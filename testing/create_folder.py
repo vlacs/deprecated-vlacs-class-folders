@@ -2,14 +2,15 @@
 
 __author__ = 'mgeorge@vlacs.org (Mike George)'
 
+import os.path
+import gdata.data
+import gdata.acl.data
 import gdata.docs.client
 import gdata.docs.data
 import gdata.docs.service
+import gdata.sample_util
 import getpass
 import config
-
-#Global Variables
-password = ""
 
 #Main Method
 def main():
@@ -26,13 +27,13 @@ def main():
     raw_input(folder_name)
 
     print "Creating a new folder..."
-    CreateCollection(client, folder_name)
+    CreateFolder(client, folder_name)
     
 #Create an empty folder in Google Drive
-def CreateCollection(client, title):
-    collection = gdata.docs.data.Resource(type='folder', title=title)
-    collection = client.CreateResource(collection)
-    print 'Created Collection: ', collection.title.text, collection.resource_id.text
+def CreateFolder(client, title):
+    folder = gdata.docs.data.Resource(type='folder', title=title)
+    folder = client.CreateResource(folder, None, None, "/")
+    print 'Created Folder: ', folder.title.text, collection.resource_id.text
 
 if __name__ == '__main__':
     main()
