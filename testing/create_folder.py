@@ -26,11 +26,11 @@ def main():
     CreateFolder(client, folder_name)
 
 #Create Google Client Object
-def CreateClient(password)
+def CreateClient(password):
     client = gdata.docs.client.DocsClient(source=config.APP_NAME)
     client.http_client.debug = config.DEBUG
-    client.ClientLogin(config.USERNAME, password)
-    
+    try:
+        client.ClientLogin(email=config.USERNAME, password=password, source=config.APP_NAME)
     except gdata.client.BadAuthentication:
         exit('Invalid user credentials given.')
     except gdata.client.Error:
@@ -41,8 +41,8 @@ def CreateClient(password)
 #Create an empty folder in Google Drive
 def CreateFolder(client, title):
     folder = gdata.docs.data.Resource(type='folder', title=title)
-    folder = client.CreateResource(folder, None, None, "/")
-    print 'Created Folder: ', folder.title.text, collection.resource_id.text
+    folder = client.CreateResource(folder)
+    print 'Created Folder: ', folder.title.text, folder.resource_id.text
 
 if __name__ == '__main__':
     main()
