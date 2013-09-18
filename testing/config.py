@@ -2,5 +2,8 @@
 
 __author__ = 'mgeorge@vlacs.org'
 
-username = "VLACSFolders@vlacs.net"
+DEBUG = true
 
+USERNAME = "VLACSFolders@vlacs.net"
+
+APP_NAME = "vlacs-class-folders"
