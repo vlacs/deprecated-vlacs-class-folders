@@ -2,7 +2,7 @@
 
 __author__ = 'mgeorge@vlacs.org'
 
-DEBUG = true
+DEBUG = False
 
 USERNAME = "VLACSFolders@vlacs.net"
 
