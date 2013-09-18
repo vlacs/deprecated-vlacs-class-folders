@@ -14,14 +14,13 @@ import config
 
 #Main Method
 def main():
-    client = gdata.docs.service.DocsService()
     folder_name = ""
 
     print "Welcome, Please enter your password: "
     password = getpass.getpass()
 
+    client = gdata.docs.client.DocsClient(source=SampleConfig.APP_NAME)
     client.ClientLogin(config.username, password)
-    client = gdata.docs.client.DocsClient(client)
 
     print "What would you like to name your folder?: "
     raw_input(folder_name)
