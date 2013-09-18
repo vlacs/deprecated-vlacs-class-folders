@@ -1,8 +1,7 @@
 # vlacs-class-folders #
-# =================== #
 
 The purpose of this project is to automate the task of creating a folder structure on Google Drive and synchronizing
-between teachers and students of each class appropreately.
+between teachers and students of each class appropriately.
 
 ## Implementation ##
 
@@ -13,4 +12,4 @@ The following will be implemented using Python.
 * Automatically archive student / class folders upon completion or drop.
 * Initial batch to insert current students, teachers, and classes.
 
-This system is meant to run on an internal VLACS server and will leverage the gData Python Client Library.
+This system is meant to run on an internal VLACS server and will leverage the GData Python Client Library.
