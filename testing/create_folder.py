@@ -16,18 +16,28 @@ import config
 def main():
     folder_name = ""
 
-    print "Welcome, Please enter your password: "
-    password = getpass.getpass()
+    password = getpass.getpass("Welcome, Please enter your password: ")
 
-    client = gdata.docs.client.DocsClient(source=SampleConfig.APP_NAME)
-    client.ClientLogin(config.username, password)
+    client = CreateClient(password)
 
-    print "What would you like to name your folder?: "
-    raw_input(folder_name)
+    folder_name = raw_input("What would you like to name your folder?: ")
 
     print "Creating a new folder..."
     CreateFolder(client, folder_name)
+
+#Create Google Client Object
+def CreateClient(password)
+    client = gdata.docs.client.DocsClient(source=config.APP_NAME)
+    client.http_client.debug = config.DEBUG
+    client.ClientLogin(config.username, password)
     
+    except gdata.client.BadAuthentication:
+        exit('Invalid user credentials given.')
+    except gdata.client.Error:
+        exit('Login Error')
+    
+    return client
+
 #Create an empty folder in Google Drive
 def CreateFolder(client, title):
     folder = gdata.docs.data.Resource(type='folder', title=title)
