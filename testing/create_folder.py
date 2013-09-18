@@ -29,7 +29,7 @@ def main():
 def CreateClient(password)
     client = gdata.docs.client.DocsClient(source=config.APP_NAME)
     client.http_client.debug = config.DEBUG
-    client.ClientLogin(config.username, password)
+    client.ClientLogin(config.USERNAME, password)
     
     except gdata.client.BadAuthentication:
         exit('Invalid user credentials given.')
