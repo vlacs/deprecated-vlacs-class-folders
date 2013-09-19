@@ -4,10 +4,6 @@ __author__ = 'mgeorge@vlacs.org (Mike George)'
 
 import getpass
 import Create
-import gdata.data
-import gdata.acl.data
-import gdata.docs.client
-import gdata.docs.data
 
 def main():
     password = getpass.getpass("Welcome, Please enter your password: ")
