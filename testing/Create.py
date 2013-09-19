@@ -1,4 +1,4 @@
-#!/usr/bin/python
+#Contains methods that are used by multiple tests
 
 __author__ = 'mgeorge@vlacs.org (Mike George)'
 
