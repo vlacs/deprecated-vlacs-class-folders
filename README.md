@@ -12,7 +12,8 @@ The following will be implemented using Python.
 * Automatically archive student / class folders upon completion or drop.
 * Initial batch to insert current students, teachers, and classes.
 
-This system is meant to run on an internal VLACS server and will leverage the GData Python Client Library.
+This program is intended to run on an internal VLACS server (linux) and will leverage the GData Python Client Library.
+When it's finished it should be able to run anywhere python does.
 
 <p align="center"><a href="http://vlacs.org/" target="_blank"><img src="http://vlacs.org/images/VLACS_logo_no_dep_website.png" alt="VLACS Logo"/></a></p>
 
