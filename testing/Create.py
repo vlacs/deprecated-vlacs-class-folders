@@ -25,3 +25,14 @@ def Client(password):
         exit('Login Error')
     
     return client
+
+#Create an empty folder in root of Google Drive
+def Folder(client, title):
+    #Initialize folder object with title
+    folder = gdata.docs.data.Resource(type='folder', title=title)
+    
+    #Use the Client Object to create the folder in the root of their Drive
+    folder = client.CreateResource(folder)
+    
+    #On success notify user and output folder Title and Resource ID
+    print 'Created Folder: ', folder.title.text, folder.resource_id.text
