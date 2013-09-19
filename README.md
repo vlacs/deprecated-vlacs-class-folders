@@ -14,5 +14,5 @@ The following will be implemented using Python.
 
 This system is meant to run on an internal VLACS server and will leverage the GData Python Client Library.
 
-<p align="center"><a href="http://vlacs.org/" target="_blank">![VLACS Logo](http://vlacs.org/images/VLACS_logo_no_dep_website.png)</a></p>
+<p align="center"><a href="http://vlacs.org/" target="_blank"><img src="http://vlacs.org/images/VLACS_logo_no_dep_website.png" alt="VLACS Logo"/></a></p>
 
