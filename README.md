@@ -1,3 +1,4 @@
+<a href="http://vlacs.org/" style="float:right;" target="_blank">![VLACS Logo](http://vlacs.org/images/VLACS_logo_no_dep_website.png)</a>
 # vlacs-class-folders #
 
 The purpose of this project is to automate the task of creating a folder structure on Google Drive and synchronizing
@@ -13,6 +14,3 @@ The following will be implemented using Python.
 * Initial batch to insert current students, teachers, and classes.
 
 This system is meant to run on an internal VLACS server and will leverage the GData Python Client Library.
-
-<a href="http://vlacs.org/" target="_blank">![VLACS Logo](http://vlacs.org/images/VLACS_logo_no_dep_website.png)</a>
-
