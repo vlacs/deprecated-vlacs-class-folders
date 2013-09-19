@@ -2,9 +2,6 @@
 
 __author__ = 'mgeorge@vlacs.org (Mike George)'
 
-import gdata.data
-import gdata.docs.data
-import gdata.docs.service
 import gdata.acl
 import Create
 import getpass
