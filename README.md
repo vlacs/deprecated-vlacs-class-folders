@@ -1,3 +1,4 @@
+![VLACS Logo](http://vlacs.org/images/VLACS_logo_no_dep_website.png)
 # vlacs-class-folders #
 
 The purpose of this project is to automate the task of creating a folder structure on Google Drive and synchronizing
