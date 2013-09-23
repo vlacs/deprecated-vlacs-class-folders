@@ -7,10 +7,10 @@ SELECT mmc.master_course_idstr as master_id,
        msu.lastname as student_lastname,
        tsu.firstname as teacher_firstname,
        tsu.lastname as teacher_lastname
-       FROM
-           mdl_classroom_enrolment mce JOIN mdl_sis_user msu on (msu.sis_user_idstr = mce.sis_user_idstr)
-           JOIN mdl_classroom mc on (mc.classroom_idstr = mce.classroom_idstr)
-           JOIN mdl_master_course mmc on (mmc.master_course_idstr = mc.master_course_idstr)
-           LEFT JOIN mdl_sis_user tsu on (mc.sis_user_idstr = tsu.sis_user_idstr)
+       FROM mdl_classroom_enrolment mce 
+       JOIN mdl_sis_user msu on (msu.sis_user_idstr = mce.sis_user_idstr)
+       JOIN mdl_classroom mc on (mc.classroom_idstr = mce.classroom_idstr)
+       JOIN mdl_master_course mmc on (mmc.master_course_idstr = mc.master_course_idstr)
+       LEFT JOIN mdl_sis_user tsu on (mc.sis_user_idstr = tsu.sis_user_idstr)
        WHERE msu.privilege = 'STUDENT' AND mc.status = 'ACTIVE' AND mce.status_idstr = 'ACTIVE'
        ORDER BY mmc.master_course_idstr, mc.classroom_idstr;
