@@ -1,12 +1,12 @@
 CREATE OR REPLACE VIEW view_vlacs_class_folders AS
-SELECT mmc.master_course_idstr as master_id,
-	   mce.classroom_idstr as class_id,
-	   mmc.name as course_name,
-	   mce.sis_user_idstr as student_id,
-	   msu.firstname as student_firstname,
-	   msu.lastname as student_lastname,
-	   tsu.firstname as teacher_firstname,
-	   tsu.lastname as teacher_lastname
+SELECT mmc.master_course_idstr AS master_id,
+	   mce.classroom_idstr AS class_id,
+	   mmc.name AS course_name,
+	   mce.sis_user_idstr AS student_id,
+	   msu.firstname AS student_firstname,
+	   msu.lastname AS student_lastname,
+	   tsu.firstname AS teacher_firstname,
+	   tsu.lastname AS teacher_lastname
 	   FROM mdl_classroom_enrolment mce 
 	   JOIN mdl_sis_user msu on msu.sis_user_idstr = mce.sis_user_idstr
 	   JOIN mdl_classroom mc on mc.classroom_idstr = mce.classroom_idstr
