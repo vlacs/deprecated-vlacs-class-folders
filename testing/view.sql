@@ -5,8 +5,8 @@ SELECT mmc.master_course_idstr as master_id,
        msu.firstname as student_firstname,
        msu.lastname as student_lastname
        FROM
-           mdl_sis_user msu LEFT OUTER JOIN mdl_classroom_enrolment mce on (mce.sis_user_idstr = msu.sis_user_idstr)
-       	LEFT OUTER JOIN mdl_classroom mc on (mc.classroom_idstr = mce.classroom_idstr)
-            	    LEFT OUTER JOIN mdl_master_course mmc on (mmc.master_course_idstr = mc.master_course_idstr)
+           mdl_sis_user msu LEFT JOIN mdl_classroom_enrolment mce on (mce.sis_user_idstr = msu.sis_user_idstr)
+               LEFT JOIN mdl_classroom mc on (mc.classroom_idstr = mce.classroom_idstr)
+        	     LEFT JOIN mdl_master_course mmc on (mmc.master_course_idstr = mc.master_course_idstr)
        WHERE msu.privilege = 'STUDENT' AND mc.status = 'ACTIVE' AND mce.status_idstr = 'ACTIVE'
        LIMIT(20);
