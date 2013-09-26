@@ -10,8 +10,8 @@ APP_NAME = "vlacs-class-folders"
 
 #Insert Postgres Database information below.
 DATABASE = {
-	'host' : '',
-	'database' : '',
-	'user' : '',
-	'password' : '',
+	'host' : 'localhost',
+	'database' : 'moodletest6_vlacs_org',
+	'user' : 'test',
+	'password' : 'hwg;mfp3',
 }
