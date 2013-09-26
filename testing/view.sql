@@ -5,8 +5,11 @@ SELECT mmc.master_course_idstr AS master_id,
 	   mce.sis_user_idstr AS student_id,
 	   msu.firstname AS student_firstname,
 	   msu.lastname AS student_lastname,
+	   msu.email AS student_email,
+	   tsu.sis_user_idstr AS teacher_id,
 	   tsu.firstname AS teacher_firstname,
-	   tsu.lastname AS teacher_lastname
+	   tsu.lastname AS teacher_lastname,
+	   tsu.email AS teacher_email
 	   FROM mdl_classroom_enrolment mce 
 	   JOIN mdl_sis_user msu on msu.sis_user_idstr = mce.sis_user_idstr
 	   JOIN mdl_classroom mc on mc.classroom_idstr = mce.classroom_idstr
