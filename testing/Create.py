@@ -32,7 +32,7 @@ def Folder(client, title, collection=None):
     if collection != None:
         collection = client.GetResourceById(collection)
     
-    #Use the Client Object to create the folder in the root of their Drive
+    #Use the Client Object to create the folder in the root of their Drive or the collection specified.
     folder = client.CreateResource(folder, collection=collection )
     
     #On success notify user and output folder Title and Resource ID
