@@ -17,12 +17,18 @@ def main(limit="e"):
 		cursor.execute("SELECT * FROM view_vlacs_class_folders LIMIT(" + limit + ")")
 
 	for row in cursor:
-		print("\033[92mStudent Name:\033[0m %-20s\033[92m Email:\033[0m %-31s\033[34mClass:\033[0m %-10s\033[34m Class ID:\033[0m %-6s\033[31mTeacher Name:\033[0m %-30s\033[31mTeacher Email:\033[0m  %-20s" % 
-			(row['student_firstname'] + " " + row['student_lastname'], row['student_email'], 
-			row['course_name'], row['class_id'], row['teacher_firstname'] + " " + row['teacher_lastname'],
-			row['teacher_email']))
+		print_row(row)
 
 	conn.close()
+
+def print_row(row):
+	WHITE   = "\033[0m"
+	GREEN   = "\033[92m"
+
+	print("--------------------------------------------------------------------------------------")
+	print("%sStudent Name: %s%-30s%sStudent Email: %s%-30s" % (GREEN, WHITE, row['student_firstname'] + " " + row['student_lastname'], GREEN, WHITE, row['student_email']))
+	print("%sClass:        %s%-30s%sClass ID:      %s%-30s" % (GREEN, WHITE, row['course_name'], GREEN, WHITE, row['class_id'])) 
+	print("%sTeacher Name: %s%-30s%sTeacher Email: %s%-30s" % (GREEN, WHITE, row['teacher_lastname'], GREEN, WHITE, row['teacher_email']))
 
 if __name__ == "__main__":
 	main(sys.argv[1])
