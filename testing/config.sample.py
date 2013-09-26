@@ -4,9 +4,10 @@ __author__ = 'mgeorge@vlacs.org'
 
 DEBUG = False
 
-USERNAME = "vlacsfolders@vlacs.net"
+#Username of Master Google Drive account.
+USERNAME = ""
 
-APP_NAME = "vlacs-class-folders"
+APP_NAME = ""
 
 #Insert Postgres Database information below.
 DATABASE = {
