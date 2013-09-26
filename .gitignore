@@ -2,4 +2,4 @@
 
 *.pyc
 
-testing/config.py
+config.py
