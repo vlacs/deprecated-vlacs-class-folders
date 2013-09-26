@@ -29,7 +29,7 @@ def ShareFolder(client, folder_res_id, share_with):
         role=gdata.acl.data.AclRole(value='writer'),
     )
 
-    client.AddAclEntry(folder, acl_entry, send_notification=False)
+    client.AddAclEntry(folder, acl_entry, send_notifications=False)
 
 #Run Main method automatically
 if __name__ == '__main__':
