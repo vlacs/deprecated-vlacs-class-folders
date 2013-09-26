@@ -12,9 +12,11 @@ def main():
 	cursor = conn.cursor(cursor_factory=psycopg2.extras.DictCursor)
 	cursor.execute("SELECT * FROM view_vlacs_class_folders LIMIT(20)")
 
-	for row in cursor:
-		print("First Name: %s Last Name: %s Class: %s", row['student_first_name'], 
-							row['student_last_name'], row['course_name'])
+	k = list(cursor.keys())
+	print k
+	#for row in cursor:
+	#	print("First Name: %s Last Name: %s Class: %s", row['student_first_name'], 
+	#						row['student_last_name'], row['course_name'])
 
 	conn.close()
 
