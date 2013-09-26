@@ -14,7 +14,7 @@ def main(limit="e"):
 	if limit == "e":
 		cursor.execute("SELECT * FROM view_vlacs_class_folders")
 	else:
-		cursor.execute("SELECT * FROM view_vlacs_class_folders LIMIT(" + limit + ")")
+		cursor.execute("SELECT * FROM view_vlacs_class_folders LIMIT(%s)" % (limit))
 
 	for row in cursor:
 		print_row(row)
