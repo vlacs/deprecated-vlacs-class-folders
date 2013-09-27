@@ -24,7 +24,7 @@ def get(query="e", limit="e"):
 	else:
 		if limit == "e":
 			cursor.execute(query)
-		else
+		else:
 			cursor.execute("%s LIMIT(%s)", query, limit)
 
 	return cursor
