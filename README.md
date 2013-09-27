@@ -1,4 +1,3 @@
-<p align="right" style="margin-bottom: -95px;"><a href="http://vlacs.org/" target="_blank"><img src="http://vlacs.org/images/VLACS_logo_no_dep_website.png" alt="VLACS Logo"/></a></p>
 # vlacs-class-folders #
 
 The purpose of this project is to automate the task of creating a folder structure on Google Drive and synchronizing
@@ -25,3 +24,5 @@ The following will be implemented using Python.
 
 This program is intended to run on an internal VLACS server (linux) and will leverage the GData Python Client Library.
 When it's finished it should be able to run anywhere python does.
+
+<p align="center"><a href="http://vlacs.org/" target="_blank"><img src="http://vlacs.org/images/VLACS_logo_no_dep_website.png" alt="VLACS Logo"/></a></p>
