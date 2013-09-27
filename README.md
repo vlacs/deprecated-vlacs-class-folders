@@ -14,7 +14,7 @@ The following will be implemented using Python.
 
 ## Structure ##
 * Classes
-  + [Client.py](https://github.com/vlacs/vlacs-class-folders/blob/master/Classes/Cleint.py)     (Easily create Google Data Client)
+  + [Client.py](https://github.com/vlacs/vlacs-class-folders/blob/master/Classes/Client.py)     (Easily create Google Data Client)
   + [Database.py](https://github.com/vlacs/vlacs-class-folders/blob/master/Classes/Database.py)   (Connect to Database and run queries)
   + [Folder.py](https://github.com/vlacs/vlacs-class-folders/blob/master/Classes/Folder.py)     (Create, Share, and Unshare Folders on Google Drive)
 * Files
