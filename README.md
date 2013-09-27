@@ -1,3 +1,4 @@
+<p align="right"><a rel="license" href="http://creativecommons.org/licenses/by-sa/3.0/us/deed.en_US"><img alt="Creative Commons License" style="border-width:0" src="http://i.creativecommons.org/l/by-sa/3.0/us/88x31.png" /></a></p>
 # vlacs-class-folders #
 
 The purpose of this project is to automate the task of creating a folder structure on Google Drive and synchronizing
