@@ -12,6 +12,16 @@ The following will be implemented using Python.
 * Automatically archive student / class folders upon completion or drop.
 * Initial batch to insert current students, teachers, and classes.
 
+## Structure ##
+* Classes
+  + [Client.py](https://github.com/vlacs/vlacs-class-folders/blob/master/Cleint.py)     (Easily create Google Data Client)
+  + [Database.py](https://github.com/vlacs/vlacs-class-folders/blob/master/Database.py)   (Connect to Database and run queries)
+  + [Folder.py](https://github.com/vlacs/vlacs-class-folders/blob/master/Folder.py)     (Create, Share, and Unshare Folders on Google Drive)
+* Files
+  + daily_cron.py (Run daily with cron to check for dropped / created classes and archive folders)
+  + run_batch.py  (Pull data from Postgres and Create / Share Folders for students and teachers)
+  + utilities.py  (Optional manual tasks. Unshare, Unarchive, etc.)
+
 This program is intended to run on an internal VLACS server (linux) and will leverage the GData Python Client Library.
 When it's finished it should be able to run anywhere python does.
 
