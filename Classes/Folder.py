@@ -22,7 +22,7 @@ def share(client, folder_res_id, share_with, permission='writer'):
 	#Check if already shared with person
     result = Database.get(query="SELECT shared_email FROM vlacs_class_folders_shared WHERE shared_email = '%s';" % (share_with))
 
-    if !(len(result['cursor']) > 0):
+    if len(result['cursor']) < 1:
         folder = client.get_resource_by_id(folder_res_id)
         
         acl_entry = gdata.docs.data.AclEntry(
