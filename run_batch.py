@@ -15,7 +15,7 @@ def main():
 		print("Processing row %s..." % (count))
 		cdb_query = 'SELECT class_id, folder_id FROM vlacs_class_folders_structure WHERE class_id = {0};'.format(row['class_id'])
 		check_db = Database.get(query=cdb_query)
-		if len(check_db[0]) > 0:
+		if len(list(check_db[0])) > 0:
 			classfolder_id = Database.get(query="SELECT folder_id FROM vlacs_class_folders_structure WHERE folder_name = 'VLACS Class Folders'")
 			archive_id = Database.get(query="SELECT folder_id FROM vlacs_class_folders_structure WHERE folder_name = 'VLACS Archive'")
 			
