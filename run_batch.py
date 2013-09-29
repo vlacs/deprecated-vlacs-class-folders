@@ -12,11 +12,11 @@ def main():
 
 	count = 1
 
-	for row in result[0]:
+	for row in result:
 		print("Processing row %s/%s..." % (count, len(list(result[0]))))
 		cdb_query = 'SELECT class_id, folder_id FROM vlacs_class_folders_structure WHERE class_id = {0};'.format(row['class_id'])
 		check_db = Database.get(query=cdb_query)
-		res = check_db[0].fetchone()
+		res = check_db.fetchone()
 		print res
 		#if len(list(check_db[0])) < 1:
 		#	classfolder_id = Database.get(query="SELECT folder_id FROM vlacs_class_folders_structure WHERE folder_name = 'VLACS Class Folders'")
@@ -29,8 +29,6 @@ def main():
 		#	res = check_db[0].fetchone()
 		#	Folder.create(client, row['student_lastname'] + ", " + row['student_firstname'] + " - Assignments", res['folder_id'])
 		count += 1
-
-	Database.close(result[1])
 
 if __name__ == "__main__":
 	main()
