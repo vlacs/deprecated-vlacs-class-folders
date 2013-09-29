@@ -22,7 +22,7 @@ def main():
 			Folder.create(client, row['student_lastname'] + ", " + row['student_firstname'] + " - Assignments", classfolder.resource_id.text)
 		else:
 			Folder.create(client, row['student_lastname'] + ", " + row['student_firstname'] + " - Assignments", check_db['folder_id'])
-		count++
+		count += 1
 
 	Database.close(result['connection'])
 
