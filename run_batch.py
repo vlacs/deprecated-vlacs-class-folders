@@ -13,7 +13,7 @@ def main():
 	count = 1
 
 	for row in result[0]:
-		print("Processing row %s/%s..." % (count, len(list(check_db[0]))))
+		print("Processing row %s/%s..." % (count, len(list(result[0]))))
 		cdb_query = 'SELECT class_id, folder_id FROM vlacs_class_folders_structure WHERE class_id = {0};'.format(row['class_id'])
 		check_db = Database.get(query=cdb_query)
 		if len(list(check_db[0])) > 0:
