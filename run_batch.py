@@ -12,6 +12,8 @@ def main():
 
 	count = 1
 
+	print result
+
 	for row in result:
 		print("Processing row %s/%s..." % (count, len(list(result))))
 		#cdb_query = 'SELECT class_id, folder_id FROM vlacs_class_folders_structure WHERE class_id = {0};'.format(row['class_id'])
