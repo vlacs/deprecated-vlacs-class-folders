@@ -13,7 +13,7 @@ def main():
 
 	for row in result[0]:
 		print "Processing row %s / %s..." % (count, len(list(result[0]))
-		check_db = Database.get(query="SELECT class_id, folder_id FROM vlacs_class_folders_structure WHERE class_id = '%s'" % row['class_id'])
+		check_db = Database.get(query="SELECT class_id, folder_id FROM vlacs_class_folders_structure WHERE class_id = " + row['class_id'] + ";")
 		if len(check_db > 0):
 			classfolder_id = Database.get(query="SELECT folder_id FROM vlacs_class_folders_structure WHERE folder_name = 'VLACS Class Folders'")
 			archive_id = Database.get(query="SELECT folder_id FROM vlacs_class_folders_structure WHERE folder_name = 'VLACS Archive'")
