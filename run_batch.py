@@ -11,7 +11,7 @@ def main():
 
 	count = 1
 
-	for row in result.cursor:
+	for row in result[0]:
 		print "Processing row %s / %s..." % (count, len(result.cursor))
 		check_db = Database.get(query="SELECT class_id, folder_id FROM vlacs_class_folders_structure WHERE class_id = '%s'" % (result['class_id']))
 		if len(check_db > 0):
@@ -25,7 +25,7 @@ def main():
 			Folder.create(client, row['student_lastname'] + ", " + row['student_firstname'] + " - Assignments", check_db['folder_id'])
 		count += 1
 
-	Database.close(result.conn)
+	Database.close(result[1])
 
 if __name__ == "__main__":
 	main()
