@@ -21,6 +21,8 @@ def create(client, title, parent=None):
     else:
         Database.execute("INSERT INTO vlacs_class_folders_structure (folder_name, folder_id) VALUES ('%s', '%s');" % (title, folder.resource_id.text))
 
+    return folder
+
 def share(client, folder_res_id, share_with, permission='writer'):
 	#Check if already shared with person
     result = Database.get(query="SELECT shared_email FROM vlacs_class_folders_shared WHERE shared_email = '%s';" % (share_with))

@@ -6,21 +6,25 @@ from Classes import Database
 
 def main():
 	result = Database.get(limit=30)
+	client = Client.create()
+
+	count = 1
 
 	for row in result['cursor']:
-		print_row(row)
+		print "Processing row %s / %s..." % (count, len(result['cursor']))
+		check_db = Database.get(query="SELECT class_id, folder_id FROM vlacs_class_folders_structure WHERE class_id = '%s'" % (result['class_id']))
+		if len(check_db > 0):
+			classfolder_id = Database.get(query="SELECT folder_id FROM vlacs_class_folders_structure WHERE folder_name = 'VLACS Class Folders'")
+			archive_id = Database.get(query="SELECT folder_id FROM vlacs_class_folders_structure WHERE folder_name = 'VLACS Archive'")
+			
+			classfolder = Folder.create(client, row['course_name'] + " - " + row['teacher_firstname'] + " " + row['teacher_lastname'] + " - " + row['class_id'], classfolder_id['folder_id'])
+			Folder.create(client, row['course_name'] + " - " + row['teacher_firstname'] + " " + row['teacher_lastname'] + " - " + row['class_id'], archive_id['folder_id'])
+			Folder.create(client, row['student_lastname'] + ", " + row['student_firstname'] + " - Assignments", classfolder.resource_id.text)
+		else:
+			Folder.create(client, row['student_lastname'] + ", " + row['student_firstname'] + " - Assignments", check_db['folder_id'])
+		count++
 
 	Database.close(result['connection'])
-
-def print_row(row):
-	WHITE   = "\033[0m"
-	GREEN   = "\033[92m"
-
-	print("--------------------------------------------------------------------------------------")
-	print("%sStudent Name: %s%-30s%sStudent Email: %s%-30s" % (GREEN, WHITE, row['student_firstname'] + " " + row['student_lastname'], GREEN, WHITE, row['student_email']))
-	print("%sClass:        %s%-30s%sClass ID:      %s%-30s" % (GREEN, WHITE, row['course_name'], GREEN, WHITE, row['class_id'])) 
-	print("%sTeacher Name: %s%-30s%sTeacher Email: %s%-30s" % (GREEN, WHITE, row['teacher_firstname'] + " " + row['teacher_lastname'], GREEN, WHITE, row['teacher_email']))
-
 
 if __name__ == "__main__":
 	main()
