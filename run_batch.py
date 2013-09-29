@@ -29,7 +29,7 @@ def main():
 		#	res = check_db[0].fetchone()
 		#	Folder.create(client, row['student_lastname'] + ", " + row['student_firstname'] + " - Assignments", res['folder_id'])
 		count += 1
-	Database.close(conn_cdb)
+	#Database.close(conn_cdb)
 	Database.close(conn, result)
 
 if __name__ == "__main__":
