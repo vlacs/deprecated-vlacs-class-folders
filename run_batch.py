@@ -7,7 +7,7 @@ from Classes import Client
 from Classes import Folder
 
 def main():
-	result = Database.get(limit=30)
+	result, conn = Database.get(limit=30)
 	client = Client.create()
 
 	count = 1
@@ -15,7 +15,7 @@ def main():
 	for row in result:
 		print("Processing row %s/%s..." % (count, len(list(result[0]))))
 		cdb_query = 'SELECT class_id, folder_id FROM vlacs_class_folders_structure WHERE class_id = {0};'.format(row['class_id'])
-		check_db = Database.get(query=cdb_query)
+		check_db, conn_cdb = Database.get(query=cdb_query)
 		res = check_db.fetchone()
 		print res
 		#if len(list(check_db[0])) < 1:
@@ -29,6 +29,8 @@ def main():
 		#	res = check_db[0].fetchone()
 		#	Folder.create(client, row['student_lastname'] + ", " + row['student_firstname'] + " - Assignments", res['folder_id'])
 		count += 1
+	Database.close(conn_cdb)
+	Database.close(conn, result)
 
 if __name__ == "__main__":
 	main()
