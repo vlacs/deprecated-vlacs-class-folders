@@ -13,7 +13,7 @@ def main():
 	count = 1
 
 	for row in result[0]:
-		print("Processing row %s..." % (count))
+		print("Processing row %s/%s..." % (count, len(list(check_db[0]))))
 		cdb_query = 'SELECT class_id, folder_id FROM vlacs_class_folders_structure WHERE class_id = {0};'.format(row['class_id'])
 		check_db = Database.get(query=cdb_query)
 		if len(list(check_db[0])) > 0:
@@ -24,7 +24,7 @@ def main():
 			Folder.create(client, row['course_name'] + " - " + row['teacher_firstname'] + " " + row['teacher_lastname'] + " - " + row['class_id'], archive_id['folder_id'])
 			Folder.create(client, row['student_lastname'] + ", " + row['student_firstname'] + " - Assignments", classfolder.resource_id.text)
 		else:
-			Folder.create(client, row['student_lastname'] + ", " + row['student_firstname'] + " - Assignments", check_db['folder_id'])
+			Folder.create(client, row['student_lastname'] + ", " + row['student_firstname'] + " - Assignments", check_db[0]['folder_id'])
 		count += 1
 
 	Database.close(result[1])
