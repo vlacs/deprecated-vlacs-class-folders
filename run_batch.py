@@ -16,7 +16,7 @@ def main():
 		print("Processing row %s..." % (count))
 		cdb_query = "SELECT class_id, folder_id FROM vlacs_class_folders_structure WHERE class_id = %s;" % row['class_id']
 		check_db, conn_cdb = Database.get(query=cdb_query)
-		print cdb_query
+		print cdb_query[0]
 		res = check_db.fetchone()
 		print res
 		#if len(list(check_db[0])) < 1:
