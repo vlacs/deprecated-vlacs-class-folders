@@ -7,12 +7,13 @@ from Classes import Client
 
 def main():
 	result = Database.get(limit=30)
+	cursor = result['cursor']
 	client = Client.create()
 
 	count = 1
 
-	for row in result['cursor']:
-		print "Processing row %s / %s..." % (count, len(result['cursor']))
+	for row in cursor:
+		print "Processing row %s / %s..." % (count, len(cursor))
 		check_db = Database.get(query="SELECT class_id, folder_id FROM vlacs_class_folders_structure WHERE class_id = '%s'" % (result['class_id']))
 		if len(check_db > 0):
 			classfolder_id = Database.get(query="SELECT folder_id FROM vlacs_class_folders_structure WHERE folder_name = 'VLACS Class Folders'")
