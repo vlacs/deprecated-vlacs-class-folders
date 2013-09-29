@@ -17,6 +17,8 @@ def execute(query):
 	conn = connect()
 	cursor = conn.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
 	cursor.execute(query)
+	conn.commit()
+	cursor.close()
 	conn.close()
 
 def get(query="e", limit="e"):
@@ -35,5 +37,7 @@ def get(query="e", limit="e"):
 
 	return {'cursor', cursor, 'connection', conn}
 
-def close(connection):
+def close(connection, cursor=None):
 	connection.close()
+	if cursor != None:
+		cursor.close()
