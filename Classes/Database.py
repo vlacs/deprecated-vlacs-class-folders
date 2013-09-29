@@ -13,6 +13,12 @@ def connect():
 
 	return conn
 
+def execute(query):
+	conn = connect()
+	cursor = conn.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
+	cursor.execute(query)
+	conn.close()
+
 def get(query="e", limit="e"):
 	conn = connect()
 	cursor = conn.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
@@ -27,4 +33,7 @@ def get(query="e", limit="e"):
 		else:
 			cursor.execute("%s LIMIT(%s)", query, limit)
 
-	return cursor
+	return {'cursor', cursor, 'connection', conn}
+
+def close(connection):
+	connection.close()

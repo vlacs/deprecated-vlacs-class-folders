@@ -7,8 +7,10 @@ from Classes import Database
 def main():
 	result = Database.get(limit=30)
 
-	for row in result:
+	for row in result['cursor']:
 		print_row(row)
+
+	Database.close(result['connection'])
 
 def print_row(row):
 	WHITE   = "\033[0m"
