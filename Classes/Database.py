@@ -35,7 +35,7 @@ def get(query="e", limit="e"):
 		else:
 			cursor.execute("%s LIMIT(%s)", query, limit)
 
-	return {'cursor', cursor, 'connection', conn}
+	return cursor, conn
 
 def close(connection, cursor=None):
 	connection.close()
