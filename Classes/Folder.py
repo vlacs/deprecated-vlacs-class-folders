@@ -16,7 +16,10 @@ def create(client, title, parent=None):
     folder = client.CreateResource(folder, collection=parent)
     
     #On success insert into database
-    Database.execute("INSERT INTO vlacs_class_folders_structure (folder_name, folder_id, folder_parent) VALUES ('%s', '%s', '%s');" % (title, folder.resource_id.text, parent))
+    if parent != None:
+        Database.execute("INSERT INTO vlacs_class_folders_structure (folder_name, folder_id, folder_parent) VALUES ('%s', '%s', '%s');" % (title, folder.resource_id.text, parent))
+    else:
+        Database.execute("INSERT INTO vlacs_class_folders_structure (folder_name, folder_id) VALUES ('%s', '%s');" % (title, folder.resource_id.text))
 
 def share(client, folder_res_id, share_with, permission='writer'):
 	#Check if already shared with person
