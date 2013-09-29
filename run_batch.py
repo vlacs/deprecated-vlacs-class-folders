@@ -3,6 +3,7 @@
 __author__ = 'mgeorge@vlacs.org (Mike George)'
 
 from Classes import Database
+from Classes import Client
 
 def main():
 	result = Database.get(limit=30)
