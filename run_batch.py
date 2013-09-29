@@ -12,7 +12,7 @@ def main():
 	count = 1
 
 	for row in result[0]:
-		print("Processing row %s..." % (count)
+		#print("Processing row %s..." % (count)
 		print row['class_id']
 		#cdb_query = 'SELECT class_id, folder_id FROM vlacs_class_folders_structure WHERE class_id = {0};'.format(row['class_id'])
 		#check_db = Database.get(query=cdb_query)
