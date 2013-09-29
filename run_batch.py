@@ -4,6 +4,7 @@ __author__ = 'mgeorge@vlacs.org (Mike George)'
 
 from Classes import Database
 from Classes import Client
+from Classes import Folder
 
 def main():
 	result = Database.get(limit=30)
