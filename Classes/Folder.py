@@ -17,7 +17,7 @@ def create(client, title, parent=None):
     
     #On success insert into database
     if parent != None:
-        Database.execute("INSERT INTO vlacs_class_folders_structure (folder_name, folder_id, folder_parent) VALUES ('%s', '%s', '%s');" % (title, folder.resource_id.text, parent))
+        Database.execute("INSERT INTO vlacs_class_folders_structure (folder_name, folder_id, folder_parent) VALUES ('%s', '%s', '%s');" % (title, folder.resource_id.text, parent.resource_id.text))
     else:
         Database.execute("INSERT INTO vlacs_class_folders_structure (folder_name, folder_id) VALUES ('%s', '%s');" % (title, folder.resource_id.text))
 
