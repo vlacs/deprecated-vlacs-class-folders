@@ -17,12 +17,10 @@ def main():
 		cdb_query = "SELECT class_id, folder_id FROM vlacs_class_folders_structure WHERE class_id = %s;" % row['class_id']
 		check_db, conn_cdb = Database.get(query=cdb_query)
 		if len(list(check_db)) < 1:
-			classfolder_id_db, conn_cf = Database.get(query="SELECT folder_id FROM vlacs_class_folders_structure WHERE folder_name = 'VLACS Class Folders'")
+			classfolder_id_db, conn_cf = Database.get(query="SELECT folder_id FROM vlacs_class_folders_structure WHERE folder_name = 'VLACS Class Folders';")
 			classfolder_id = classfolder_id_db.fetchone()
-			archive_id = Database.get(query="SELECT folder_id FROM vlacs_class_folders_structure WHERE folder_name = 'VLACS Archive'")
-			
+
 			classfolder = Folder.create(client, row['course_name'] + " - " + row['teacher_firstname'] + " " + row['teacher_lastname'] + " - " + row['class_id'], classfolder_id['folder_id'])
-			Folder.create(client, row['course_name'] + " - " + row['teacher_firstname'] + " " + row['teacher_lastname'] + " - " + row['class_id'], archive_id['folder_id'])
 			Folder.create(client, row['student_lastname'] + ", " + row['student_firstname'] + " - Assignments", classfolder.resource_id.text)
 			Database.close(conn_cf, classfolder_id_db)
 		else:
