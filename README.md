@@ -18,6 +18,7 @@ The following will be implemented using Python.
   + [Database.py](https://github.com/vlacs/vlacs-class-folders/blob/master/Classes/Database.py)   (Connect to Database and run queries)
   + [Folder.py](https://github.com/vlacs/vlacs-class-folders/blob/master/Classes/Folder.py)     (Create, Share, and Unshare Folders on Google Drive)
 * Files
+  + [create_structure.py](https://github.com/vlacs/vlacs-class-folders/blob/master/create_structure.py) (Run once to create Database Tables and root folders)
   + [daily_cron.py](https://github.com/vlacs/vlacs-class-folders/blob/master/daily_cron.py) (Run daily with cron to check for dropped / created classes and archive folders)
   + [run_batch.py](https://github.com/vlacs/vlacs-class-folders/blob/master/run_batch.py)  (Pull data from Postgres and Create / Share Folders for students and teachers)
   + [utilities.py](https://github.com/vlacs/vlacs-class-folders/blob/master/utilities.py)  (Optional manual tasks. Unshare, Unarchive, etc.)
