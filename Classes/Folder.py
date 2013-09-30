@@ -10,7 +10,7 @@ def create(client, title, parent=None):
     folder = gdata.docs.data.Resource(type='folder', title=title)
 
     if parent != None:
-        parent = client.GetResourceById(collection)
+        parent = client.GetResourceById(parent)
     
     #Use the Client Object to create the folder in the root of their Drive or the collection specified.
     folder = client.CreateResource(folder, collection=parent)
