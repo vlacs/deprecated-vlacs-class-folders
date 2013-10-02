@@ -26,6 +26,7 @@ def main():
 			Database.close(conn_rcf, rootclassfolder_id_db)
 		else:
 			print "Class Folder Found..."
+			#For some reason the script doesn't work without this redundant database call...
 			classfolder_id_db, conn_cf = Database.get(query=cdb_query)
 			classfolder_id = classfolder_id_db.fetchone()
 			Folder.create(client, row['student_lastname'] + ", " + row['student_firstname'] + " - Assignments", classfolder_id['folder_id'])
