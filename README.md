@@ -24,6 +24,8 @@ The following will be implemented using Python.
   + [utilities.py](https://github.com/vlacs/vlacs-class-folders/blob/master/utilities.py)  (Optional manual tasks. Unshare, Unarchive, etc.)
 
 ## Dependencies ##
+* python
+* python-dev
 * gdata
 * pyscopg2
 * libpq-dev
