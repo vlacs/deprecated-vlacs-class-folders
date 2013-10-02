@@ -26,9 +26,9 @@ def main():
 			Database.close(conn_cf, classfolder_id_db)
 		else:
 			print "Class Folder Found..."
-			res = check_db.fetchone()
+			res = check_db.fetchall()
 			if res == None:
-				print check_db.rowcount, check_db[0]
+				print check_db.rowcount, res
 				break
 			print res
 			Folder.create(client, row['student_lastname'] + ", " + row['student_firstname'] + " - Assignments", res['folder_id'])
