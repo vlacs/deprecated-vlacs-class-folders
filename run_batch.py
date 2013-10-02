@@ -7,7 +7,7 @@ from Classes import Client
 from Classes import Folder
 
 def main():
-	result, conn = Database.get(limit=2)
+	result, conn = Database.get(limit=30)
 	client = Client.create()
 
 	count = 1
