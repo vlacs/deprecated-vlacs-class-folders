@@ -5,7 +5,7 @@ import gdata.docs.data
 import Database
 
 #Create an empty folder in Google Drive
-def create(client, title, parent=None):
+def create(client, title, parent=None, class_id=None):
     #Initialize folder object with title
     folder = gdata.docs.data.Resource(type='folder', title=title)
 
@@ -16,7 +16,9 @@ def create(client, title, parent=None):
     folder = client.CreateResource(folder, collection=parent)
     
     #On success insert into database
-    if parent != None:
+    if parent != None || class_id != None:
+        Database.execute("INSERT INTO vlacs_class_folders_structure (class_id, folder_name, folder_id, folder_parent) VALUES ('%s', '%s', '%s');" % (class_id, title, folder.resource_id.text, parent.resource_id.text))
+    elif parent != None:
         Database.execute("INSERT INTO vlacs_class_folders_structure (folder_name, folder_id, folder_parent) VALUES ('%s', '%s', '%s');" % (title, folder.resource_id.text, parent.resource_id.text))
     else:
         Database.execute("INSERT INTO vlacs_class_folders_structure (folder_name, folder_id) VALUES ('%s', '%s');" % (title, folder.resource_id.text))
