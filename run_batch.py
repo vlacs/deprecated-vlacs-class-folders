@@ -31,7 +31,7 @@ def main():
 				print check_db.rowcount, res
 				break
 			print res
-			Folder.create(client, row['student_lastname'] + ", " + row['student_firstname'] + " - Assignments", res['folder_id'])
+			Folder.create(client, row['student_lastname'] + ", " + row['student_firstname'] + " - Assignments", res[0]['folder_id'])
 		count += 1
 	Database.close(conn_cdb, check_db)
 	Database.close(conn, result)
