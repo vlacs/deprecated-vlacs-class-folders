@@ -23,6 +23,11 @@ The following will be implemented using Python.
   + [run_batch.py](https://github.com/vlacs/vlacs-class-folders/blob/master/run_batch.py)  (Pull data from Postgres and Create / Share Folders for students and teachers)
   + [utilities.py](https://github.com/vlacs/vlacs-class-folders/blob/master/utilities.py)  (Optional manual tasks. Unshare, Unarchive, etc.)
 
+## Dependencies ##
+* gdata
+* pyscopg2
+* libpq-dev
+
 This program is intended to run on an internal VLACS server (linux) and will leverage the GData Python Client Library.
 When it's finished it should be able to run anywhere python does.
 
