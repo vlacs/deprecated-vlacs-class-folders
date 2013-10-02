@@ -23,7 +23,7 @@ def main():
 			classfolder_id = classfolder_id_db.fetchone()
 
 			classfolder = Folder.create(client, row['course_name'] + " - " + row['teacher_firstname'] + " " + row['teacher_lastname'] + " - " + row['class_id'], classfolder_id['folder_id'])
-			Folder.create(client, row['student_lastname'] + ", " + row['student_firstname'] + " - Assignments", classfolder.resource_id.text)
+			Folder.create(client, row['student_lastname'] + ", " + row['student_firstname'] + " - Assignments", classfolder.resource_id.text, row['class_id'])
 			Database.close(conn_cf, classfolder_id_db)
 		else:
 			print "Folder Found..."
