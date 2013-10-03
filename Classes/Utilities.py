@@ -15,3 +15,10 @@ def clean_name(name):
 	clean = string.capitalize(clean)
 
 	return clean
+
+def course_version(course_full_name):
+	course_version = course_full_version
+	course_version = course_version.split("-")
+	course_version = course_version[1].split("_")
+
+	return course_version[0]

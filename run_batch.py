@@ -41,7 +41,7 @@ def main(limit_in=None, offset_in=None):
 			rootclassfolder_id_db, conn_rcf = Database.get(query="SELECT folder_id FROM vlacs_class_folders_structure WHERE folder_name = 'VLACS Class Folders';")
 			rootclassfolder_id = rootclassfolder_id_db.fetchone()
 
-			classfolder = Folder.create(client, row['course_name'] + " - " + Utilities.clean_name(row['teacher_firstname']) + " " + Utilities.clean_name(row['teacher_lastname']) + " - " + row['class_id'], rootclassfolder_id['folder_id'], row['class_id'])
+			classfolder = Folder.create(client, row['course_name'] + " - " + Utilities.clean_name(row['teacher_firstname']) + " " + Utilities.clean_name(row['teacher_lastname']) + " - " + Utilities.course_version(row['course_full_name']) + " - " + row['class_id'], rootclassfolder_id['folder_id'], row['class_id'])
 			Folder.create(client, Utilities.clean_name(row['student_lastname']) + ", " + Utilities.clean_name(row['student_firstname']) + " - Assignments", classfolder.resource_id.text)
 			Database.close(conn_rcf, rootclassfolder_id_db)
 		else:
