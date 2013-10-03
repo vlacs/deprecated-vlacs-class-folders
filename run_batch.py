@@ -4,6 +4,7 @@ __author__ = 'mgeorge@vlacs.org (Mike George)'
 
 import sys
 import getopt
+from time import time
 from Libs import Database
 from Libs import Client
 from Libs import Folder
@@ -28,6 +29,7 @@ def main(limit=None, offset=None):
         last_disp = offset + limit
 
     enrollments = Database.get(Database.execute(conn, Database.enrollment_query_string(limit=limit, offset=offset)))
+    start = time()
     for enrollment in enrollments:
         print("Processing enrollment %s/%s..." % (count, last_disp))
         folder_exists = Database.get(Database.execute(conn, Database.folder_exists_query_string(enrollment['class_id'])))
@@ -42,6 +44,10 @@ def main(limit=None, offset=None):
             classfolder = Folder.create(client, title, rootclassfolder_id['folder_id'], enrollment['class_id'])
             Folder.create(client, Utilities.gen_title(enrollment, "s"), classfolder.resource_id.text)
         count += 1
+    elapsed = time() - start
+    elapsed_min = '{0:.2g}'.format(elapsed / 60)
+    min_per_enrol = '{0:.2g}'.format(elapsed / count / 60)
+    print "It took %s to process %s enrollments. (%s mins per enrollment)" % (elapsed_min, count, min_per_enrol)
     conn.close()
 
 # TODO: consider getopt() for make benefit glorious CLI
