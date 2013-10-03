@@ -13,17 +13,16 @@ def main(limit_in=None, offset_in=None):
 
 	if offset_in != None:
 		offset = int(offset_in)
+		count = offset
 	else:
 		offset = None
+		count = 1
+		
 	if limit_in != None:
 		limit = int(limit_in)
 	else:
 		limit = None
-
-	if offset != None:
-		count = offset
-	else:
-		count = 1
+		
 
 	for row in result:
 		if limit != None:
