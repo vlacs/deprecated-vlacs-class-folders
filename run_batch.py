@@ -3,6 +3,7 @@
 __author__ = 'mgeorge@vlacs.org (Mike George)'
 
 import sys
+import getopt
 from Libs import Database
 from Libs import Client
 from Libs import Folder
@@ -45,9 +46,19 @@ def main(limit=None, offset=None):
 
 # TODO: consider getopt() for make benefit glorious CLI
 if __name__ == "__main__":
-    if len(sys.argv) > 2:
-        main(sys.argv[1], sys.argv[2])
-    elif len(sys.argv) > 1:
-        main(sys.argv[1])
-    else:
-        main()
+    limit = None
+    offset = None
+
+    try:
+        opts, args = getopt.getopt(argv, 'l:o', ['limit=', 'offset='])
+    except getopt.GetoptError:
+        print("Usage: python run_batch.py --limit n --offset n")
+        sys.exit(2)
+
+    for opt, arg in opts:
+        if opt in ('-l', '--limit'):
+            limit = arg
+        elif opt in ('-o', '--offset'):
+            offset = arg
+
+    main(limit, offset)
