@@ -1,6 +1,7 @@
 CREATE OR REPLACE VIEW view_vlacs_class_folders AS
 SELECT mmc.master_course_idstr AS master_id,
 	   mce.classroom_idstr AS class_id,
+	   mc.name AS course_full_name,
 	   mmc.name AS course_name,
 	   mce.sis_user_idstr AS student_id,
 	   msu.firstname AS student_firstname,
