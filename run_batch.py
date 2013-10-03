@@ -50,8 +50,9 @@ def main(limit=None, offset=None):
         min_per_enrol = '{0:.2g}'.format(elapsed / (count-offset) / 60 /60)
         print "It took %s min(s) to process %s enrollments. (%s sec(s) per enrollment)" % (elapsed_min, count-offset, min_per_enrol)
     else:
-        min_per_enrol = '{0:.2g}'.format(elapsed / count / 60 /60) 
-        conn.close(print "It took %s min(s) to process %s enrollments. (%s sec(s) per enrollment)" % (elapsed_min, count, min_per_enrol))
+        min_per_enrol = '{0:.2g}'.format(elapsed / count / 60 /60)
+        print "It took %s min(s) to process %s enrollments. (%s sec(s) per enrollment)" % (elapsed_min, count, min_per_enrol)        
+    conn.close()
 
 # TODO: consider getopt() for make benefit glorious CLI
 if __name__ == "__main__":
