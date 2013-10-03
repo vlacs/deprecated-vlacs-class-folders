@@ -11,10 +11,23 @@ def main(limit_in=None, offset_in=None):
 	result, conn = Database.get(limit=limit_in, offset=offset_in)
 	client = Client.create()
 
-	count = 1
+	offset = offset_in
+	limit = limit_in
+
+	if offset != None:
+		count = offset
+	else:
+		count = 1
 
 	for row in result:
-		print("Processing row %s..." % (count))
+		if limit != None:
+			if offset != None:
+				last = offset_in + limit_in
+				print("Processing row %s/%s..." % (count, last))
+			else:
+				print("Processing row %s/%s..." % (count, limit))
+		else:
+			print("Processing row %s..." % (count))
 		cdb_query = "SELECT class_id, folder_id FROM vlacs_class_folders_structure WHERE class_id = %s;" % row['class_id']
 		check_db, conn_cdb = Database.get(query=cdb_query)
 		if len(list(check_db)) < 1:
