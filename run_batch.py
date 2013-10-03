@@ -2,12 +2,13 @@
 
 __author__ = 'mgeorge@vlacs.org (Mike George)'
 
+import sys
 from Classes import Database
 from Classes import Client
 from Classes import Folder
 
-def main():
-	result, conn = Database.get(limit=30)
+def main(limit_in=None, offset_in=None):
+	result, conn = Database.get(limit=limit_in, offset=offset_in)
 	client = Client.create()
 
 	count = 1
@@ -36,4 +37,9 @@ def main():
 	Database.close(conn, result)
 
 if __name__ == "__main__":
-	main()
+	if len(sys.argv) > 2:
+		main(sys.argv[1], sys.argv[2])
+	elif len(sys.argv) > 1:
+		main(sys.argv[1])
+	else:
+		main()

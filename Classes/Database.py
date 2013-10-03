@@ -21,19 +21,27 @@ def execute(query):
 	cursor.close()
 	conn.close()
 
-def get(query="e", limit="e"):
+def get(query=None, limit=None, offset=None):
 	conn = connect()
 	cursor = conn.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
-	if query == "e":
-		if limit == "e":
-			cursor.execute("SELECT * FROM view_vlacs_class_folders")
+	if query == None:
+		if limit == None and offset == None:
+			cursor.execute("SELECT * FROM view_vlacs_class_folders;")
+		elif offset == None:
+			cursor.execute("SELECT * FROM view_vlacs_class_folders LIMIT(%s);" % (limit))
+		elif limit == None:
+			cursor.execute("SELECT * FROM view_vlacs_class_folders OFFSET(%s);" % (offset))
 		else:
-			cursor.execute("SELECT * FROM view_vlacs_class_folders LIMIT(%s)" % (limit))
+			cursor.execute("SELECT * FROM view_vlacs_class_folders LIMIT(%s) OFFSET(%s);" % (limit, offset))
 	else:
-		if limit == "e":
+		if limit == None and offset == None:
 			cursor.execute(query)
+		elif offset == None:
+			cursor.execute("%s LIMIT(%s);" % (query, limit))
+		elif limit == None:
+			cursor.execute("%s OFFSET(%s);" % (query, offset))
 		else:
-			cursor.execute("%s LIMIT(%s)", query, limit)
+			cursor.execute("%s LIMIT(%s) OFFSET(%s);" % (query, limit, offset))
 
 	return cursor, conn
 
