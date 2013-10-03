@@ -13,8 +13,12 @@ def main(limit_in=None, offset_in=None):
 
 	if offset_in != None:
 		offset = int(offset_in)
+	else:
+		offset = None
 	if limit_in != None:
 		limit = int(limit_in)
+	else:
+		limit = None
 
 	if offset != None:
 		count = offset
