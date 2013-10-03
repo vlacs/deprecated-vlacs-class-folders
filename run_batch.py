@@ -32,7 +32,7 @@ def main(limit=None, offset=None):
         print("Processing enrollment %s/%s..." % (count, last_disp))
         folder_exists = Database.get(Database.execute(conn, Database.folder_exists_query_string(enrollment['class_id'])))
         if folder_exists:
-            print "Class Folder Found..."
+            print "Class Folder Found, %s..." % (Utilities.gen_title(enrollment, "s"))
             Folder.create(client, Utilities.gen_title(enrollment, "s"), folder_exists['folder_id'])
         else:
             title = Utilities.gen_title(enrollment, "c")

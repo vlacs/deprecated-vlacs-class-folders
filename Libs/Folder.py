@@ -17,13 +17,17 @@ def create(client, title, parent=None, class_id=None):
     #Use the Client Object to create the folder in the root of their Drive or the collection specified.
     folder = client.CreateResource(folder, collection=parent)
 
+    conn = Database.connect()
+
     #On success insert into database
     if parent != None and class_id != None:
-        Database.execute("INSERT INTO vlacs_class_folders_structure (class_id, folder_name, folder_id, folder_parent) VALUES ('%s', '%s', '%s', '%s');" % (class_id, Utilities.clean_title(title), folder.resource_id.text, parent.resource_id.text))
+        Database.insert(conn, "INSERT INTO vlacs_class_folders_structure (class_id, folder_name, folder_id, folder_parent) VALUES ('%s', '%s', '%s', '%s');" % (class_id, Utilities.clean_title(title), folder.resource_id.text, parent.resource_id.text))
     elif parent != None:
-        Database.execute("INSERT INTO vlacs_class_folders_structure (folder_name, folder_id, folder_parent) VALUES ('%s', '%s', '%s');" % (Utilities.clean_title(title), folder.resource_id.text, parent.resource_id.text))
+        Database.insert(conn, "INSERT INTO vlacs_class_folders_structure (folder_name, folder_id, folder_parent) VALUES ('%s', '%s', '%s');" % (Utilities.clean_title(title), folder.resource_id.text, parent.resource_id.text))
     else:
-        Database.execute("INSERT INTO vlacs_class_folders_structure (folder_name, folder_id) VALUES ('%s', '%s');" % (Utilities.clean_title(title), folder.resource_id.text))
+        Database.insert(conn, "INSERT INTO vlacs_class_folders_structure (folder_name, folder_id) VALUES ('%s', '%s');" % (Utilities.clean_title(title), folder.resource_id.text))
+
+    conn.close()
 
     return folder
 
@@ -41,8 +45,10 @@ def share(client, folder_res_id, share_with, permission='writer'):
 
         client.AddAclEntry(folder, acl_entry, send_notifications=False)
 
+        conn = Database.connect()
         #On success insert into database
-        Database.execute("INSERT INTO vlacs_class_folders_shared (folder_id, shared_email, shared_permission) VALUES ('%s', '%s', '%s');" % (folder_res_id, share_with, permission))
+        Database.insert("INSERT INTO vlacs_class_folders_shared (folder_id, shared_email, shared_permission) VALUES ('%s', '%s', '%s');" % (folder_res_id, share_with, permission))
+        conn.close()
 
 def unshare(client, folder_res_id, unshare_with):
     folder = client.GetResourceById(folder_id)
@@ -52,4 +58,6 @@ def unshare(client, folder_res_id, unshare_with):
         for e in acl_feed.entry:
             if e.scope.value == unshare_with:
                 client.DeleteAclEntry(e)
-                Database.execute("DELETE FROM vlacs_class_folders_shared WHERE shared_email = ''" % (unshare_with))
+                conn = Database.connect()
+                Database.insert(conn, "DELETE FROM vlacs_class_folders_shared WHERE shared_email = ''" % (unshare_with))
+                conn.close()

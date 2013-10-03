@@ -31,6 +31,12 @@ def execute(conn, query):
     cursor.execute(query)
     return cursor
 
+def insert(conn, statement):
+    cursor = conn.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
+    cursor.execte(statement)
+    conn.commit()
+    cursor.close()
+
 def get(cursor):
     results = cursor.fetchall()
     cursor.close
@@ -42,5 +48,4 @@ def get(cursor):
         return getone(results)
 
 def getone(result_list):
-    print "DEBUG: result_list[0] = %s" % result_list[0]
     return result_list[0]
