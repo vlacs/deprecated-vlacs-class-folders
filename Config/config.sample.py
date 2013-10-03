@@ -9,6 +9,10 @@ DEBUG = False
 USERNAME = ""
 PASSWORD = ""
 
+#Root Folder Names
+ROOT_CLASS_FOLDER = ""
+ROOT_ARCHIVE_FOLDER = ""
+
 #APP NAME
 APP_NAME = "vlacs-class-folders"
 
