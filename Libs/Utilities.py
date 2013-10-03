@@ -36,7 +36,7 @@ def clean_name(name):
     return clean
 
 def course_version(course_full_name):
-    course_version = course_full_version
+    course_version = course_full_name
     course_version = course_version.split("-")
     course_version = course_version[1].split("_")
 
