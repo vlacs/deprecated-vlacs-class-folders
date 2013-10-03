@@ -33,7 +33,7 @@ def execute(conn, query):
 
 def insert(conn, statement):
     cursor = conn.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
-    cursor.execte(statement)
+    cursor.execute(statement)
     conn.commit()
     cursor.close()
 
