@@ -13,14 +13,14 @@ from Classes import Database
 from Classes import Folder
 
 def main():
-	Database.execute("CREATE TABLE IF NOT EXISTS vlacs_class_folders_structure(id serial, class_id integer, folder_name text, folder_id text, folder_parent text);")
-	Database.execute("CREATE TABLE IF NOT EXISTS vlacs_class_folders_shared(id serial, folder_id text, shared_email text, shared_permission text);")
+    Database.execute("CREATE TABLE IF NOT EXISTS vlacs_class_folders_structure(id serial, class_id integer, folder_name text, folder_id text, folder_parent text);")
+    Database.execute("CREATE TABLE IF NOT EXISTS vlacs_class_folders_shared(id serial, folder_id text, shared_email text, shared_permission text);")
 
-	#Create gdata client object
-	client = Client.create()
+    #Create gdata client object
+    client = Client.create()
 
-	Folder.create(client, 'VLACS Archive')
-	Folder.create(client, 'VLACS Class Folders')
+    Folder.create(client, 'VLACS Archive')
+    Folder.create(client, 'VLACS Class Folders')
 
 if __name__ == "__main__":
-	main()
+    main()
