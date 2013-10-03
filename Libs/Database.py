@@ -36,11 +36,14 @@ def get(cursor):
     cursor.close
     print "DEBUG: results = %s" % results
     if len(results) < 1:
+        print "DEBUG: results = %s" % results
         return False
     elif len(results) > 1:
+        print "DEBUG: results = %s" % results
         return results
     else:
         getone(results)
 
 def getone(result_list):
+    print "DEBUG result_list[0] = %s" $ result_list[0]
     return result_list[0]
