@@ -34,7 +34,7 @@ def execute(conn, query):
 def get(cursor):
     results = cursor.fetchall()
     cursor.close
-
+    print "DEBUG: results = %s" % results
     if len(results) < 1:
         return False
     elif len(results) > 1:
