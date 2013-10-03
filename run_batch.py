@@ -6,6 +6,7 @@ import sys
 from Classes import Database
 from Classes import Client
 from Classes import Folder
+from Classes import Utilities
 
 def main(limit_in=None, offset_in=None):
 	result, conn = Database.get(limit=limit_in, offset=offset_in)
@@ -17,7 +18,7 @@ def main(limit_in=None, offset_in=None):
 	else:
 		offset = None
 		count = 1
-		
+
 	if limit_in != None:
 		limit = int(limit_in)
 	else:
@@ -40,15 +41,15 @@ def main(limit_in=None, offset_in=None):
 			rootclassfolder_id_db, conn_rcf = Database.get(query="SELECT folder_id FROM vlacs_class_folders_structure WHERE folder_name = 'VLACS Class Folders';")
 			rootclassfolder_id = rootclassfolder_id_db.fetchone()
 
-			classfolder = Folder.create(client, row['course_name'] + " - " + row['teacher_firstname'] + " " + row['teacher_lastname'] + " - " + row['class_id'], rootclassfolder_id['folder_id'], row['class_id'])
-			Folder.create(client, row['student_lastname'] + ", " + row['student_firstname'] + " - Assignments", classfolder.resource_id.text)
+			classfolder = Folder.create(client, row['course_name'] + " - " + Utilities.clean_name(row['teacher_firstname']) + " " + Utilities.clean_name(row['teacher_lastname']) + " - " + row['class_id'], rootclassfolder_id['folder_id'], row['class_id'])
+			Folder.create(client, Utilities.clean_name(row['student_lastname']) + ", " + Utilities.clean_name(row['student_firstname']) + " - Assignments", classfolder.resource_id.text)
 			Database.close(conn_rcf, rootclassfolder_id_db)
 		else:
 			print "Class Folder Found..."
 			#For some reason the script doesn't work without this redundant database call...
 			classfolder_id_db, conn_cf = Database.get(query=cdb_query)
 			classfolder_id = classfolder_id_db.fetchone()
-			Folder.create(client, row['student_lastname'] + ", " + row['student_firstname'] + " - Assignments", classfolder_id['folder_id'])
+			Folder.create(client, Utilities.clean_name(row['student_lastname']) + ", " + Utilities.clean_name(row['student_firstname']) + " - Assignments", classfolder_id['folder_id'])
 			Database.close(conn_cf, classfolder_id_db)
 		count += 1
 	Database.close(conn_cdb, check_db)

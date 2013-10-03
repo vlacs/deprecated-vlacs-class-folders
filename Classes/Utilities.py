@@ -6,7 +6,12 @@ import string
 
 def clean_title(title):
 	clean = title
-	clean = string.capwords(clean)
 	clean = string.replace(clean, "'", "''")
+
+	return clean
+
+def clean_name(name):
+	clean = title
+	clean = string.capitalize(clean)
 
 	return clean
