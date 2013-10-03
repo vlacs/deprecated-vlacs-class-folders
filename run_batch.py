@@ -30,7 +30,7 @@ def main(limit=None, offset=None):
     enrollments = Database.get(Database.execute(conn, Database.enrollment_query_string(limit=limit, offset=offset)))
     for enrollment in enrollments:
         print("Processing enrollment %s/%s..." % (count, last_disp))
-        folder_exists = Database.get(Database.execute(conn, Database.folder_exists_query_string(query=enrollment['class_id'])))
+        folder_exists = Database.get(Database.execute(conn, Database.folder_exists_query_string(enrollment['class_id'])))
         if folder_exists:
             print "Class Folder Found..."
             Folder.create(client, Utilities.gen_title(enrollment, "s"), folder_exists['folder_id'])
