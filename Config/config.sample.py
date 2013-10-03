@@ -14,8 +14,8 @@ APP_NAME = "vlacs-class-folders"
 
 #Postgres Database Connection Information
 DATABASE = {
-	'host' : '',
-	'database' : '',
-	'user' : '',
-	'password' : '',
+    'host' : '',
+    'database' : '',
+    'user' : '',
+    'password' : '',
 }
