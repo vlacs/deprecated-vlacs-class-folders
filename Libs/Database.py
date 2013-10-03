@@ -18,7 +18,7 @@ def enrollment_query_string(limit=None, offset=None):
         query_string = "SELECT * FROM view_vlacs_class_folders LIMIT(%s) OFFSET(%s)" % (limit, offset)
     elif limit != None:
         query_string = "SELECT * FROM view_vlacs_class_folders LIMIT(%s)" % (limit)
-    else:
+    elif offset != None:
         query_string = "SELECT * FROM view_vlacs_class_folders OFFSET(%s)" % (offset)
     return query_string
 
