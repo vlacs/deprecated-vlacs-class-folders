@@ -50,7 +50,6 @@ This program is intended to run on an internal VLACS server (Ubuntu) but it shou
 Python, GData, and psycopg2 will.
 
 ### License ###
-
 vlacs-class-folders by [Mike George](http://mikegeorge.org) is licensed under a [Creative Commons Attribution-ShareAlike 3.0 United States License](http://creativecommons.org/licenses/by-sa/3.0/us/deed.en_US).
 
 <p align="center"><a href="http://vlacs.org/" target="_blank"><img src="http://vlacs.org/images/VLACS_logo_no_dep_website.png" alt="VLACS Logo"/></a><br /><a rel="license" href="http://creativecommons.org/licenses/by-sa/3.0/us/deed.en_US"><img alt="Creative Commons License" style="border-width:0" src="http://i.creativecommons.org/l/by-sa/3.0/us/88x31.png" /></a></p>
