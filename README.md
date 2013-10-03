@@ -46,8 +46,8 @@ After the first batch you can use the offset parameter to process the next set o
 
 Currently the script orders by the master id and classroom id.
 
-This program is intended to run on an internal VLACS server (linux) and will leverage the GData Python Client Library.
-When it's finished it should be able to run anywhere python does.
+This program is intended to run on an internal VLACS server (Ubuntu) but it should run anywhere
+Python, GData, and psycopg2 will.
 
 vlacs-class-folders by [Mike George](http://mikegeorge.org) is licensed under a [Creative Commons Attribution-ShareAlike 3.0 United States License](http://creativecommons.org/licenses/by-sa/3.0/us/deed.en_US).
 
