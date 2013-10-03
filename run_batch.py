@@ -37,7 +37,7 @@ def main(limit=None, offset=None):
         else:
             title = Utilities.gen_title(enrollment, "c")
             print "Class Folder not found, creating: %s" % title
-            rootclassfolder_id = Database.get(Database.execute(conn, query="SELECT folder_id FROM vlacs_class_folders_structure WHERE folder_name = ''" % (config.ROOT_CLASS_FOLDER)))
+            rootclassfolder_id = Database.get(Database.execute(conn, query="SELECT folder_id FROM vlacs_class_folders_structure WHERE folder_name = '%s'" % (config.ROOT_CLASS_FOLDER)))
 
             classfolder = Folder.create(client, title, rootclassfolder_id['folder_id'], enrollment['class_id'])
             Folder.create(client, Utilities.gen_title(enrollment, "s"), classfolder.resource_id.text)
