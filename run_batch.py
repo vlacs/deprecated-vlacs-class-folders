@@ -11,8 +11,8 @@ def main(limit_in=None, offset_in=None):
 	result, conn = Database.get(limit=limit_in, offset=offset_in)
 	client = Client.create()
 
-	offset = offset_in
-	limit = limit_in
+	offset = int(offset_in)
+	limit = int(limit_in)
 
 	if offset != None:
 		count = offset
