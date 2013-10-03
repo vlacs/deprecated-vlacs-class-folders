@@ -45,5 +45,5 @@ def get(cursor):
         getone(results)
 
 def getone(result_list):
-    print "DEBUG result_list[0] = %s" $ result_list[0]
+    print "DEBUG result_list[0] = %s" % result_list[0]
     return result_list[0]
