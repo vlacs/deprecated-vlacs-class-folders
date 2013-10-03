@@ -30,6 +30,22 @@ The following will be implemented using Python.
 * pyscopg2
 * libpq-dev
 
+## Instructions ##
+Before you run the first batch be sure to run create_structure.py so you have the root folders in
+Google Drive and the tables in the Postgres Database.
+
+Also, be sure that the database has the proper view in it ([view.sql](https://github.com/vlacs/vlacs-class-folders/blob/master/view.sql))
+
+Now you are ready to run a batch, here is the command line syntax:
+:$ python run_batch.py <limit> <offset>
+
+For the first batch it will be fine just to provide a limit, or if you'd like to process the entire
+database you will not need to provide any parameters.
+
+After the first batch you can use the offset parameter to process the next set of records.
+
+Currently the script orders by the master id and classroom id.
+
 This program is intended to run on an internal VLACS server (linux) and will leverage the GData Python Client Library.
 When it's finished it should be able to run anywhere python does.
 
