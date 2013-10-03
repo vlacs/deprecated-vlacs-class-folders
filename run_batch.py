@@ -32,9 +32,11 @@ def main(limit=None, offset=None):
         print("Processing enrollment %s/%s..." % (count, last_disp))
         folder_exists = Database.get(Database.execute(conn, Database.folder_exists_query_string(enrollment['class_id'])))
         if folder_exists:
+            print "DEBUG: folder_exists = %s" % folder_exists
             print "Class Folder Found..."
             Folder.create(client, Utilities.gen_title(enrollment, "s"), folder_exists['folder_id'])
         else:
+            print "DEBUG: folder_exists = %s" % folder_exists
             title = Utilities.gen_title(enrollment, "c")
             print "Class Folder not found, creating: %s" % title
             rootclassfolder_id = Database.get(Database.execute(conn, query="SELECT folder_id FROM vlacs_class_folders_structure WHERE folder_name = '%s'" % (config.ROOT_CLASS_FOLDER)))
@@ -46,19 +48,9 @@ def main(limit=None, offset=None):
 
 # TODO: consider getopt() for make benefit glorious CLI
 if __name__ == "__main__":
-    limit = None
-    offset = None
-
-    try:
-        opts, args = getopt.getopt(sys.argv, 'l:o', ['limit=', 'offset='])
-    except getopt.GetoptError:
-        print("Usage: python run_batch.py --limit n --offset n")
-        sys.exit(2)
-
-    for opt, arg in opts:
-        if opt in ('-l', '--limit'):
-            limit = arg
-        elif opt in ('-o', '--offset'):
-            offset = arg
-
-    main(limit, offset)
+    if len(sys.argv) > 2:
+        main(sys.argv[1], sys.argv[2])
+    elif len(sys.argv) > 1:
+        main(sys.argv[1])
+    else:
+        main()
