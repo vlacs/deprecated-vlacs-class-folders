@@ -11,8 +11,10 @@ def main(limit_in=None, offset_in=None):
 	result, conn = Database.get(limit=limit_in, offset=offset_in)
 	client = Client.create()
 
-	offset = int(offset_in)
-	limit = int(limit_in)
+	if offset_in != None:
+		offset = int(offset_in)
+	if limit_in != None:
+		limit = int(limit_in)
 
 	if offset != None:
 		count = offset
@@ -22,7 +24,7 @@ def main(limit_in=None, offset_in=None):
 	for row in result:
 		if limit != None:
 			if offset != None:
-				last = offset_in + limit_in
+				last = int(offset_in) + int(limit_in)
 				print("Processing row %s/%s..." % (count, last))
 			else:
 				print("Processing row %s/%s..." % (count, limit))
