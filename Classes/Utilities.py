@@ -11,7 +11,7 @@ def clean_title(title):
 	return clean
 
 def clean_name(name):
-	clean = title
+	clean = name
 	clean = string.capitalize(clean)
 
 	return clean
