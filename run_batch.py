@@ -50,7 +50,7 @@ if __name__ == "__main__":
     offset = None
 
     try:
-        opts, args = getopt.getopt(argv, 'l:o', ['limit=', 'offset='])
+        opts, args = getopt.getopt(sys.argv, 'l:o', ['limit=', 'offset='])
     except getopt.GetoptError:
         print("Usage: python run_batch.py --limit n --offset n")
         sys.exit(2)
