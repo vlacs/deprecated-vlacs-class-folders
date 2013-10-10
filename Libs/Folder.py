@@ -31,6 +31,31 @@ def create(client, title, parent=None, class_id=None):
 
     return folder
 
+#Create an empty folder in Google Drive
+def create_flat(client, title, collection, parent=None, class_id=None):
+    #Initialize folder object with title
+    folder = gdata.docs.data.Resource(type='folder', title=title)
+
+    if parent != None:
+        parent = client.GetResourceById(parent)
+
+    #Use the Client Object to create the folder in the root of their Drive or the collection specified.
+    folder = client.CreateResource(folder, collection=collection)
+
+    conn = Database.connect()
+
+    #On success insert into database
+    if parent != None and class_id != None:
+        Database.insert(conn, "INSERT INTO vlacs_class_folders_structure (class_id, folder_name, folder_id, folder_parent) VALUES ('%s', '%s', '%s', '%s');" % (class_id, Utilities.clean_title(title), folder.resource_id.text, parent.resource_id.text))
+    elif parent != None:
+        Database.insert(conn, "INSERT INTO vlacs_class_folders_structure (folder_name, folder_id, folder_parent) VALUES ('%s', '%s', '%s');" % (Utilities.clean_title(title), folder.resource_id.text, parent.resource_id.text))
+    else:
+        Database.insert(conn, "INSERT INTO vlacs_class_folders_structure (folder_name, folder_id) VALUES ('%s', '%s');" % (Utilities.clean_title(title), folder.resource_id.text))
+
+    conn.close()
+
+    return folder
+
 def share(client, folder_res_id, share_with, permission='writer'):
     #Check if already shared with person
     result = Database.get(query="SELECT shared_email FROM vlacs_class_folders_shared WHERE shared_email = '%s';" % (share_with))
