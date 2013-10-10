@@ -36,8 +36,8 @@ def create_flat(client, title, root_collection, parent=None, class_id=None):
     #Initialize folder object with title
     folder = gdata.docs.data.Resource(type='folder', title=title)
 
-    if parent != None:
-        parent = client.GetResourceById(parent)
+    if root_collection != None:
+        root_collection = client.GetResourceById(root_collection)
 
     #Use the Client Object to create the folder in the root of their Drive or the collection specified.
     folder = client.CreateResource(folder, collection=root_collection)
