@@ -86,3 +86,9 @@ def unshare(client, folder_res_id, unshare_with):
                 conn = Database.connect()
                 Database.insert(conn, "DELETE FROM vlacs_class_folders_shared WHERE shared_email = ''" % (unshare_with))
                 conn.close()
+
+def copy(client, folder_res_id, copy_to_res_id):
+    copy_folder = client.GetResourceById(folder_res_id)
+    copy_to_folder = client.GetResourceById(copy_to_res_id)
+
+    client.MoveResource(copy_folder, copy_to_folder, True)
