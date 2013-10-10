@@ -1,0 +1,15 @@
+- VLACS Class Folders
+- VLACS Teacher
+- - Students
+- - - LName, FName
+- - - - Master Course Name
+- - - - - Assignments
+- - Courses
+- - - Master Course Name
+- - - - Classroom
+- - - - - Class Files
+- - - - - SLName, SFName - Assignments
+- VLACS Student
+- - Master Course Name
+- - - LName, FName - Assignments
+- - - Class Files
