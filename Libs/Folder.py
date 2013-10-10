@@ -32,7 +32,7 @@ def create(client, title, parent=None, class_id=None):
     return folder
 
 #Create an empty folder in Google Drive
-def create_flat(client, title, collection, parent=None, class_id=None):
+def create_flat(client, title, root_collection, parent=None, class_id=None):
     #Initialize folder object with title
     folder = gdata.docs.data.Resource(type='folder', title=title)
 
@@ -40,7 +40,7 @@ def create_flat(client, title, collection, parent=None, class_id=None):
         parent = client.GetResourceById(parent)
 
     #Use the Client Object to create the folder in the root of their Drive or the collection specified.
-    folder = client.CreateResource(folder, collection=collection)
+    folder = client.CreateResource(folder, collection=root_collection)
 
     conn = Database.connect()
 
