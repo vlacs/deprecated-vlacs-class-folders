@@ -46,9 +46,9 @@ def create_flat(client, title, root_collection, parent=None, class_id=None):
 
     #On success insert into database
     if parent != None and class_id != None:
-        Database.insert(conn, "INSERT INTO vlacs_class_folders_structure (class_id, folder_name, folder_id, folder_parent) VALUES ('%s', '%s', '%s', '%s');" % (class_id, Utilities.clean_title(title), folder.resource_id.text, parent.resource_id.text))
+        Database.insert(conn, "INSERT INTO vlacs_class_folders_structure (class_id, folder_name, folder_id, folder_parent) VALUES ('%s', '%s', '%s', '%s');" % (class_id, Utilities.clean_title(title), folder.resource_id.text, parent))
     elif parent != None:
-        Database.insert(conn, "INSERT INTO vlacs_class_folders_structure (folder_name, folder_id, folder_parent) VALUES ('%s', '%s', '%s');" % (Utilities.clean_title(title), folder.resource_id.text, parent.resource_id.text))
+        Database.insert(conn, "INSERT INTO vlacs_class_folders_structure (folder_name, folder_id, folder_parent) VALUES ('%s', '%s', '%s');" % (Utilities.clean_title(title), folder.resource_id.text, parent))
     else:
         Database.insert(conn, "INSERT INTO vlacs_class_folders_structure (folder_name, folder_id) VALUES ('%s', '%s');" % (Utilities.clean_title(title), folder.resource_id.text))
 
