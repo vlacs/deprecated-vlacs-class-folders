@@ -66,9 +66,9 @@ def reset():
             client.DeleteResource(resource, True)
             print "Resource deleted."
     except gdata.client.RequestError as e:
-        if e.status == "400":
+        if e.status == 400 :
             print "That would be a programming error..."
-        elif e.status == "500":
+        elif e.status == 500:
             print "That is a server error, you should retry..."
 
     Database.execute(conn, "DELETE FROM vlacs_class_folders_structure WHERE id > 2")
