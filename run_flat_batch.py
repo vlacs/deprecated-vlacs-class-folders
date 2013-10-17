@@ -33,6 +33,7 @@ def main(limit=None, offset=None):
         last_disp = offset + limit
 
     enrollments = Database.get(Database.execute(conn, Database.enrollment_query_string(limit=limit, offset=offset)))
+    print "DEBUG:", enrollments
     start = time()
     for enrollment in enrollments:
         try:
