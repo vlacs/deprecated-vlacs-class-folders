@@ -37,13 +37,13 @@ def main(limit=None, offset=None):
         
         if folder_exists:
             print "Class Folder Found, %s..." % (Utilities.gen_title(enrollment, "c"))
-            print Folder.create_flat(client, Utilities.gen_title(enrollment, "s"), rootclassfolder_id['folder_id'], folder_exists['folder_id'])
+            Folder.create_flat(client, Utilities.gen_title(enrollment, "s"), rootclassfolder_id['folder_id'], folder_exists['folder_id'])
         else:
             title = Utilities.gen_title(enrollment, "c")
             print "Class Folder not found, creating: %s" % title
 
-            print classfolder = Folder.create_flat(client, title, rootclassfolder_id['folder_id'], rootclassfolder_id['folder_id'], enrollment['class_id'])
-            print Folder.create_flat(client, Utilities.gen_title(enrollment, "s"), rootclassfolder_id['folder_id'], classfolder.resource_id.text)
+            classfolder = Folder.create_flat(client, title, rootclassfolder_id['folder_id'], rootclassfolder_id['folder_id'], enrollment['class_id'])
+            Folder.create_flat(client, Utilities.gen_title(enrollment, "s"), rootclassfolder_id['folder_id'], classfolder.resource_id.text)
         count += 1
     elapsed = time() - start
     elapsed_min = '{0:.2g}'.format(elapsed / 60)
