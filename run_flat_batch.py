@@ -92,8 +92,5 @@ if __name__ == "__main__":
             inputfile = arg
         elif opt in ("-o", "--offset"):
             outputfile = arg
-        else:
-            limit = None
-            offset = None
     print 'Limit is:', limit
     print 'Offset is:', offset
