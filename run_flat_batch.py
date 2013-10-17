@@ -24,13 +24,8 @@ def main(limit=None, offset=None):
         offset = int(offset)
         count = offset
 
-    #last_disp = "-"
-    #if limit != None:
-    #    limit = int(limit)
-    #    last_disp = limit
-
-    #if limit != None and offset != None:
-    #    last_disp = offset + limit
+    if limit != None:
+        last_disp = limit
 
     enrollments = Database.get(Database.execute(conn, Database.enrollment_query_string(limit=limit, offset=offset)))
     last_disp = len(enrollments)
@@ -62,14 +57,17 @@ def main(limit=None, offset=None):
             count += 1
         except gdata.client.RequestError as e:
             print "ERROR:", e.status
+            count += 1
 
     elapsed = time() - start
     elapsed_min = '{0:.2g}'.format(elapsed / 60)
     if offset != None:
-        print "It took %s min(s) to process %s enrollments." % (elapsed_min, count-offset)
+        enrollments_min = elapsed_min / count-offset
+        print "It took %s min(s) to process %s enrollments. (%s enrollments /min" % (elapsed_min, count-offset, enrollments_min)
         print "%s classrooms containing %s students were processed successfully." % (classroom_count, student_count)
     else:
-        print "It took %s min(s) to process %s enrollments." % (elapsed_min, count)
+        enrollments_min = elapsed_min / count
+        print "It took %s min(s) to process %s enrollments." % (elapsed_min, count, enrollments_min)
         print "%s classrooms containing %s students were processed." % (classroom_count, student_count)       
     conn.close()
 
