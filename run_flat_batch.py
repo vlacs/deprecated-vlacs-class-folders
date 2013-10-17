@@ -34,6 +34,9 @@ def main(limit=None, offset=None):
 
     enrollments = Database.get(Database.execute(conn, Database.enrollment_query_string(limit=limit, offset=offset)))
     last_disp = len(enrollments)
+    if offset != None:
+        last_disp = len(enrollments) + offset
+
     start = time()
     for enrollment in enrollments:
         try:
@@ -64,7 +67,7 @@ def main(limit=None, offset=None):
     elapsed_min = '{0:.2g}'.format(elapsed / 60)
     if offset != None:
         print "It took %s min(s) to process %s enrollments." % (elapsed_min, count-offset)
-        print "%s classrooms containing %s students were processed." % (classroom_count, student_count)
+        print "%s classrooms containing %s students were processed successfully." % (classroom_count, student_count)
     else:
         print "It took %s min(s) to process %s enrollments." % (elapsed_min, count)
         print "%s classrooms containing %s students were processed." % (classroom_count, student_count)       
