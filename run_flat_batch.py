@@ -50,7 +50,7 @@ def main(limit=None, offset=None):
         except gdata.client.RequestError as e:
             if folder_exists:
                 print e.status, studentfolder
-            elif:
+            else:
                 print e.status, classfoder, studentfolder
 
     elapsed = time() - start
