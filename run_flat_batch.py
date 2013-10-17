@@ -32,20 +32,27 @@ def main(limit=None, offset=None):
     enrollments = Database.get(Database.execute(conn, Database.enrollment_query_string(limit=limit, offset=offset)))
     start = time()
     for enrollment in enrollments:
-        print("Processing enrollment %s/%s..." % (count, last_disp))
-        folder_exists = Database.get(Database.execute(conn, Database.folder_exists_query_string(enrollment['class_id'])))
-        rootclassfolder_id = Database.get(Database.execute(conn, query="SELECT folder_id FROM vlacs_class_folders_structure WHERE folder_name = '%s'" % (config.ROOT_CLASS_FOLDER)))
-        
-        if folder_exists:
-            print "Class Folder Found, %s..." % (Utilities.gen_title(enrollment, "c"))
-            Folder.create_flat(client, Utilities.gen_title(enrollment, "s"), rootclassfolder_id['folder_id'], folder_exists['folder_id'])
-        else:
-            title = Utilities.gen_title(enrollment, "c")
-            print "Class Folder not found, creating: %s" % title
+        try:
+            print("Processing enrollment %s/%s..." % (count, last_disp))
+            folder_exists = Database.get(Database.execute(conn, Database.folder_exists_query_string(enrollment['class_id'])))
+            rootclassfolder_id = Database.get(Database.execute(conn, query="SELECT folder_id FROM vlacs_class_folders_structure WHERE folder_name = '%s'" % (config.ROOT_CLASS_FOLDER)))
+            
+            if folder_exists:
+                print "Class Folder Found, %s..." % (Utilities.gen_title(enrollment, "c"))
+                studentfolder = Folder.create_flat(client, Utilities.gen_title(enrollment, "s"), rootclassfolder_id['folder_id'], folder_exists['folder_id'])
+            else:
+                title = Utilities.gen_title(enrollment, "c")
+                print "Class Folder not found, creating: %s" % title
 
-            classfolder = Folder.create_flat(client, title, rootclassfolder_id['folder_id'], rootclassfolder_id['folder_id'], enrollment['class_id'])
-            Folder.create_flat(client, Utilities.gen_title(enrollment, "s"), rootclassfolder_id['folder_id'], classfolder.resource_id.text)
-        count += 1
+                classfolder = Folder.create_flat(client, title, rootclassfolder_id['folder_id'], rootclassfolder_id['folder_id'], enrollment['class_id'])
+                studentfolder = Folder.create_flat(client, Utilities.gen_title(enrollment, "s"), rootclassfolder_id['folder_id'], classfolder.resource_id.text)
+            count += 1
+        except gdata.client.RequestError as e:
+            if folder_exists:
+                print e.status, studentfolder
+            elif:
+                print e.status, classfoder, studentfolder
+
     elapsed = time() - start
     elapsed_min = '{0:.2g}'.format(elapsed / 60)
     if offset != None:
@@ -56,32 +63,11 @@ def main(limit=None, offset=None):
         print "It took %s min(s) to process %s enrollments. (%s sec(s) per enrollment)" % (elapsed_min, count, min_per_enrol)        
     conn.close()
 
-def reset():
-    conn = Database.connect()
-
-    client = Client.create()
-    rootclassfolder_id = Database.get(Database.execute(conn, query="SELECT folder_id FROM vlacs_class_folders_structure WHERE folder_name = '%s'" % (config.ROOT_CLASS_FOLDER)))
-    try:
-        for resource in client.GetAllResources(uri="/feeds/default/private/full/%s/contents/-/folder" % rootclassfolder_id):
-            client.DeleteResource(resource, True)
-            print "Resource deleted."
-    except gdata.client.RequestError as e:
-        if e.status == 400 :
-            print "That would be a programming error..."
-        elif e.status == 500:
-            print "That is a server error, you should retry..."
-
-    Database.execute(conn, "DELETE FROM vlacs_class_folders_structure WHERE id > 2")
-
-
 # TODO: consider getopt() for make benefit glorious CLI
 if __name__ == "__main__":
     if len(sys.argv) > 2:
         main(sys.argv[1], sys.argv[2])
     elif len(sys.argv) > 1:
-        if(sys.argv[1] == "reset"):
-            reset()
-        else:
-            main(sys.argv[1])
+        main(sys.argv[1])
     else:
         main()
