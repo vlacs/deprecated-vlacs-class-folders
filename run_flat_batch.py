@@ -38,7 +38,7 @@ def main(limit=None, offset=None):
     for enrollment in enrollments:
         try:
             print("Processing enrollment %s/%s..." % (count, last_disp))
-            folder_exists = Database.get(Database.execute(conn, Database.folder_exists_query_string(enrollment['class_id'])))
+            folder_exists = Database.get(Database.execute(conn, Database.folder_exists_query_string(1)))
             rootclassfolder_id = Database.get(Database.execute(conn, query="SELECT folder_id FROM vlacs_class_folders_structure WHERE folder_name = '%s'" % (config.ROOT_CLASS_FOLDER)))
             
             if folder_exists:
