@@ -63,11 +63,11 @@ def main(limit=None, offset=None):
     elapsed_min = '{0:.2g}'.format(elapsed / 60)
     if offset != None:
         enrollments_min = elapsed_min / count-offset
-        print "It took %s min(s) to process %s enrollments. (%s enrollments /min" % (elapsed_min, count-offset, enrollments_min)
+        print "It took %s min(s) to process %s enrollments. (%s enrollments /min)" % (elapsed_min, count-offset, enrollments_min)
         print "%s classrooms containing %s students were processed successfully." % (classroom_count, student_count)
     else:
         enrollments_min = elapsed_min / count
-        print "It took %s min(s) to process %s enrollments." % (elapsed_min, count, enrollments_min)
+        print "It took %s min(s) to process %s enrollments. (%s enrollments /min)" % (elapsed_min, count, enrollments_min)
         print "%s classrooms containing %s students were processed." % (classroom_count, student_count)       
     conn.close()
 
