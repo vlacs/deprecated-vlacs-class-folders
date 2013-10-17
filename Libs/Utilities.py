@@ -46,6 +46,5 @@ def check_nulls(list):
     for item in list:
         print "DEBUG:", item
         if item == None:
-            return False
-        else:
-            return True
+            print "DEBUG: NULL VALUE"
+    return True
