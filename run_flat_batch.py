@@ -2,7 +2,7 @@
 
 __author__ = 'mgeorge@vlacs.org (Mike George)'
 
-import sys
+import sys, getopt
 import gdata.client
 from time import time
 from Libs import Database
@@ -71,11 +71,29 @@ def main(limit=None, offset=None):
         print "%s classrooms containing %s students were processed." % (classroom_count, student_count)       
     conn.close()
 
+def sync():
+    conn = Database.connect()
+    db_records = Database.get(Database.execute(conn, "SELECT * FROM vlacs_class_folders_structure"))
+
 # TODO: consider getopt() for make benefit glorious CLI
 if __name__ == "__main__":
-    if len(sys.argv) > 2:
-        main(sys.argv[1], sys.argv[2])
-    elif len(sys.argv) > 1:
-        main(sys.argv[1])
-    else:
-        main()
+    limit = None;
+    offset = None;
+    try:
+        opts, args = getopt.getopt(sys.argv[1:],"hl:o:",["help","limit=","offset="])
+    except getopt.GetoptError:
+        print 'run_flat_batch.py [-l <limit> -o <offset>]'
+        sys.exit(2)
+    for opt, arg in opts:
+        if opt in ("-h", "--help"):
+            print 'run_flat_batch.py [-l <limit> -o <offset>]'
+            sys.exit()
+        elif opt in ("-l", "--limit"):
+            inputfile = arg
+        elif opt in ("-o", "--offset"):
+            outputfile = arg
+        else:
+            limit = None
+            offset = None
+    print 'Limit is:', limit
+    print 'Offset is:', offset
