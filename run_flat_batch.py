@@ -16,7 +16,11 @@ def main(limit=None, offset=None):
     conn = Database.connect()
     client = Client.create()
 
-    count = 1
+    count = 0
+    student_count = 0
+    classroom_count = 0
+    error_count = 0
+
     if offset != None:
         offset = int(offset)
         count = offset
@@ -40,27 +44,28 @@ def main(limit=None, offset=None):
             if folder_exists:
                 print "Class Folder Found, %s..." % (Utilities.gen_title(enrollment, "c"))
                 studentfolder = Folder.create_flat(client, Utilities.gen_title(enrollment, "s"), rootclassfolder_id['folder_id'], folder_exists['folder_id'])
+                student_count += 1
             else:
                 title = Utilities.gen_title(enrollment, "c")
                 print "Class Folder not found, creating: %s" % title
 
                 classfolder = Folder.create_flat(client, title, rootclassfolder_id['folder_id'], rootclassfolder_id['folder_id'], enrollment['class_id'])
+                classroom_count += 1
                 studentfolder = Folder.create_flat(client, Utilities.gen_title(enrollment, "s"), rootclassfolder_id['folder_id'], classfolder.resource_id.text)
+                student_count += 1
             count += 1
         except gdata.client.RequestError as e:
-            if folder_exists:
-                print e.status, studentfolder
-            else:
-                print e.status, classfoder, studentfolder
+            
+            print "ERROR:", e.status
 
     elapsed = time() - start
     elapsed_min = '{0:.2g}'.format(elapsed / 60)
     if offset != None:
-        min_per_enrol = '{0:.2g}'.format(elapsed / (count-offset) / 60 /60)
-        print "It took %s min(s) to process %s enrollments. (%s sec(s) per enrollment)" % (elapsed_min, count-offset, min_per_enrol)
+        print "It took %s min(s) to process %s enrollments." % (elapsed_min, count-offset, min_per_enrol)
+        print "%s classrooms containing %s students were processed." % (classroom_count, student_count)
     else:
-        min_per_enrol = '{0:.2g}'.format(elapsed / count / 60 /60)
-        print "It took %s min(s) to process %s enrollments. (%s sec(s) per enrollment)" % (elapsed_min, count, min_per_enrol)        
+        print "It took %s min(s) to process %s enrollments." % (elapsed_min, count, min_per_enrol)
+        print "%s classrooms containing %s students were processed." % (classroom_count, student_count)       
     conn.close()
 
 # TODO: consider getopt() for make benefit glorious CLI
