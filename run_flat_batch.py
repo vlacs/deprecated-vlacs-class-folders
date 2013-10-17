@@ -75,7 +75,6 @@ def sync():
     conn = Database.connect()
     db_records = Database.get(Database.execute(conn, "SELECT * FROM vlacs_class_folders_structure"))
 
-# TODO: consider getopt() for make benefit glorious CLI
 if __name__ == "__main__":
     limit = None;
     offset = None;
