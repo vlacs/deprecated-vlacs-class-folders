@@ -57,12 +57,15 @@ def main(limit=None, offset=None):
 
 def reset():
     conn = Database.connect()
-    
+
     client = Client.create()
     rootclassfolder_id = Database.get(Database.execute(conn, query="SELECT folder_id FROM vlacs_class_folders_structure WHERE folder_name = '%s'" % (config.ROOT_CLASS_FOLDER)))
-    for resource in client.GetAllResources(uri="/feeds/default/private/full/%s/contents/-/folder" % rootclassfolder_id):
-        client.DeleteResource(resource, True)
-        print "Resource deleted."
+    try:
+        for resource in client.GetAllResources(uri="/feeds/default/private/full/%s/contents/-/folder" % rootclassfolder_id):
+            client.DeleteResource(resource, True)
+            print "Resource deleted."
+    except gdata.client.RequestError as e:
+        print e.reason
 
     Database.execute(conn, "DELETE FROM vlacs_class_folders_structure WHERE id > 2")
 
