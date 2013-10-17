@@ -15,7 +15,7 @@ def main(limit=None, offset=None):
     conn = Database.connect()
     client = Client.create()
 
-    count = 0
+    count = 1
     student_count = 0
     classroom_count = 0
     error_count = 0
@@ -24,21 +24,20 @@ def main(limit=None, offset=None):
         offset = int(offset)
         count = offset
 
-    last_disp = "-"
-    if limit != None:
-        limit = int(limit)
-        last_disp = limit
+    #last_disp = "-"
+    #if limit != None:
+    #    limit = int(limit)
+    #    last_disp = limit
 
-    if limit != None and offset != None:
-        last_disp = offset + limit
+    #if limit != None and offset != None:
+    #    last_disp = offset + limit
 
     enrollments = Database.get(Database.execute(conn, Database.enrollment_query_string(limit=limit, offset=offset)))
-    print "DEBUG:", enrollments
+    last_disp = len(enrollments)
     start = time()
     for enrollment in enrollments:
         try:
             print("Processing enrollment %s/%s..." % (count, last_disp))
-            print "DEBUG:", enrollment
             if(Utilities.check_nulls(enrollment)):
                 folder_exists = Database.get(Database.execute(conn, Database.folder_exists_query_string(enrollment['class_id'])))
                 rootclassfolder_id = Database.get(Database.execute(conn, query="SELECT folder_id FROM vlacs_class_folders_structure WHERE folder_name = '%s'" % (config.ROOT_CLASS_FOLDER)))

@@ -44,7 +44,6 @@ def course_version(course_full_name):
 
 def check_nulls(list):
     for k, v in list.items():
-        print "DEBUG:", k, v
         if v == None:
-            print "DEBUG: NULL VALUE"
+            return False
     return True
