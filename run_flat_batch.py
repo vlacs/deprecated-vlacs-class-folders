@@ -4,6 +4,7 @@ __author__ = 'mgeorge@vlacs.org (Mike George)'
 
 import sys
 import getopt
+import gdata.client
 from time import time
 from Libs import Database
 from Libs import Client
