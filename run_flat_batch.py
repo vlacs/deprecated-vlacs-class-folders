@@ -89,8 +89,8 @@ if __name__ == "__main__":
             print 'run_flat_batch.py [-l <limit> -o <offset>]'
             sys.exit()
         elif opt in ("-l", "--limit"):
-            inputfile = arg
+            limit = arg
         elif opt in ("-o", "--offset"):
-            outputfile = arg
+            offset = arg
     print 'Limit is:', limit
     print 'Offset is:', offset
