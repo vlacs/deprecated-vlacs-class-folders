@@ -92,5 +92,4 @@ if __name__ == "__main__":
             limit = arg
         elif opt in ("-o", "--offset"):
             offset = arg
-    print 'Limit is:', limit
-    print 'Offset is:', offset
+    main(limit=limit, offset=offset)
