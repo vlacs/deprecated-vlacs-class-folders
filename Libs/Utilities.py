@@ -41,3 +41,10 @@ def course_version(course_full_name):
     course_version = course_version[1].split("_")
 
     return course_version[0]
+
+def check_nulls(list):
+    for item in list:
+        if item == None:
+            return false
+        else:
+            return true
