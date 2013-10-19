@@ -19,7 +19,7 @@ def main(limit=None, offset=None):
     count = 1
 
     print "******** VLACS CLASS FOLDERS ********"
-    print "(NI) Checking if database and folders exist.."
+    print "(NI) Verifying datbase and root folders exist..."
     # Check for database and folders
 
     print "(NI) Comparing the database with Google Drive..."
@@ -38,8 +38,19 @@ def main(limit=None, offset=None):
     conn.close()
 
 def check_structure(client, conn):
-    Database.insert(conn, "CREATE TABLE IF NOT EXISTS vlacs_class_folders_structure(id serial, class_id integer, folder_name text, folder_id text, folder_parent text);")
-    Database.insert(conn, "CREATE TABLE IF NOT EXISTS vlacs_class_folders_shared(id serial, folder_id text, shared_email text, shared_permission text);")
+    tables_exist = False
+    folders_exist = False
+
+    tables_query = Database.get(Database.execute(conn, "SELECT COUNT(*) FROM pg_tables WHERE schemaname='public' AND tablename LIKE 'vlacs%'"))
+    if tables_query[0] > 1:
+        tables_exist = True
+
+    if !tables_exist:
+        Database.insert(conn, "CREATE TABLE IF NOT EXISTS vlacs_class_folders_structure(id serial, class_id integer, folder_name text, folder_id text, folder_parent text);")
+        Database.insert(conn, "CREATE TABLE IF NOT EXISTS vlacs_class_folders_shared(id serial, folder_id text, shared_email text, shared_permission text);")
+
+    
+
 
     
 

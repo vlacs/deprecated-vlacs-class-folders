@@ -10,7 +10,8 @@ import gdata.docs.data
 def main():
 	client = Client.create()
 
-	folder_count = get_resources('folder:0B7AqvGrb_oO8SDYwem5zcTdrMnM', client)
+	#folder_count = get_resources('folder:0B7AqvGrb_oO8SDYwem5zcTdrMnM', client)
+	folder_count = get_resources('root', client)
 
 	print "Done!"
 
