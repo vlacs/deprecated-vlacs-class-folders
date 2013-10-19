@@ -42,8 +42,8 @@ def course_version(course_full_name):
 
     return course_version[0]
 
-def check_nulls(list):
-    for k, v in list.items():
+def fix_nulls(dict):
+    for k, v in dict.items():
         if v == None:
-            return False
+            dict[k] = k + " - NULL"
     return True
