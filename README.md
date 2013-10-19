@@ -12,6 +12,8 @@ after a student completes the class, drops the class, or fails the class.
 The system also handles name changes for both students and teachers.
 
 ## Structure ##
+* Config
+  + [config.sample.py](https://github.com/vlacs/vlacs-class-folders/blob/master/Config/config.samply.py) - (Must be renamed to config.py)
 * Libraries
   + [Client.py](https://github.com/vlacs/vlacs-class-folders/blob/master/Libs/Client.py) -------- (Easily create Google Data Client)
   + [Database.py](https://github.com/vlacs/vlacs-class-folders/blob/master/Libs/Database.py) --- (Connect to Database and run queries)
