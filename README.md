@@ -35,7 +35,9 @@ First, be sure that your database has the proper view in it ([view.sql](https://
 Now you are ready to run a batch, here is the command line syntax:
 
 :$ python run.py [--limit [limit] --offset [offset] --verbosity [verbosity]]
+
 or
+
 :$ python run.py [-l [limit] -o [offset] -v [verbosity]]
 
 The first time you run the program it will be fine just to provide a limit, or if you'd like to process the entire
