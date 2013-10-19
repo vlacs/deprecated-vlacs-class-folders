@@ -13,12 +13,12 @@ The system also handles name changes for both students and teachers.
 
 ## Structure ##
 * Libraries
-  + [Client.py](https://github.com/vlacs/vlacs-class-folders/blob/master/Libs/Client.py)<----(Easily create Google Data Client)
-  + [Database.py](https://github.com/vlacs/vlacs-class-folders/blob/master/Libs/Database.py)<---(Connect to Database and run queries)
-  + [Folder.py](https://github.com/vlacs/vlacs-class-folders/blob/master/Libs/Folder.py)<----(Create, Share, and Unshare Folders on Google Drive)
-  + [Utilities.py](https://github.com/vlacs/vlacs-class-folders/blob/master/Libs/Utilities.py)<-(Useful methods that can be used throughout the codebase)
+  + [Client.py](https://github.com/vlacs/vlacs-class-folders/blob/master/Libs/Client.py) -------- (Easily create Google Data Client)
+  + [Database.py](https://github.com/vlacs/vlacs-class-folders/blob/master/Libs/Database.py) --- (Connect to Database and run queries)
+  + [Folder.py](https://github.com/vlacs/vlacs-class-folders/blob/master/Libs/Folder.py) ------- (Create, Share, and Unshare Folders on Google Drive)
+  + [Utilities.py](https://github.com/vlacs/vlacs-class-folders/blob/master/Libs/Utilities.py) ------ (Useful methods that can be used throughout the codebase)
 * Files
-  + [run.py](https://github.com/vlacs/vlacs-class-folders/blob/master/run.py)<-------(All-in-One file, check structure of db an google drive, sync, update, etc.)
+  + [run.py](https://github.com/vlacs/vlacs-class-folders/blob/master/run.py) ----------- (All-in-One file, check structure of db an google drive, sync, update, etc.)
 
 ## Dependencies ##
 * python
