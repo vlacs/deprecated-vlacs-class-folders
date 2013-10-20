@@ -107,6 +107,7 @@ def check_structure(client, conn):
             Database.insert(conn, Database.two_value_structure_insert_string(config.ROOT_CLASS_FOLDER, folder_list[config.ROOT_CLASS_FOLDER]))
         elif 'root' not in exists_list_db and 'root' not in exists_list_gd:
             Color.red("--- Root folder is not in Google Drive or the database. Fixing...")
+            print config.ROOT_CLASS_FOLDER
             rcf = Folder.create(conn, client, config.ROOT_CLASS_FOLDER)
 
         if 'teacher' in exists_list_db and 'teacher' not in exists_list_gd:
@@ -118,6 +119,7 @@ def check_structure(client, conn):
             Database.insert(conn, Database.two_value_structure_insert_string(config.ROOT_CLASS_FOLDER, folder_list[config.TEACHER_SHARE_FOLDER]))
         elif 'teacher' not in exists_list_db and 'teacher' not in exists_list_gd:
             Color.red("--- Teacher folder is not in Google Drive or the database. Fixing...")
+            print config.TEACHER_SHARE_FOLDER
             rcf = Folder.create(conn, client, config.TEACHER_SHARE_FOLDER)
 
         if 'student' in exists_list_db and 'student' not in exists_list_gd:
