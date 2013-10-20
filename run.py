@@ -75,9 +75,9 @@ def check_structure(client, conn):
 
     print "Making sure the database has entries for the root folders..."
     # CHECK FOR ROOT LEVEL FOLDERS IN DATABASE #
-    rcf_query = Database.get(Database.execute(conn, "SELECT count(*) FROM vlacs_class_folders_structure WHERE folder_name = %s" % config.ROOT_CLASS_FOLDER))
-    ts_query = Database.get(Database.execute(conn, "SELECT count(*) FROM vlacs_class_folders_structure WHERE folder_name = %s" % config.TEACHER_SHARE_FOLDER))
-    ss_query = Database.get(Database.execute(conn, "SELECT count(*) FROM vlacs_class_folders_structure WHERE folder_name = %s" % config.STUDENT_SHARE_FOLDER))
+    rcf_query = Database.get(Database.execute(conn, "SELECT count(*) FROM vlacs_class_folders_structure WHERE folder_name = '%s'" % config.ROOT_CLASS_FOLDER))
+    ts_query = Database.get(Database.execute(conn, "SELECT count(*) FROM vlacs_class_folders_structure WHERE folder_name = '%s'" % config.TEACHER_SHARE_FOLDER))
+    ss_query = Database.get(Database.execute(conn, "SELECT count(*) FROM vlacs_class_folders_structure WHERE folder_name = '%s'" % config.STUDENT_SHARE_FOLDER))
 
     if rcf_query['count'] > 0:
         print "--- %s exists in the Database." % config.ROOT_CLASS_FOLDER
