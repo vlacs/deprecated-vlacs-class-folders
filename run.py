@@ -58,7 +58,7 @@ def check_structure(client, conn):
 
     print "Making sure the root folders exist in Google Drive..."
     # CHECK FOR ROOT LEVEL FOLDERS IN GOOGLE DRIVE #
-    for resource in client.GetAllResources(uri="/feeds/default/private/full/%s/contents/-/folder" % collection_id, show_root=True):
+    for resource in client.GetAllResources(uri="/feeds/default/private/full/root/contents/-/folder", show_root=True):
         if resource.GetResourceType() == 'folder':
             folder_list[resource.title.text] = resource.resource_id.text
 
