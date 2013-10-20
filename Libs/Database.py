@@ -27,6 +27,18 @@ def folder_exists_query_string(class_id):
     query_string = "SELECT class_id, folder_id FROM vlacs_class_folders_structure WHERE class_id = %s" % (class_id)
     return query_string
 
+def two_value_structure_insert_string(folder_name, folder_id):
+    insert_string = "INSERT INTO vlacs_class_folders_structure (folder_name, folder_id) VALUES ('%s', '%s');" % (folder_name, folder_id)
+    return insert_string
+
+def three_value_structure_insert_string(folder_name, folder_id, folder_parent):
+    insert_string = "INSERT INTO vlacs_class_folders_structure (folder_name, folder_id, folder_parent) VALUES ('%s', '%s', '%s');" % (folder_name, folder_id, folder_parent)
+    return insert_string
+
+def four_value_structure_insert_string(class_id, folder_name, folder_id, folder_parent):
+    insert_string = "INSERT INTO vlacs_class_folders_structure (class_id, folder_name, folder_id, folder_parent) VALUES ('%s', '%s', '%s', '%s');" % (class_id, folder_name, folder_id, folder_parent)
+    return insert_string
+
 def execute(conn, query):
     cursor = conn.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
     cursor.execute(query)

@@ -7,7 +7,7 @@ import Utilities
 import Database
 
 #Create an empty folder in Google Drive
-def create(client, title, parent=None, class_id=None):
+def create(conn, client, title, parent=None, class_id=None, noDB=False):
     #Initialize folder object with title
     folder = gdata.docs.data.Resource(type='folder', title=title)
 
@@ -17,22 +17,19 @@ def create(client, title, parent=None, class_id=None):
     #Use the Client Object to create the folder in the root of their Drive or the collection specified.
     folder = client.CreateResource(folder, collection=parent)
 
-    conn = Database.connect()
-
-    #On success insert into database
-    if parent != None and class_id != None:
-        Database.insert(conn, "INSERT INTO vlacs_class_folders_structure (class_id, folder_name, folder_id, folder_parent) VALUES ('%s', '%s', '%s', '%s');" % (class_id, Utilities.clean_title(title), folder.resource_id.text, parent.resource_id.text))
-    elif parent != None:
-        Database.insert(conn, "INSERT INTO vlacs_class_folders_structure (folder_name, folder_id, folder_parent) VALUES ('%s', '%s', '%s');" % (Utilities.clean_title(title), folder.resource_id.text, parent.resource_id.text))
-    else:
-        Database.insert(conn, "INSERT INTO vlacs_class_folders_structure (folder_name, folder_id) VALUES ('%s', '%s');" % (Utilities.clean_title(title), folder.resource_id.text))
-
-    conn.close()
+    if not noDB:
+        #On success insert into database
+        if parent != None and class_id != None:
+            Database.insert(conn, Database.four_value_structure_insert_string(class_id, Utilities.clean_title(title), folder.resource_id.text, parent.resource_id.text))
+        elif parent != None:
+            Database.insert(conn, Database.three_value_structure_insert_string(Utilities.clean_title(title), folder.resource_id.text, parent.resource_id.text))
+        else:
+            Database.insert(conn, Database.two_value_structure_insert_string(Utilities.clean_title(title), folder.resource_id.text))
 
     return folder
 
 #Create an empty folder in Google Drive
-def create_flat(client, title, root_collection, parent=None, class_id=None):
+def create_flat(conn, client, title, root_collection, parent=None, class_id=None):
     #Initialize folder object with title
     folder = gdata.docs.data.Resource(type='folder', title=title)
 
@@ -42,17 +39,13 @@ def create_flat(client, title, root_collection, parent=None, class_id=None):
     #Use the Client Object to create the folder in the root of their Drive or the collection specified.
     folder = client.CreateResource(folder, collection=root_collection)
 
-    conn = Database.connect()
-
     #On success insert into database
     if parent != None and class_id != None:
-        Database.insert(conn, "INSERT INTO vlacs_class_folders_structure (class_id, folder_name, folder_id, folder_parent) VALUES ('%s', '%s', '%s', '%s');" % (class_id, Utilities.clean_title(title), folder.resource_id.text, parent))
+        Database.insert(conn, Database.four_value_structure_insert_string(class_id, Utilities.clean_title(title), folder.resource_id.text, parent))
     elif parent != None:
-        Database.insert(conn, "INSERT INTO vlacs_class_folders_structure (folder_name, folder_id, folder_parent) VALUES ('%s', '%s', '%s');" % (Utilities.clean_title(title), folder.resource_id.text, parent))
+        Database.insert(conn, Database.three_value_structure_insert_string(Utilities.clean_title(title), folder.resource_id.text, parent))
     else:
-        Database.insert(conn, "INSERT INTO vlacs_class_folders_structure (folder_name, folder_id) VALUES ('%s', '%s');" % (Utilities.clean_title(title), folder.resource_id.text))
-
-    conn.close()
+        Database.insert(conn, Database.two_value_structure_insert_string(Utilities.clean_title(title), folder.resource_id.text))
 
     return folder
 

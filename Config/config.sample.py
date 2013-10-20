@@ -11,7 +11,8 @@ PASSWORD = ""
 
 #Root Folder Names
 ROOT_CLASS_FOLDER = ""
-ROOT_ARCHIVE_FOLDER = ""
+TEACHER_SHARE_FOLDER = ""
+STUDENT_SHARE_FOLDER = ""
 
 #APP NAME
 APP_NAME = "vlacs-class-folders"
