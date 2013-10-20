@@ -47,10 +47,9 @@ def check_structure(client, conn):
     print "Making sure the database tables exist..."
     # CHECK FOR DATBASE TABLES #
     tables_query = Database.get(Database.execute(conn, "SELECT COUNT(*) FROM pg_tables WHERE schemaname='public' AND tablename LIKE 'vlacs%'"))
-    print tables_query
-    #if tables_query[0] > 1:
-    #    print "Database tables exist."
-    #    tables_exist = True
+    if tables_query['count'] > 1:
+        print "Database tables exist."
+        tables_exist = True
 
     #if not tables_exist:
     #    print "Database tables do not exist, creating..."
