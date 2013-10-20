@@ -46,81 +46,81 @@ def check_structure(client, conn):
 
     print "Making sure the database tables exist..."
     # CHECK FOR DATBASE TABLES #
-    tables_query = Database.get(Database.execute(conn, "SELECT COUNT(*) FROM pg_tables WHERE schemaname='public' AND tablename LIKE 'vlacs%'"))
-    if tables_query[0] > 1:
-        print "Database tables exist."
-        tables_exist = True
+    print tables_query = Database.get(Database.execute(conn, "SELECT COUNT(*) FROM pg_tables WHERE schemaname='public' AND tablename LIKE 'vlacs%'"))
+    #if tables_query[0] > 1:
+    #    print "Database tables exist."
+    #    tables_exist = True
 
-    if not tables_exist:
-        print "Database tables do not exist, creating..."
-        Database.insert(conn, "CREATE TABLE IF NOT EXISTS vlacs_class_folders_structure(id serial, class_id integer, folder_name text, folder_id text, folder_parent text);")
-        Database.insert(conn, "CREATE TABLE IF NOT EXISTS vlacs_class_folders_shared(id serial, folder_id text, shared_email text, shared_permission text);")
+    #if not tables_exist:
+    #    print "Database tables do not exist, creating..."
+    #    Database.insert(conn, "CREATE TABLE IF NOT EXISTS vlacs_class_folders_structure(id serial, class_id integer, folder_name text, folder_id text, folder_parent text);")
+    #    Database.insert(conn, "CREATE TABLE IF NOT EXISTS vlacs_class_folders_shared(id serial, folder_id text, shared_email text, shared_permission text);")
 
-    print "Making sure the root folders exist in Google Drive..."
-    # CHECK FOR ROOT LEVEL FOLDERS IN GOOGLE DRIVE #
-    for resource in client.GetAllResources(uri="/feeds/default/private/full/%s/contents/-/folder" % collection_id, show_root=True):
-        if resource.GetResourceType() == 'folder':
-            folder_list[resource.title.text] = resource.resource_id.text
+    #print "Making sure the root folders exist in Google Drive..."
+    ## CHECK FOR ROOT LEVEL FOLDERS IN GOOGLE DRIVE #
+    #for resource in client.GetAllResources(uri="/feeds/default/private/full/%s/contents/-/folder" % collection_id, show_root=True):
+    #    if resource.GetResourceType() == 'folder':
+    #        folder_list[resource.title.text] = resource.resource_id.text
 
-    for title, f_id in folder_list.items():
-        if title == config.ROOT_CLASS_FOLDER:
-            print "%s exists in Google Drive." % config.ROOT_CLASS_FOLDER
-            exists_list_gd["root"] = True
-        elif title == config.TEACHER_SHARE_FOLDER:
-            print "%s exists in Google Drive." % config.TEACHER_SHARE_FOLDER
-            exists_list_gd["teacher"] = True
-        elif title == config.STUDENT_SHARE_FOLDER:
-            print "%s exists in Google Drive." % config.STUDENT_SHARE_FOLDER
-            exists_list_gd["student"] = True
+    #for title, f_id in folder_list.items():
+    #    if title == config.ROOT_CLASS_FOLDER:
+    #        print "%s exists in Google Drive." % config.ROOT_CLASS_FOLDER
+    #        exists_list_gd["root"] = True
+    #    elif title == config.TEACHER_SHARE_FOLDER:
+    #        print "%s exists in Google Drive." % config.TEACHER_SHARE_FOLDER
+    #        exists_list_gd["teacher"] = True
+    #    elif title == config.STUDENT_SHARE_FOLDER:
+    #        print "%s exists in Google Drive." % config.STUDENT_SHARE_FOLDER
+    #        exists_list_gd["student"] = True
 
-    print "Making sure the database has entries for the root folders..."
-    # CHECK FOR ROOT LEVEL FOLDERS IN DATABASE #
-    rcf_query = Database.get(Database.execute("SELECT count(*) FROM vlacs_class_folders_structure WHERE folder_name = %s" % config.ROOT_CLASS_FOLDER))
-    ts_query = Database.get(Database.execute("SELECT count(*) FROM vlacs_class_folders_structure WHERE folder_name = %s" % config.TEACHER_SHARE_FOLDER))
-    ss_query = Database.get(Database.execute("SELECT count(*) FROM vlacs_class_folders_structure WHERE folder_name = %s" % config.STUDENT_SHARE_FOLDER))
+    #print "Making sure the database has entries for the root folders..."
+    ## CHECK FOR ROOT LEVEL FOLDERS IN DATABASE #
+    #rcf_query = Database.get(Database.execute("SELECT count(*) FROM vlacs_class_folders_structure WHERE folder_name = %s" % config.ROOT_CLASS_FOLDER))
+    #ts_query = Database.get(Database.execute("SELECT count(*) FROM vlacs_class_folders_structure WHERE folder_name = %s" % config.TEACHER_SHARE_FOLDER))
+    #ss_query = Database.get(Database.execute("SELECT count(*) FROM vlacs_class_folders_structure WHERE folder_name = %s" % config.STUDENT_SHARE_FOLDER))
 
-    if rcf_query[0] > 0:
-        print "%s exists in the Database." % config.ROOT_CLASS_FOLDER
-        exists_list_db["root"] = True
-    if ts_query[0] > 0:
-        print "%s exists in the Database." % config.TEACHER_SHARE_FOLDER
-        exists_list_db["teacher"] = True
-    if ss_query[0] > 0:
-        print "%s exists in the Database." % config.STUDENT_SHARE_FOLDER
-        exists_list_db["student"] = True
+    #if rcf_query[0] > 0:
+    #    print "%s exists in the Database." % config.ROOT_CLASS_FOLDER
+    #    exists_list_db["root"] = True
+    #if ts_query[0] > 0:
+    #    print "%s exists in the Database." % config.TEACHER_SHARE_FOLDER
+    #    exists_list_db["teacher"] = True
+    #if ss_query[0] > 0:
+    #    print "%s exists in the Database." % config.STUDENT_SHARE_FOLDER
+    #    exists_list_db["student"] = True
 
-    if ("root" in exists_list_db and "root" in exists_list_gd and 
-            "teacher" in exists_list_db and "teacher" in exists_list_gd and 
-            "student" in exists_list_db and "student" in exists_list_gd):
-        everything_exists = True
+    #if ("root" in exists_list_db and "root" in exists_list_gd and 
+    #        "teacher" in exists_list_db and "teacher" in exists_list_gd and 
+    #        "student" in exists_list_db and "student" in exists_list_gd):
+    #    everything_exists = True
 
-    if not everything_exists:
-        print "Something is missing..."
-        print "Fixing the problem..."
-        # COMPARE AND INSERT / CREATE #
-        if "root" in exists_list_db and "root" not in exists_list_gd:
-            rcf = Folder.create(conn, client, config.ROOT_CLASS_FOLDER, noDB=True)
-            Database.insert(conn, "UPDATE vlacs_class_folders_structure SET folder_id = '%s' WHERE folder_name = '%s'" % (rcf.resource_id.text, config.ROOT_CLASS_FOLDER))
-        elif "root" in exists_list_gd and "root" not in exists_list_db:
-            Database.insert(conn, Database.two_value_structure_insert_string(config.ROOT_CLASS_FOLDER, folder_list[config.ROOT_CLASS_FOLDER]))
-        else:
-            rcf = Folder.create(conn, client, config.ROOT_CLASS_FOLDER)
+    #if not everything_exists:
+    #    print "Something is missing..."
+    #    print "Fixing the problem..."
+    #    # COMPARE AND INSERT / CREATE #
+    #    if "root" in exists_list_db and "root" not in exists_list_gd:
+    #        rcf = Folder.create(conn, client, config.ROOT_CLASS_FOLDER, noDB=True)
+    #        Database.insert(conn, "UPDATE vlacs_class_folders_structure SET folder_id = '%s' WHERE folder_name = '%s'" % (rcf.resource_id.text, config.ROOT_CLASS_FOLDER))
+    #    elif "root" in exists_list_gd and "root" not in exists_list_db:
+    #        Database.insert(conn, Database.two_value_structure_insert_string(config.ROOT_CLASS_FOLDER, folder_list[config.ROOT_CLASS_FOLDER]))
+    #    else:
+    #        rcf = Folder.create(conn, client, config.ROOT_CLASS_FOLDER)
 
-        if "teacher" in exists_list_db and "teacher" not in exists_list_gd:
-            rcf = Folder.create(conn, client, config.TEACHER_SHARE_FOLDER, noDB=True)
-            Database.insert(conn, "UPDATE vlacs_class_folders_structure SET folder_id = '%s' WHERE folder_name = '%s'" % (rcf.resource_id.text, config.TEACHER_SHARE_FOLDER))
-        elif "teacher" in exists_list_gd and "teacher" not in exists_list_db:
-            Database.insert(conn, Database.two_value_structure_insert_string(config.ROOT_CLASS_FOLDER, folder_list[config.TEACHER_SHARE_FOLDER]))
-        else:
-            rcf = Folder.create(conn, client, config.TEACHER_SHARE_FOLDER)
+    #    if "teacher" in exists_list_db and "teacher" not in exists_list_gd:
+    #        rcf = Folder.create(conn, client, config.TEACHER_SHARE_FOLDER, noDB=True)
+    #        Database.insert(conn, "UPDATE vlacs_class_folders_structure SET folder_id = '%s' WHERE folder_name = '%s'" % (rcf.resource_id.text, config.TEACHER_SHARE_FOLDER))
+    #    elif "teacher" in exists_list_gd and "teacher" not in exists_list_db:
+    #        Database.insert(conn, Database.two_value_structure_insert_string(config.ROOT_CLASS_FOLDER, folder_list[config.TEACHER_SHARE_FOLDER]))
+    #    else:
+    #        rcf = Folder.create(conn, client, config.TEACHER_SHARE_FOLDER)
 
-        if "student" in exists_list_db and "student" not in exists_list_gd:
-            rcf = Folder.create(conn, client, config.STUDENT_SHARE_FOLDER, noDB=True)
-            Database.insert(conn, "UPDATE vlacs_class_folders_structure SET folder_id = '%s' WHERE folder_name = '%s'" % (rcf.resource_id.text, config.STUDENT_SHARE_FOLDER))
-        elif "student" in exists_list_gd and "student" not in exists_list_db:
-            Database.insert(conn, Database.two_value_structure_insert_string(config.ROOT_CLASS_FOLDER, folder_list[config.STUDENT_SHARE_FOLDER]))
-        else:
-            rcf = Folder.create(conn, client, config.STUDENT_SHARE_FOLDER)
+    #    if "student" in exists_list_db and "student" not in exists_list_gd:
+    #        rcf = Folder.create(conn, client, config.STUDENT_SHARE_FOLDER, noDB=True)
+    #        Database.insert(conn, "UPDATE vlacs_class_folders_structure SET folder_id = '%s' WHERE folder_name = '%s'" % (rcf.resource_id.text, config.STUDENT_SHARE_FOLDER))
+    #    elif "student" in exists_list_gd and "student" not in exists_list_db:
+    #        Database.insert(conn, Database.two_value_structure_insert_string(config.ROOT_CLASS_FOLDER, folder_list[config.STUDENT_SHARE_FOLDER]))
+    #    else:
+    #        rcf = Folder.create(conn, client, config.STUDENT_SHARE_FOLDER)
 
 def create_in_drive(conn, enrollments, count, offset):
     if offset != None:
