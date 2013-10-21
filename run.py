@@ -194,10 +194,8 @@ def compare_db_with_drive(client, conn):
         if resource.GetResourceType() == 'folder':
             gd_root_folders[resource.title.text] = resource.resource_id.text
 
-    root_collection_id = gd_root_folders[config.ROOT_CLASS_FOLDER]
-
     # STORE LIST OF CONTENTS (TITLE BY ID) FROM ROOT FOLDER #
-    for resource in client.GetAllResources(uri="/feeds/default/private/full/%s/contents/-/folder" % root_collection_id)
+    for resource in client.GetAllResources(uri="/feeds/default/private/full/%s/contents/-/folder" % gd_root_folders[config.ROOT_CLASS_FOLDER]):
         if resource.GetResourceType() == 'folder':
             gd_contents[resource.resource_id.text] = resource.title.text
 
