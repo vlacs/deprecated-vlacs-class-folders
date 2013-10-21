@@ -23,8 +23,8 @@ def main(limit=None, offset=None):
     Color.blue("Verifying datbase and root folders exist...")
     check_structure(client, conn)
 
-    Color.blue("(NI) Comparing the database with Google Drive...")
-    # Compare database with google drive
+    Color.blue("Comparing the database with Google Drive...")
+    compare_db_with_drive(client, conn)
 
     Color.blue("(NI) Applying changes to Google Drive...")
     #enrollments = Database.get(Database.execute(conn, Database.enrollment_query_string(limit=limit, offset=offset)))
@@ -181,9 +181,26 @@ def create_in_drive(conn, enrollments, count, offset):
         print "It took %s min(s) to process %s enrollments. (%s enrollments /min)" % (elapsed_min, count, enrollments_min)
         print "%s classrooms containing %s students were processed." % (classroom_count, student_count)
 
-def sync():
-    conn = Database.connect()
-    db_records = Database.get(Database.execute(conn, "SELECT * FROM vlacs_class_folders_structure"))
+def rename_in_drive(client, enrollments):
+
+
+def compare_db_with_drive(client, conn):
+    db_contents = Database.get(Database.execute(conn, Database.enrollment_query_string(limit=limit, offset=offset)))
+    gd_root_folders = {}
+    gd_contents = {}
+
+    # STORE RESOURCE ID BY TITLE FOR ROOT FOLDERS #
+    for resource in client.GetAllResources(uri="/feeds/default/private/full/root/contents/-/folder", show_root=True):
+        if resource.GetResourceType() == 'folder':
+            gd_root_folders[resource.title.text] = resource.resource_id.text
+
+    # STORE LIST OF CONTENTS (TITLE BY ID) FROM ROOT FOLDER #
+    for resource in client.GetAllResources(uri="/feeds/default/private/full/%s/contents/-/folder" % (gd_root_folders[config.ROOT_CLASS_FOLDER]))
+        if resource.GetResourceType() == 'folder':
+            gd_contents[resource.resource_id.text] = resource.title.text
+
+    print gd_contents
+
 
 if __name__ == "__main__":
     limit = None;
