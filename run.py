@@ -24,7 +24,11 @@ def main(limit=None, offset=None):
     check_structure(client, conn)
 
     Color.blue("Comparing the database with Google Drive...")
-    create_in_drive, rename_in_drive, archive_in_drive compare_db_with_drive(client, conn, limit, offset)
+    compare_db_with_drive = compare_db_with_drive(client, conn, limit, offset)
+
+    create_in_drive = compare_db_with_drive['create_in_drive']
+    rename_in_drive = compare_db_with_drive['rename_in_drive']
+    archive_in_drive = compare_db_with_drive['archive_in_drive']
 
     print create_in_drive
     print rename_in_drive
@@ -157,7 +161,7 @@ def compare_db_with_drive(client, conn, limit, offset):
     #    if Utilities.gen_title(enrollment, "s") 
 
 
-    return create_in_drive, rename_in_drive, archive_in_drive
+    return {'create_in_drive':create_in_drive, 'rename_in_drive':rename_in_drive, 'archive_in_drive':archive_in_drive}
 
 def create_in_drive(conn, enrollments, count, offset):
     if offset != None:
