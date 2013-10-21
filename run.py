@@ -182,7 +182,7 @@ def create_in_drive(conn, enrollments, count, offset):
         print "%s classrooms containing %s students were processed." % (classroom_count, student_count)
 
 def rename_in_drive(client, enrollments):
-
+    pass
 
 def compare_db_with_drive(client, conn):
     db_contents = Database.get(Database.execute(conn, Database.enrollment_query_string(limit=limit, offset=offset)))
