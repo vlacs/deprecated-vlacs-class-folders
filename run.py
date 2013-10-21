@@ -138,7 +138,9 @@ def compare_db_with_drive(client, conn, limit, offset):
     database_contents = Database.get(Database.execute(conn, Database.compare_query_string(limit=limit, offset=offset)))
     gd_root_folders = {}
     gd_contents = {}
-    create_in_drive, rename_in_drive, archive_in_drive = {}
+    create_in_drive = {}
+    rename_in_drive = {} 
+    archive_in_drive = {}
 
     # STORE RESOURCE ID BY TITLE FOR ROOT FOLDERS #
     for resource in client.GetAllResources(uri="/feeds/default/private/full/root/contents/-/folder", show_root=True):
