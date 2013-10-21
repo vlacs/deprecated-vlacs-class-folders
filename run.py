@@ -199,7 +199,7 @@ def compare_db_with_drive(client, conn):
         if resource.GetResourceType() == 'folder':
             gd_contents[resource.resource_id.text] = resource.title.text
 
-    #print gd_contents
+    print gd_contents
 
 
 if __name__ == "__main__":
