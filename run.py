@@ -24,10 +24,12 @@ def main(limit=None, offset=None):
     check_structure(client, conn)
 
     Color.blue("Comparing the database with Google Drive...")
-    compare_db_with_drive(client, conn)
+    create_in_drive, rename_in_drive, archive_in_drive compare_db_with_drive(client, conn, limit, offset)
 
-    Color.blue("(NI) Applying changes to Google Drive...")
-    #enrollments = Database.get(Database.execute(conn, Database.enrollment_query_string(limit=limit, offset=offset)))
+    print create_in_drive
+    print rename_in_drive
+    print archive_in_drive
+
     #create_in_drive(conn, enrollments, count, offset)
     # archive_in_drive for folders that no longer show in database
 
@@ -131,6 +133,32 @@ def check_structure(client, conn):
             Color.red("--- Student folder is not in Google Drive or the database. Fixing...")
             rcf = Folder.create(conn, client, config.STUDENT_SHARE_FOLDER)
 
+def compare_db_with_drive(client, conn, limit, offset):
+    enrollments = Datbase.get(Database.execute(conn, Database.enrollment_query_string(limit=limit, offset=offset)))
+    database_contents = Database.get(Database.execute(conn, Database.compare_query_string(limit=limit, offset=offset)))
+    gd_root_folders = {}
+    gd_contents = {}
+    create_in_drive, rename_in_drive, archive_in_drive = {}
+
+    # STORE RESOURCE ID BY TITLE FOR ROOT FOLDERS #
+    for resource in client.GetAllResources(uri="/feeds/default/private/full/root/contents/-/folder", show_root=True):
+        if resource.GetResourceType() == 'folder':
+            gd_root_folders[resource.title.text] = resource.resource_id.text
+
+    # STORE LIST OF CONTENTS (TITLE BY ID) FROM ROOT FOLDER #
+    for resource in client.GetAllResources(uri="/feeds/default/private/full/%s/contents/-/folder" % gd_root_folders[config.ROOT_CLASS_FOLDER], show_root=True):
+        if resource.GetResourceType() == 'folder':
+            gd_contents[resource.resource_id.text] = resource.title.text
+
+    print enrollments
+    print database_contents
+
+    #for enrollment in enrollments:
+    #    if Utilities.gen_title(enrollment, "s") 
+
+
+    return create_in_drive, rename_in_drive, archive_in_drive
+
 def create_in_drive(conn, enrollments, count, offset):
     if offset != None:
         offset = int(offset)
@@ -183,25 +211,6 @@ def create_in_drive(conn, enrollments, count, offset):
 
 def rename_in_drive(client, enrollments):
     pass
-
-def compare_db_with_drive(client, conn):
-    db_contents = Database.get(Database.execute(conn, Database.enrollment_query_string(limit=limit, offset=offset)))
-    gd_root_folders = {}
-    gd_contents = {}
-
-    # STORE RESOURCE ID BY TITLE FOR ROOT FOLDERS #
-    for resource in client.GetAllResources(uri="/feeds/default/private/full/root/contents/-/folder", show_root=True):
-        if resource.GetResourceType() == 'folder':
-            gd_root_folders[resource.title.text] = resource.resource_id.text
-
-    print gd_root_folders[config.ROOT_CLASS_FOLDER]
-
-    # STORE LIST OF CONTENTS (TITLE BY ID) FROM ROOT FOLDER #
-    for resource in client.GetAllResources(uri="/feeds/default/private/full/%s/contents/-/folder" % gd_root_folders[config.ROOT_CLASS_FOLDER], show_root=True):
-        if resource.GetResourceType() == 'folder':
-            print resource.resource_id.text, resource.title.text
-            gd_contents[resource.resource_id.text] = resource.title.text
-
 
 if __name__ == "__main__":
     limit = None;

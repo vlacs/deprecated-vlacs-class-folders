@@ -23,6 +23,17 @@ def enrollment_query_string(limit=None, offset=None):
         query_string = "SELECT * FROM view_vlacs_class_folders OFFSET(%s)" % (offset)
     return query_string
 
+def compare_query_string(limit=None, offset=None):
+    query_string = "SELECT * FROM vlacs_class_folders_structure"
+    if limit != None and offset != None:
+        query_string = "SELECT * FROM vlacs_class_folders_structure LIMIT(%s) OFFSET(%s)" % (limit, offset)
+        print query_string
+    elif limit != None:
+        query_string = "SELECT * FROM vlacs_class_folders_structure LIMIT(%s)" % (limit)
+    elif offset != None:
+        query_string = "SELECT * FROM vlacs_class_folders_structure OFFSET(%s)" % (offset)
+    return query_string
+
 def folder_exists_query_string(class_id):
     query_string = "SELECT class_id, folder_id FROM vlacs_class_folders_structure WHERE class_id = %s" % (class_id)
     return query_string
