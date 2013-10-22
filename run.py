@@ -155,9 +155,13 @@ def compare_db_with_drive(client, conn, limit, offset):
     print enrollments
     print database_contents
 
-    #for enrollment in enrollments:
-    #    if Utilities.gen_title(enrollment, "s") 
+    # REMOVE SYNCED ENROLLMENTS FROM DICT #
+    enrollments = [enrollment for enrollment in enrollments if Utilities.not_synced(enrollment, datbase_contents)]
 
+    # WHAT NEEDS TO BE DONE TO THE REMAINING ENROLLMENTS TO SYNC THEM? #
+    
+
+    # TODO: NEED TO CHECK IF FOLDER ACTIVE TO ARCHIVE #
 
     return create_in_drive, rename_in_drive, archive_in_drive
 

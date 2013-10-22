@@ -47,3 +47,10 @@ def fix_nulls(dict):
         if v == None:
             dict[k] = k + " - NULL"
     return True
+
+def not_synced(enrollment, datbase_contents):
+    for entry in database_contents:
+        if (gen_title(enrollment, "s") == entry['folder_name'] and 
+                enrollment[class_id] == entry['class_id']):
+            return False
+    return True
