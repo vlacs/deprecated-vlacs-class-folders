@@ -156,7 +156,7 @@ def compare_db_with_drive(client, conn, limit, offset):
     enrollments = [enrollment for enrollment in enrollments if Utilities.not_synced(enrollment, database_contents)]
 
     # WHAT NEEDS TO BE DONE TO THE REMAINING ENROLLMENTS TO SYNC THEM? #
-    
+    create_in_drive = enrollments
 
     # TODO: NEED TO CHECK IF FOLDER ACTIVE TO ARCHIVE #
 
