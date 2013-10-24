@@ -24,9 +24,9 @@ def main(limit=None, offset=None):
     check_structure(client, conn)
 
     Color.blue("Comparing the database with Google Drive...")
-    create_in_drive, rename_in_drive, archive_in_drive = compare_db_with_drive(client, conn, limit, offset)
+    cid, rid, aid = compare_db_with_drive(client, conn, limit, offset)
 
-    create_in_drive(conn, create_in_drive, count, offset)
+    create_in_drive(conn, cid, count, offset)
     #print rename_in_drive
     #print archive_in_drive
 
