@@ -20,7 +20,7 @@ def main(limit=None, offset=None):
     count = 1
 
     Color.green("******** VLACS CLASS FOLDERS ********")
-    Color.blue("Verifying datbase and root folders exist...")
+    Color.blue("Verifying database and root folders exist...")
     check_structure(client, conn)
 
     Color.blue("Comparing the database with Google Drive...")
@@ -48,7 +48,7 @@ def check_structure(client, conn):
     everything_exists = False
 
     Color.cyan("Making sure the database tables exist...")
-    # CHECK FOR DATBASE TABLES #
+    # CHECK FOR DATABASE TABLES #
     tables_query = Database.get(Database.execute(conn, "SELECT COUNT(*) FROM pg_tables WHERE schemaname='public' AND tablename LIKE 'vlacs%'"))
     if tables_query['count'] > 1:
         Color.green("Database tables exist.")
@@ -156,7 +156,7 @@ def compare_db_with_drive(client, conn, limit, offset):
     print database_contents
 
     # REMOVE SYNCED ENROLLMENTS FROM DICT #
-    enrollments = [enrollment for enrollment in enrollments if Utilities.not_synced(enrollment, datbase_contents)]
+    enrollments = [enrollment for enrollment in enrollments if Utilities.not_synced(enrollment, database_contents)]
 
     # WHAT NEEDS TO BE DONE TO THE REMAINING ENROLLMENTS TO SYNC THEM? #
     
