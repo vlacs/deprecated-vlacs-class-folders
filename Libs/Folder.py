@@ -20,9 +20,11 @@ def create(conn, client, title, parent=None, class_id=None, noDB=False):
     if not noDB:
         #On success insert into database
         if parent != None and class_id != None:
-            Database.insert(conn, Database.four_value_structure_insert_string(class_id, Utilities.clean_title(title), folder.resource_id.text, parent.resource_id.text))
+            Database.insert(conn, Database.parent_class_id_structure_insert_string(class_id, Utilities.clean_title(title), folder.resource_id.text, parent.resource_id.text))
         elif parent != None:
-            Database.insert(conn, Database.three_value_structure_insert_string(Utilities.clean_title(title), folder.resource_id.text, parent.resource_id.text))
+            Database.insert(conn, Database.parent_structure_insert_string(Utilities.clean_title(title), folder.resource_id.text, parent.resource_id.text))
+        elif class_id != None:
+            Database.insert(conn, Database.class_id_structure_insert_string(Utilities.clean_title(title), folder.resource_id.text, class_id))
         else:
             Database.insert(conn, Database.two_value_structure_insert_string(Utilities.clean_title(title), folder.resource_id.text))
 
@@ -41,9 +43,11 @@ def create_flat(conn, client, title, root_collection, parent=None, class_id=None
 
     #On success insert into database
     if parent != None and class_id != None:
-        Database.insert(conn, Database.four_value_structure_insert_string(class_id, Utilities.clean_title(title), folder.resource_id.text, parent))
+        Database.insert(conn, Database.parent_class_id_structure_insert_string(class_id, Utilities.clean_title(title), folder.resource_id.text, parent))
     elif parent != None:
-        Database.insert(conn, Database.three_value_structure_insert_string(Utilities.clean_title(title), folder.resource_id.text, parent))
+        Database.insert(conn, Database.parent_structure_insert_string(Utilities.clean_title(title), folder.resource_id.text, parent))
+    elif class_id != None:
+        Database.insert(conn, Database.class_id_structure_insert_string(Utilities.clean_title(title), folder.resource_id.text, class_id))
     else:
         Database.insert(conn, Database.two_value_structure_insert_string(Utilities.clean_title(title), folder.resource_id.text))
 

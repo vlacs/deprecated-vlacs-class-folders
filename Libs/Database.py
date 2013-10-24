@@ -42,11 +42,15 @@ def two_value_structure_insert_string(folder_name, folder_id):
     insert_string = "INSERT INTO vlacs_class_folders_structure (folder_name, folder_id) VALUES ('%s', '%s');" % (folder_name, folder_id)
     return insert_string
 
-def three_value_structure_insert_string(folder_name, folder_id, folder_parent):
+def parent_structure_insert_string(folder_name, folder_id, folder_parent):
     insert_string = "INSERT INTO vlacs_class_folders_structure (folder_name, folder_id, folder_parent) VALUES ('%s', '%s', '%s');" % (folder_name, folder_id, folder_parent)
     return insert_string
 
-def four_value_structure_insert_string(class_id, folder_name, folder_id, folder_parent):
+def class_id_structure_insert_string(folder_name, folder_id, class_id):
+    insert_string = "INSERT INTO vlacs_class_folders_structure (folder_name, folder_id, class_id) VALUES ('%s', '%s', '%s');" % (folder_name, folder_id, class_id)
+    return insert_string
+
+def parent_class_id_structure_insert_string(class_id, folder_name, folder_id, folder_parent):
     insert_string = "INSERT INTO vlacs_class_folders_structure (class_id, folder_name, folder_id, folder_parent) VALUES ('%s', '%s', '%s', '%s');" % (class_id, folder_name, folder_id, folder_parent)
     return insert_string
 

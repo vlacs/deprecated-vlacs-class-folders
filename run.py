@@ -186,7 +186,7 @@ def create_in_drive(conn, client, enrollments, count, offset):
                 
                 if folder_exists:
                     print "Creating Student Folder: %s" % Utilities.gen_title(enrollment, "s")
-                    studentfolder = Folder.create_flat(conn, client, Utilities.gen_title(enrollment, "s"), rootclassfolder_id['folder_id'], folder_exists['folder_id'])
+                    studentfolder = Folder.create_flat(conn, client, Utilities.gen_title(enrollment, "s"), rootclassfolder_id['folder_id'], folder_exists['folder_id'], enrollment['class_id'])
                     student_count += 1
                 else:
                     title = Utilities.gen_title(enrollment, "c")
@@ -194,7 +194,7 @@ def create_in_drive(conn, client, enrollments, count, offset):
                     classfolder = Folder.create_flat(conn, client, title, rootclassfolder_id['folder_id'], rootclassfolder_id['folder_id'], enrollment['class_id'])
                     classroom_count += 1
                     print "Creating Student Folder: %s" % Utilities.gen_title(enrollment, "s")
-                    studentfolder = Folder.create_flat(conn, client, Utilities.gen_title(enrollment, "s"), rootclassfolder_id['folder_id'], classfolder.resource_id.text)
+                    studentfolder = Folder.create_flat(conn, client, Utilities.gen_title(enrollment, "s"), rootclassfolder_id['folder_id'], classfolder.resource_id.text, enrollment['class_id'])
                     student_count += 1
             else:
                 print "ERROR:", count, "HAS NULL VALUE(S) THAT COULD NOT BE FIXED"
