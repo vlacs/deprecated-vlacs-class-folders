@@ -203,9 +203,11 @@ def create_in_drive(conn, client, enrollments, count, offset):
             print "ERROR:", e.status
             count += 1
         except TypeError as te:
+            print "ERROR:", te
             print enrollment
+            count += 1
     elapsed = time() - start
-    elapsed_min = '{0:.2g}'.format(elapsed / 60)
+    (float)elapsed_min = '{0:.2g}'.format(elapsed / 60)
     if offset != None:
         enrollments_min = elapsed_min / count-offset
         print "It took %s min(s) to process %s enrollments. (%s enrollments /min)" % (elapsed_min, count-offset, enrollments_min)
