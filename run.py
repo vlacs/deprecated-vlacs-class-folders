@@ -26,7 +26,7 @@ def main(limit=None, offset=None):
     Color.blue("Comparing the database with Google Drive...")
     cid, rid, aid = compare_db_with_drive(client, conn, limit, offset)
 
-    create_in_drive(conn, cleint, cid, count, offset)
+    create_in_drive(conn, client, cid, count, offset)
     #print rename_in_drive
     #print archive_in_drive
 
