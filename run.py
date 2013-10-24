@@ -152,9 +152,6 @@ def compare_db_with_drive(client, conn, limit, offset):
         if resource.GetResourceType() == 'folder':
             gd_contents[resource.resource_id.text] = resource.title.text
 
-    print enrollments
-    print database_contents
-
     # REMOVE SYNCED ENROLLMENTS FROM DICT #
     enrollments = [enrollment for enrollment in enrollments if Utilities.not_synced(enrollment, database_contents)]
 
