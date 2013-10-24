@@ -26,7 +26,7 @@ def main(limit=None, offset=None):
     Color.blue("Comparing the database with Google Drive...")
     cid, rid, aid = compare_db_with_drive(client, conn, limit, offset)
 
-    #create_in_drive(conn, client, cid, count, offset)
+    create_in_drive(conn, client, cid, count, offset)
     #print rename_in_drive
     #print archive_in_drive
 
@@ -156,8 +156,8 @@ def compare_db_with_drive(client, conn, limit, offset):
     enrollments = [enrollment for enrollment in enrollments if Utilities.not_synced(enrollment, database_contents)]
 
     # WHAT NEEDS TO BE DONE TO THE REMAINING ENROLLMENTS TO SYNC THEM? #
-    print enrollments
-    #create_in_drive = enrollments
+    #print enrollments
+    create_in_drive = enrollments
 
     # TODO: NEED TO CHECK IF FOLDER ACTIVE TO ARCHIVE #
 
