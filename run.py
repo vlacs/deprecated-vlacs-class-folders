@@ -26,9 +26,9 @@ def main(limit=None, offset=None):
     Color.blue("Comparing the database with Google Drive...")
     create_in_drive, rename_in_drive, archive_in_drive = compare_db_with_drive(client, conn, limit, offset)
 
-    print create_in_drive
-    print rename_in_drive
-    print archive_in_drive
+    create_in_drive(conn, create_in_drive, count, offset)
+    #print rename_in_drive
+    #print archive_in_drive
 
     #create_in_drive(conn, enrollments, count, offset)
     # archive_in_drive for folders that no longer show in database
