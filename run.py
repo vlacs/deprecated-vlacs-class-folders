@@ -177,7 +177,7 @@ def create_in_drive(conn, client, enrollments, count, offset):
         last_disp = len(enrollments) + offset
 
     start = time()
-    for enrollment in enrollments:
+    for enrollment in dict(enrollments):
         try:
             print("Processing enrollment %s/%s..." % (count, last_disp))
             if(Utilities.fix_nulls(enrollment)):
