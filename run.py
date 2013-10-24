@@ -209,8 +209,8 @@ def create_in_drive(conn, client, enrollments, count, offset):
     elapsed = time() - start
     elapsed_min = (float)('{0:.2g}'.format(elapsed / 60))
     if offset != None:
-        enrollments_min = elapsed_min / count-offset
-        print "It took %s min(s) to process %s enrollments. (%s enrollments /min)" % (elapsed_min, count-offset, enrollments_min)
+        enrollments_min = elapsed_min / count-offset-1
+        print "It took %s min(s) to process %s enrollments. (%s enrollments /min)" % (elapsed_min, count-offset-1, enrollments_min)
         print "%s classrooms containing %s students were processed successfully." % (classroom_count, student_count)
     else:
         enrollments_min = elapsed_min / count
