@@ -176,8 +176,6 @@ def create_in_drive(conn, client, enrollments, count, offset):
     if offset != None:
         last_disp = len(enrollments) + offset
 
-    enrollments = dict(enrollments)
-
     start = time()
     for enrollment in enrollments:
         try:
