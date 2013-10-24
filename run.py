@@ -202,6 +202,8 @@ def create_in_drive(conn, client, enrollments, count, offset):
         except gdata.client.RequestError as e:
             print "ERROR:", e.status
             count += 1
+        except TypeError as te:
+            print enrollment
     elapsed = time() - start
     elapsed_min = '{0:.2g}'.format(elapsed / 60)
     if offset != None:
