@@ -218,6 +218,9 @@ def create_in_drive(conn, enrollments, count, offset):
 def rename_in_drive(client, enrollments):
     pass
 
+def archive_in_drive(client, enrollments):
+    pass
+
 if __name__ == "__main__":
     limit = None;
     offset = None;
