@@ -30,7 +30,7 @@ def main(limit=None, offset=None):
     if cid:
         create_in_drive(conn, client, cid, count, offset)
     else:
-        Color.green("Nothing to Create in Drive.")
+        Color.green("--- Nothing to Create in Drive.")
 
     elapsed = time() - start
     elapsed_min = '{0:.2g}'.format(elapsed / 60)
