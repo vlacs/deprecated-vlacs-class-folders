@@ -70,5 +70,10 @@ def get(cursor):
     cursor.close
     if len(results) < 1:
         return False
-    else:
+    elif len(results) > 1:
         return results
+    else:
+        return getone(results)
+
+def getone(result_list):
+    return result_list[0]

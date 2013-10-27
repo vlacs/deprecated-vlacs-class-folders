@@ -201,7 +201,7 @@ def create_in_drive(conn, client, enrollments, count, offset):
             print "ERROR:", te
             print "DEBUG:", enrollment
             print "DEBUG:", rootclassfolder_id['folder_id']
-            print "DEBUG:", folder_exists
+            print "DEBUG:", folder_exists[0]
             count += 1
     elapsed = time() - start
     elapsed_min = (float)('{0:.2g}'.format(elapsed / 60))
