@@ -26,12 +26,7 @@ def main(limit=None, offset=None):
     Color.blue("Comparing the database with Google Drive...")
     cid, rid, aid = compare_db_with_drive(client, conn, limit, offset)
 
-    #create_in_drive(conn, client, cid, count, offset)
-    #print rename_in_drive
-    #print archive_in_drive
-
-    #create_in_drive(conn, enrollments, count, offset)
-    # archive_in_drive for folders that no longer show in database
+    create_in_drive(conn, client, cid, count, offset)
 
     elapsed = time() - start
     elapsed_min = '{0:.2g}'.format(elapsed / 60)
@@ -158,7 +153,6 @@ def compare_db_with_drive(client, conn, limit, offset):
     # WHAT NEEDS TO BE DONE TO THE REMAINING ENROLLMENTS TO SYNC THEM? #
     #print enrollments
     create_in_drive = enrollments
-    print "DEBUG: ", len(create_in_drive)
 
     # TODO: NEED TO CHECK IF FOLDER ACTIVE TO ARCHIVE #
 
