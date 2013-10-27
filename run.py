@@ -26,7 +26,11 @@ def main(limit=None, offset=None):
     Color.blue("Comparing the database with Google Drive...")
     cid, rid, aid = compare_db_with_drive(client, conn, limit, offset)
 
-    create_in_drive(conn, client, cid, count, offset)
+
+    if cid:
+        create_in_drive(conn, client, cid, count, offset)
+    else:
+        Color.green("Nothing to Create in Drive.")
 
     elapsed = time() - start
     elapsed_min = '{0:.2g}'.format(elapsed / 60)
