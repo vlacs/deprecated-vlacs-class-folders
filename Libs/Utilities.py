@@ -55,6 +55,7 @@ def not_synced(enrollment, database_contents):
             if(enrollment['class_id'] == entry['class_id']):
                 rVal = False
             else:
+                print "DEBUG: ", enrollment['class_id'], "!=" entry['class_id']
                 rVal = True
         else:
             rVal = True
