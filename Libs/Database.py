@@ -26,11 +26,15 @@ def enrollment_query_string(limit=None, offset=None):
 def compare_query_string(limit=None, offset=None):
     query_string = "SELECT * FROM vlacs_class_folders_structure"
     if limit != None and offset != None:
+        limit = int(limit + 3)
+        offset = int(offset + 3)
         query_string = "SELECT * FROM vlacs_class_folders_structure LIMIT(%s) OFFSET(%s)" % (limit, offset)
         print query_string
     elif limit != None:
+        limit = int(limit + 3)
         query_string = "SELECT * FROM vlacs_class_folders_structure LIMIT(%s)" % (limit)
     elif offset != None:
+        offset = int(offset +3)
         query_string = "SELECT * FROM vlacs_class_folders_structure OFFSET(%s)" % (offset)
     return query_string
 

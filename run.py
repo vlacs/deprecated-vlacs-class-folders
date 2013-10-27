@@ -130,7 +130,7 @@ def check_structure(client, conn):
 
 def compare_db_with_drive(client, conn, limit, offset):
     enrollments = Database.get(Database.execute(conn, Database.enrollment_query_string(limit=limit, offset=offset)))
-    database_contents = Database.get(Database.execute(conn, Database.compare_query_string(limit=limit+3, offset=offset+3)))
+    database_contents = Database.get(Database.execute(conn, Database.compare_query_string(limit=limit, offset=offset)))
     gd_root_folders = {}
     gd_contents = {}
     create_in_drive = {}
