@@ -52,7 +52,7 @@ def not_synced(enrollment, database_contents):
     for entry in database_contents:
         print "DEBUG: ", gen_title(enrollment, "s"), "|", entry['folder_name'], "|", enrollment['class_id'], "|", entry['class_id'] 
         if (gen_title(enrollment, "s") == entry['folder_name']):
-            if(enrollment['class_id'].strip() == entry['class_id'].strip()):
+            if((int)enrollment['class_id'] == (int)entry['class_id']):
                 rVal = False
             else:
                 print "DEBUG: ", enrollment['class_id'], "!=", entry['class_id']
