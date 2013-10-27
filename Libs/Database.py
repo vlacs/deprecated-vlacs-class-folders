@@ -70,5 +70,5 @@ def get(cursor):
     cursor.close
     if len(results) < 1:
         return False
-    else len(results) > 1:
+    else:
         return results
