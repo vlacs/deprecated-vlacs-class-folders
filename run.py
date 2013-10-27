@@ -181,7 +181,7 @@ def create_in_drive(conn, client, enrollments, count, offset):
                 
                 if folder_exists:
                     print "Creating Student Folder: %s" % Utilities.gen_title(enrollment, "s")
-                    studentfolder = Folder.create_flat(conn, client, Utilities.gen_title(enrollment, "s"), rootclassfolder_id['folder_id'], folder_exists['folder_id'], enrollment['class_id'])
+                    studentfolder = Folder.create_flat(conn, client, Utilities.gen_title(enrollment, "s"), rootclassfolder_id['folder_id'], folder_exists[0]['folder_id'], enrollment['class_id'])
                     student_count += 1
                 else:
                     title = Utilities.gen_title(enrollment, "c")
@@ -196,12 +196,6 @@ def create_in_drive(conn, client, enrollments, count, offset):
             count += 1
         except gdata.client.RequestError as e:
             print "ERROR:", e.status
-            count += 1
-        except TypeError as te:
-            print "ERROR:", te
-            print "DEBUG:", enrollment
-            print "DEBUG:", rootclassfolder_id['folder_id']
-            print "DEBUG:", folder_exists[0]['folder_id']
             count += 1
     elapsed = time() - start
     elapsed_min = (float)('{0:.2g}'.format(elapsed / 60))
