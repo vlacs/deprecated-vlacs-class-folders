@@ -51,8 +51,7 @@ def fix_nulls(dict):
 def not_synced(enrollment, database_contents):
     for entry in database_contents:
         print "DEBUG: ", gen_title(enrollment, "s"), "|", entry['folder_name'], "|", enrollment['class_id'], "|", entry['class_id'] 
-        if (gen_title(enrollment, "s") == entry['folder_name'] and 
-                enrollment['class_id'] == entry['class_id']):
+        if (gen_title(enrollment, "s") == entry['folder_name']):
             rVal = False
         else:
             rVal = True
