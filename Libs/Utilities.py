@@ -23,6 +23,16 @@ def gen_title(enrollment, type):
         title += enrollment['class_id']
     return title
 
+def deconstruct_title(title, type):
+    enrollment = {}
+    if type == "s":
+        student_lastname = title.split(',')[0]
+        student_firstname = title.split(',')[1].split('-')[0].strip()
+        enrollment['student_lastname'] = student_lastname
+        enrollment['student_firstname'] = student_firstname
+
+        return enrollment
+
 def clean_title(title):
     clean = title
     clean = string.replace(clean, "'", "''")
