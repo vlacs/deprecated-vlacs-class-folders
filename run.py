@@ -197,21 +197,27 @@ def create_in_drive(conn, client, enrollments, count, offset):
                     student_count += 1
             else:
                 print "ERROR:", count, "HAS NULL VALUE(S) THAT COULD NOT BE FIXED"
+                error_count += 1
             count += 1
         except gdata.client.RequestError as e:
             print "ERROR:", e.status
+            error_count += 1
             count += 1
     elapsed = time() - start
     elapsed_min = (float)('{0:.2g}'.format(elapsed / 60))
     if offset != None:
-        print "It took %s min(s) to process %s enrollments." % (elapsed_min, count-offset-1,)
-        print "%s classrooms containing %s students were processed successfully." % (classroom_count, student_count)
+        print "It took %s min(s) to process %s enrollments." % (elapsed_min, count-offset-error_count,)
+        print "%s classrooms containing %s students were processed successfully." % (classroom_count, student_count-error_count)
     else:
-        print "It took %s min(s) to process %s enrollments." % (elapsed_min, count)
-        print "%s classrooms containing %s students were processed." % (classroom_count, student_count)
+        print "It took %s min(s) to process %s enrollments." % (elapsed_min, count-error_count)
+        print "%s classrooms containing %s students were processed." % (classroom_count, student_count-error_count)
 
 def rename_in_drive(client, enrollments):
-    pass
+    for enrollment in enrollments:
+        Color.green("Renaming folder %s to %s..." % (enrollment['old_name'], enrollment['new_name']))
+        folder = client.GetResourceById(enrollment['folder_id'])
+        folder.title.text = enrollment['new_name']
+        client.UpdateResource(folder)
 
 def archive_in_drive(client, enrollments):
     pass
