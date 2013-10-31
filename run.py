@@ -67,7 +67,7 @@ def check_structure(client, conn):
 
     if not tables_exist:
         Color.red("Database tables do not exist, creating...")
-        Database.insert(conn, "CREATE TABLE IF NOT EXISTS vlacs_class_folders_structure(id serial, class_id integer, student_id integer, folder_name text, folder_id text, folder_parent text, active int DEFAULT 1)")
+        Database.insert(conn, "CREATE TABLE IF NOT EXISTS vlacs_class_folders_structure(id serial, class_id integer, student_id integer, folder_name text, folder_id text, folder_parent text, isactive int DEFAULT 1 NOTNULL)")
         Database.insert(conn, "CREATE TABLE IF NOT EXISTS vlacs_class_folders_shared(id serial, folder_id text, shared_email text, shared_permission text)")
 
     Color.cyan("Making sure the root folders exist in Google Drive...")
@@ -166,9 +166,11 @@ def compare_db_with_drive(client, conn, limit, offset):
     # REMOVE SYNCED ENROLLMENTS FROM DICT #
     enrollments = [enrollment for enrollment in enrollments if Utilities.not_synced(enrollment, database_contents)]
 
+    rename_in_drive = [enrollment for enrollment in enrollments if Utilities.student_needs_renaming(enrollment, database_contents)]
+
     # WHAT NEEDS TO BE DONE TO THE REMAINING ENROLLMENTS TO SYNC THEM? #
     #print enrollments
-    create_in_drive = enrollments
+    create_in_drive = [enrollment for enrollment in enrollments if enrollment not in rename_in_drive]
 
     # TODO: NEED TO CHECK IF FOLDER ACTIVE TO ARCHIVE #
 
