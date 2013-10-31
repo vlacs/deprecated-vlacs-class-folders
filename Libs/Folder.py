@@ -21,7 +21,7 @@ def create(conn, client, title, parent=None, class_id=None, noDB=False):
         if parent != None:
             Database.insert(conn, Database.structure_insert_string(Utilities.clean_title(title), folder.resource_id.text, parent.resource_id.text, class_id))
         else:
-            Database.insert(conn, Database.structure_insert_string(Utilities.clean_title(title), folder.resource_id.text, parent=None, class_id))
+            Database.insert(conn, Database.structure_insert_string(Utilities.clean_title(title), folder.resource_id.text, parent, class_id))
 
     return folder
 
