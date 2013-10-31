@@ -3,6 +3,7 @@
 __author__ = 'mgeorge@vlacs.org (Mike George)'
 
 import sys, getopt
+import gdata.client
 from Config import config
 import datetime
 from time import time
