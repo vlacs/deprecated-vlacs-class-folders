@@ -28,9 +28,22 @@ def main(limit=None, offset=None):
 
 
     if cid:
+        Color.blue("--- Creating folders in Drive...")
         create_in_drive(conn, client, cid, count, offset)
     else:
-        Color.green("--- Nothing to Create in Drive.")
+        Color.green("--- No folders to create.")
+
+    if rid:
+        Color.blue("--- Renaming folders in Drive...")
+        rename_in_drive(client, rid)
+    else:
+        Color.green("--- Nothing to rename.")
+
+    if aid:
+        Color.blue("--- Archiving folders in Drive...")
+        archive_in_drive(conn, client, aid)
+    else:
+        Color.green("--- Nothing to archive.")
 
     elapsed = time() - start
     elapsed_min = '{0:.2g}'.format(elapsed / 60)
@@ -220,6 +233,8 @@ def rename_in_drive(client, enrollments):
         client.UpdateResource(folder)
 
 def archive_in_drive(client, enrollments):
+    #loop through enrollments
+    #delete folder from /VLACS Teacher/ and /VLACS Student/
     pass
 
 if __name__ == "__main__":
