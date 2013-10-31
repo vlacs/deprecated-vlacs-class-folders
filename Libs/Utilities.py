@@ -64,3 +64,6 @@ def not_synced(enrollment, database_contents):
             int(enrollment['class_id']) == int(entry['class_id'])):
             return False
     return True
+
+def student_needs_renaming(enrollment, database_contents):
+    pass
