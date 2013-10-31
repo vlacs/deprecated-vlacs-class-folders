@@ -209,6 +209,9 @@ def create_in_drive(conn, client, enrollments, count, offset):
             print "ERROR:", ke
             print "DEBUG:", folder_exists
             count += 1
+        except TypeError as te:
+            print "ERROR:", te
+            print "DEBUG:", folder_exists
 
 def rename_in_drive(client, enrollments):
     for enrollment in enrollments:
