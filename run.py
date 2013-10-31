@@ -4,6 +4,7 @@ __author__ = 'mgeorge@vlacs.org (Mike George)'
 
 import sys, getopt
 from Config import config
+import datetime
 from time import time
 from Libs import Client
 from Libs import Color
@@ -45,9 +46,7 @@ def main(limit=None, offset=None):
         Color.green("--- Nothing to archive.")
 
     elapsed = time() - start
-    elapsed_min = '{0:.2g}'.format(elapsed / 60)
-
-    print "Finished in %s mins." % elapsed_min
+    print "Finished in %s mins." % str(datetime.timedelta(seconds=elapsed))
     
     conn.close()
 
