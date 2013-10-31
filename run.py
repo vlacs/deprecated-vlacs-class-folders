@@ -66,8 +66,8 @@ def check_structure(client, conn):
 
     if not tables_exist:
         Color.red("Database tables do not exist, creating...")
-        Database.insert(conn, "CREATE TABLE IF NOT EXISTS vlacs_class_folders_structure(id serial, class_id integer, folder_name text, folder_id text, folder_parent text, active int DEFAULT 1);")
-        Database.insert(conn, "CREATE TABLE IF NOT EXISTS vlacs_class_folders_shared(id serial, folder_id text, shared_email text, shared_permission text);")
+        Database.insert(conn, "CREATE TABLE IF NOT EXISTS vlacs_class_folders_structure(id serial, class_id integer, student_id integer, folder_name text, folder_id text, folder_parent text, active int DEFAULT 1)")
+        Database.insert(conn, "CREATE TABLE IF NOT EXISTS vlacs_class_folders_shared(id serial, folder_id text, shared_email text, shared_permission text)")
 
     Color.cyan("Making sure the root folders exist in Google Drive...")
     # CHECK FOR ROOT LEVEL FOLDERS IN GOOGLE DRIVE #
@@ -178,15 +178,10 @@ def create_in_drive(conn, client, enrollments, count, offset):
         offset = int(offset)
         count = offset
 
-    student_count = 0
-    classroom_count = 0
-    error_count = 0
-
     last_disp = len(enrollments)
     if offset != None:
         last_disp = len(enrollments) + offset
 
-    start = time()
     for enrollment in enrollments:
         try:
             print("Processing enrollment %s/%s..." % (count, last_disp))
@@ -196,32 +191,20 @@ def create_in_drive(conn, client, enrollments, count, offset):
                 
                 if folder_exists:
                     print "Creating Student Folder: %s" % Utilities.gen_title(enrollment, "s")
-                    studentfolder = Folder.create_flat(conn, client, Utilities.gen_title(enrollment, "s"), rootclassfolder_id['folder_id'], folder_exists[0]['folder_id'], enrollment['class_id'])
-                    student_count += 1
+                    studentfolder = Folder.create_flat(conn, client, Utilities.gen_title(enrollment, "s"), rootclassfolder_id['folder_id'], folder_exists[0]['folder_id'], enrollment['class_id'], enrollment['student_id'])
                 else:
                     title = Utilities.gen_title(enrollment, "c")
                     print "Creating Class Folder: %s" % title
                     classfolder = Folder.create_flat(conn, client, title, rootclassfolder_id['folder_id'], rootclassfolder_id['folder_id'], enrollment['class_id'])
                     classroom_count += 1
                     print "Creating Student Folder: %s" % Utilities.gen_title(enrollment, "s")
-                    studentfolder = Folder.create_flat(conn, client, Utilities.gen_title(enrollment, "s"), rootclassfolder_id['folder_id'], classfolder.resource_id.text, enrollment['class_id'])
-                    student_count += 1
+                    studentfolder = Folder.create_flat(conn, client, Utilities.gen_title(enrollment, "s"), rootclassfolder_id['folder_id'], classfolder.resource_id.text, enrollment['class_id'], enrollment['student_id'])
             else:
                 print "ERROR:", count, "HAS NULL VALUE(S) THAT COULD NOT BE FIXED"
-                error_count += 1
             count += 1
         except gdata.client.RequestError as e:
             print "ERROR:", e.status
-            error_count += 1
             count += 1
-    elapsed = time() - start
-    elapsed_min = (float)('{0:.2g}'.format(elapsed / 60))
-    if offset != None:
-        print "It took %s min(s) to process %s enrollments." % (elapsed_min, count-offset-error_count,)
-        print "%s classrooms containing %s students were processed successfully." % (classroom_count, student_count-error_count)
-    else:
-        print "It took %s min(s) to process %s enrollments." % (elapsed_min, count-error_count)
-        print "%s classrooms containing %s students were processed." % (classroom_count, student_count-error_count)
 
 def rename_in_drive(client, enrollments):
     for enrollment in enrollments:

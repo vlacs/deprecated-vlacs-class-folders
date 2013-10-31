@@ -18,20 +18,15 @@ def create(conn, client, title, parent=None, class_id=None, noDB=False):
     folder = client.CreateResource(folder, collection=parent)
 
     if not noDB:
-        #On success insert into database
-        if parent != None and class_id != None:
-            Database.insert(conn, Database.parent_class_id_structure_insert_string(class_id, Utilities.clean_title(title), folder.resource_id.text, parent.resource_id.text))
-        elif parent != None:
-            Database.insert(conn, Database.parent_structure_insert_string(Utilities.clean_title(title), folder.resource_id.text, parent.resource_id.text))
-        elif class_id != None:
-            Database.insert(conn, Database.class_id_structure_insert_string(Utilities.clean_title(title), folder.resource_id.text, class_id))
+        if parent != None:
+            Database.insert(conn, Database.structure_insert_string(Utilities.clean_title(title), folder.resource_id.text, parent.resource_id.text, class_id))
         else:
-            Database.insert(conn, Database.two_value_structure_insert_string(Utilities.clean_title(title), folder.resource_id.text))
+            Database.insert(conn, Database.structure_insert_string(Utilities.clean_title(title), folder.resource_id.text, parent=None, class_id))
 
     return folder
 
 #Create an empty folder in Google Drive
-def create_flat(conn, client, title, root_collection, parent=None, class_id=None):
+def create_flat(conn, client, title, root_collection, parent=None, class_id=None, student_id=None):
     #Initialize folder object with title
     folder = gdata.docs.data.Resource(type='folder', title=title)
 
@@ -42,15 +37,8 @@ def create_flat(conn, client, title, root_collection, parent=None, class_id=None
     folder = client.CreateResource(folder, collection=root_collection)
 
     #On success insert into database
-    if parent != None and class_id != None:
-        Database.insert(conn, Database.parent_class_id_structure_insert_string(class_id, Utilities.clean_title(title), folder.resource_id.text, parent))
-    elif parent != None:
-        Database.insert(conn, Database.parent_structure_insert_string(Utilities.clean_title(title), folder.resource_id.text, parent))
-    elif class_id != None:
-        Database.insert(conn, Database.class_id_structure_insert_string(Utilities.clean_title(title), folder.resource_id.text, class_id))
-    else:
-        Database.insert(conn, Database.two_value_structure_insert_string(Utilities.clean_title(title), folder.resource_id.text))
-
+    Database.insert(conn, Database.structure_insert_string(Utilities.clean_title(title), folder.resource_id.text, parent, class_id, student_id))
+ 
     return folder
 
 def share(client, folder_res_id, share_with, permission='writer'):

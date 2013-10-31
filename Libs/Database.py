@@ -31,20 +31,24 @@ def folder_exists_query_string(class_id):
     query_string = "SELECT class_id, folder_id FROM vlacs_class_folders_structure WHERE class_id = %s" % (class_id)
     return query_string
 
-def two_value_structure_insert_string(folder_name, folder_id):
-    insert_string = "INSERT INTO vlacs_class_folders_structure (folder_name, folder_id) VALUES ('%s', '%s');" % (folder_name, folder_id)
-    return insert_string
+def structure_insert_string(folder_name, folder_id, folder_parent=None, class_id=None, student_id=None):
+    if folder_parent != None and class_id != None and student_id != None:
+        insert_string = "INSERT INTO vlacs_class_folders_structure (folder_name, folder_id, folder_parent, class_id, student_id) VALUES ('%s', '%s', '%s', '%s', '%s')" % (folder_name, folder_id, folder_parent, class_id, student_id)
+    elif folder_parent != None and class_id != None:
+        insert_string = "INSERT INTO vlacs_class_folders_structure (folder_name, folder_id, folder_parent, class_id) VALUES ('%s', '%s', '%s', '%s')" % (folder_name, folder_id, folder_parent, class_id)
+    elif class_id != None and student_id != None:
+        insert_string = "INSERT INTO vlacs_class_folders_structure (folder_name, folder_id, class_id, student_id) VALUES ('%s', '%s', '%s', '%s')" % (folder_name, folder_id, class_id, student_id)
+    elif folder_parent != None and student_id != None:
+        insert_string = "INSERT INTO vlacs_class_folders_structure (folder_name, folder_id, folder_parent, student_id) VALUES ('%s', '%s', '%s', '%s')" % (folder_name, folder_id, folder_parent, student_id)
+    elif folder_parent != None:
+        insert_string = "INSERT INTO vlacs_class_folders_structure (folder_name, folder_id, folder_parent) VALUES ('%s', '%s', '%s')" % (folder_name, folder_id, folder_parent)
+    elif class_id != None:
+        insert_string = "INSERT INTO vlacs_class_folders_structure (folder_name, folder_id, class_id) VALUES ('%s', '%s', '%s')" % (folder_name, folder_id, class_id)
+    elif student_id != None:
+        insert_string = "INSERT INTO vlacs_class_folders_structure (folder_name, folder_id, student_id) VALUES ('%s', '%s', '%s')" % (folder_name, folder_id, student_id)
+    else:
+        insert_string = "INSERT INTO vlacs_class_folders_structure (folder_name, folder_id) VALUES ('%s', '%s')" % (folder_name, folder_id)
 
-def parent_structure_insert_string(folder_name, folder_id, folder_parent):
-    insert_string = "INSERT INTO vlacs_class_folders_structure (folder_name, folder_id, folder_parent) VALUES ('%s', '%s', '%s');" % (folder_name, folder_id, folder_parent)
-    return insert_string
-
-def class_id_structure_insert_string(folder_name, folder_id, class_id):
-    insert_string = "INSERT INTO vlacs_class_folders_structure (folder_name, folder_id, class_id) VALUES ('%s', '%s', '%s');" % (folder_name, folder_id, class_id)
-    return insert_string
-
-def parent_class_id_structure_insert_string(class_id, folder_name, folder_id, folder_parent):
-    insert_string = "INSERT INTO vlacs_class_folders_structure (class_id, folder_name, folder_id, folder_parent) VALUES ('%s', '%s', '%s', '%s');" % (class_id, folder_name, folder_id, folder_parent)
     return insert_string
 
 def execute(conn, query):
