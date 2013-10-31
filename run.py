@@ -61,7 +61,7 @@ def check_structure(client, conn):
     Color.cyan("Making sure the database tables exist...")
     # CHECK FOR DATABASE TABLES #
     tables_query = Database.get(Database.execute(conn, "SELECT COUNT(*) FROM pg_tables WHERE schemaname='public' AND tablename LIKE 'vlacs%'"))
-    if len(tables_query) > 1:
+    if tables_query['count'] > 1:
         Color.green("Database tables exist.")
         tables_exist = True
 
@@ -93,13 +93,13 @@ def check_structure(client, conn):
     ts_query = Database.get(Database.execute(conn, "SELECT count(*) FROM vlacs_class_folders_structure WHERE folder_name = '%s'" % config.TEACHER_SHARE_FOLDER))
     ss_query = Database.get(Database.execute(conn, "SELECT count(*) FROM vlacs_class_folders_structure WHERE folder_name = '%s'" % config.STUDENT_SHARE_FOLDER))
 
-    if len(rcf_query) > 0:
+    if rcf_query['count'] > 0:
         Color.green("--- %s exists in the Database." % config.ROOT_CLASS_FOLDER)
         exists_list_db["root"] = True
-    if len(ts_query) > 0:
+    if ts_query['count'] > 0:
         Color.green("--- %s exists in the Database." % config.TEACHER_SHARE_FOLDER)
         exists_list_db["teacher"] = True
-    if len(ss_query) > 0:
+    if ss_query['count'] > 0:
         Color.green("--- %s exists in the Database." % config.STUDENT_SHARE_FOLDER)
         exists_list_db["student"] = True
 
@@ -191,6 +191,8 @@ def create_in_drive(conn, client, enrollments, count, offset):
                 rootclassfolder_id = Database.get(Database.execute(conn, query="SELECT folder_id FROM vlacs_class_folders_structure WHERE folder_name = '%s'" % (config.ROOT_CLASS_FOLDER)))
                 
                 if folder_exists:
+                    if isinstance(folder_exists, list):
+                        folder_exists = folder_exists[0]
                     print "Creating Student Folder: %s" % Utilities.gen_title(enrollment, "s")
                     studentfolder = Folder.create_flat(conn, client, Utilities.gen_title(enrollment, "s"), rootclassfolder_id['folder_id'], folder_exists['folder_id'], enrollment['class_id'], enrollment['student_id'])
                 else:

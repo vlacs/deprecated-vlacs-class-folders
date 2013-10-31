@@ -70,7 +70,7 @@ def get(cursor):
     elif len(results) > 1:
         return results
     else:
-        return results
+        return getone(results)
 
 def getone(result_list):
     return result_list[0]
