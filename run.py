@@ -46,7 +46,7 @@ def main(limit=None, offset=None):
         Color.green("--- Nothing to archive.")
 
     elapsed = time() - start
-    print "Finished in %s" % str(datetime.timedelta(seconds=elapsed))
+    print "Finished in %s" % '{0:.3g}'.format(datetime.timedelta(seconds=elapsed))
     
     conn.close()
 
