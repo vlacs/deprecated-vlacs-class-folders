@@ -61,7 +61,7 @@ def check_structure(client, conn):
     Color.cyan("Making sure the database tables exist...")
     # CHECK FOR DATABASE TABLES #
     tables_query = Database.get(Database.execute(conn, "SELECT COUNT(*) FROM pg_tables WHERE schemaname='public' AND tablename LIKE 'vlacs%'"))
-    if tables_query['count'] > 1:
+    if len(tables_query) > 1:
         Color.green("Database tables exist.")
         tables_exist = True
 
@@ -93,13 +93,13 @@ def check_structure(client, conn):
     ts_query = Database.get(Database.execute(conn, "SELECT count(*) FROM vlacs_class_folders_structure WHERE folder_name = '%s'" % config.TEACHER_SHARE_FOLDER))
     ss_query = Database.get(Database.execute(conn, "SELECT count(*) FROM vlacs_class_folders_structure WHERE folder_name = '%s'" % config.STUDENT_SHARE_FOLDER))
 
-    if rcf_query['count'] > 0:
+    if len(rcf_query) > 0:
         Color.green("--- %s exists in the Database." % config.ROOT_CLASS_FOLDER)
         exists_list_db["root"] = True
-    if ts_query['count'] > 0:
+    if len(ts_query) > 0:
         Color.green("--- %s exists in the Database." % config.TEACHER_SHARE_FOLDER)
         exists_list_db["teacher"] = True
-    if ss_query['count'] > 0:
+    if len(ss_query) > 0:
         Color.green("--- %s exists in the Database." % config.STUDENT_SHARE_FOLDER)
         exists_list_db["student"] = True
 
