@@ -206,6 +206,10 @@ def create_in_drive(conn, client, enrollments, count, offset):
         except gdata.client.RequestError as e:
             print "ERROR:", e.status
             count += 1
+        except KeyError as ke:
+            print "ERROR:", ke
+            print "DEBUG:", folder_exists
+            count += 1
 
 def rename_in_drive(client, enrollments):
     for enrollment in enrollments:
