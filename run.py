@@ -27,6 +27,8 @@ def main(limit=None, offset=None):
     Color.blue("Comparing the database with Google Drive...")
     cid, rid, aid = compare_db_with_drive(client, conn, limit, offset)
 
+    Color.blue("--- Checking of anything needs archiving...")
+
 
     if cid:
         Color.blue("--- Creating folders in Drive...")
@@ -165,14 +167,13 @@ def compare_db_with_drive(client, conn, limit, offset):
 
     # REMOVE SYNCED ENROLLMENTS FROM DICT #
     enrollments = [enrollment for enrollment in enrollments if Utilities.not_synced(enrollment, database_contents)]
-
+    
+    # REMOVE ENROLLMENTS THAT NEED TO BE ARCHIVED FROM DICT #
+    archive_in_drive = [enrollment for enrollment in enrollments if Utilities.should_arcive(enrollment, database_contents)]
+    # REMOVE ENROLLMENTS THAT NEED RENAMING FROM DICT #
     rename_in_drive = [enrollment for enrollment in enrollments if Utilities.student_needs_renaming(enrollment, database_contents)]
-
-    # WHAT NEEDS TO BE DONE TO THE REMAINING ENROLLMENTS TO SYNC THEM? #
-    #print enrollments
-    create_in_drive = [enrollment for enrollment in enrollments if enrollment not in rename_in_drive]
-
-    # TODO: NEED TO CHECK IF FOLDER ACTIVE TO ARCHIVE #
+    # REMOVE ENROLLMENTS THAT NEED TO BE CREATED FROM DICT #
+    create_in_drive = [enrollment for enrollment in enrollments if enrollment not in rename_in_drive and enrollment not in archive_in_drive]
 
     return create_in_drive, rename_in_drive, archive_in_drive
 
@@ -227,6 +228,12 @@ def rename_in_drive(client, enrollments):
 def archive_in_drive(client, enrollments):
     #loop through enrollments
     #delete folder from /VLACS Teacher/ and /VLACS Student/
+    pass
+
+def check_for_archive(conn, client):
+    pass
+
+def check_for_class_rename(conn, client):
     pass
 
 if __name__ == "__main__":

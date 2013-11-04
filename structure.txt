@@ -13,3 +13,16 @@
 - - Master Course Name
 - - - LName, FName - Assignments
 - - - Class Files
+
+ACL ROLES
+- appender - can add to object
+- none - no permission
+- owner - read, modify, delete
+- peeker - knows object exists
+- reader - read access 
+- writer - write access
+
+Teacher Rename Check
+
+class_folders_db -> "SELECT DISTINCT ON (class_id) * FROM vlacs_class_folders_sturcture WHERE class_id NOTNULL and student_id ISNULL"
+class_folders_enrollments -> "SELECT DISTINCT ON (class_id) * FROM view_vlacs_class_folders"
