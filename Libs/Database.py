@@ -51,6 +51,9 @@ def structure_insert_string(folder_name, folder_id, folder_parent=None, class_id
 
     return insert_string
 
+def set_entry_to_archived(conn, entry):
+    execute(conn, "UPDATE vlacs_class_folders_structure SET isactive = 0 WHERE class_id = '%s' AND student_id = '%s' AND folder_name = '%s' AND folder_id = '%s' AND folder_parent = '%s'" % (entry['class_id'], entry['student_id'], entry['folder_name'], entry['folder_id'], entry['folder_parent']))
+
 def execute(conn, query):
     cursor = conn.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
     cursor.execute(query)

@@ -24,11 +24,11 @@ def main(limit=None, offset=None):
     Color.blue("Verifying database and root folders exist...")
     check_structure(client, conn)
 
+    Color.blue("Marking items that need to be archived...")
+    mark_for_archive(conn, client)
+
     Color.blue("Comparing the database with Google Drive...")
     cid, rid, aid = compare_db_with_drive(client, conn, limit, offset)
-
-    Color.blue("--- Checking of anything needs archiving...")
-
 
     if cid:
         Color.blue("--- Creating folders in Drive...")
@@ -230,8 +230,16 @@ def archive_in_drive(client, enrollments):
     #delete folder from /VLACS Teacher/ and /VLACS Student/
     pass
 
-def check_for_archive(conn, client):
-    pass
+def mark_for_archive(conn, client):
+    enrollments = Database.get(Database.execute(conn, Database.enrollment_query_string()))
+    database_contents = Database.get(Database.execute(conn, Database.compare_query_string()))
+
+    items_to_archive = {}
+
+    items_to_archive = [entry for entry in database_contents if Utilities.not_exists_in_enrollments(entry, enrollments)]
+
+    for entry in items_to_archive:
+        Database.set_entry_to_archived(conn, entry)
 
 def check_for_class_rename(conn, client):
     pass

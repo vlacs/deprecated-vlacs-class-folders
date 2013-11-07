@@ -101,3 +101,6 @@ def should_archive(enrollment, database_contents):
             entry['isactive'] == "0"):
         return True
     return False
+
+def not_exists_in_enrollments(entry, enrollments):
+    pass
