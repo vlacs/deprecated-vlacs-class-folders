@@ -103,4 +103,6 @@ def should_archive(enrollment, database_contents):
     return False
 
 def not_exists_in_enrollments(entry, enrollments):
-    pass
+    for enrollment in enrollments:
+        if()
+    return false
