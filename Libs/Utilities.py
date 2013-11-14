@@ -103,6 +103,12 @@ def should_archive(enrollment, database_contents):
     return False
 
 def not_exists_in_enrollments(entry, enrollments):
+    dc_folder_name = deconstruct_title(entry['folder_name'], "s")
+
     for enrollment in enrollments:
-        if()
-    return false
+        if(enrollment['class_id'] == entry['class_id'] and
+            enrollment['student_id'] == entry['student_id'] and
+            enrollment['student_firstname'] == dc_folder_name['student_firstname'] and
+            enrollment['student_lastname'] == dc_folder_name['student_lastname']):
+        return False
+    return True
