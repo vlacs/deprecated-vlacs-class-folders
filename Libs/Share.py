@@ -4,18 +4,34 @@ __author__ = 'mgeorge@vlacs.org (Mike George)'
 
 from Config import 
 from collections import OrderedDict
+from Libs import Database
 
-def share(client, conn, folder_res_id, share_with, permission):
+def share(client, conn, folder_entry, share_with, permission):
     pass
 
-def create_share_structure(client, folder_res_id):
-	pass
+def create_share_structure(client, conn, folder_entry):
+	enrollment = Database.get(Database.execute(conn, Database.enrollment_query_string(where="class_id = '" + folder_entry['class_id'] + "' AND student_id = '" + folder_entry['student_id'] + "'")))
+	parent_res_id = ""
+
+	structures = retrieve_share_structures()
+
+	for structure in structures:
+		for template, level in structure.iteritems():
+			#If folder for current level exists store the resource_id.text in
+			#a temp variable, then skip the creation and move on to the next level
+
+	#Return resource_id.text from parent of {{STUDENT_ASSIGNMENTS}}
+	return parent_res_id
 
 def unshare(client, conn, folder_res_id, unshare_with):
-    pass
 
-def remove_share_structure():
-	pass
+
+def remove_share_structure(folder_res_id):
+	#Get resource_id.text from folder parent and store in variable
+    
+    #Delete folder with folder_res_id
+
+    #Recursively delete parent elements if they have no children
 
 def retrieve_share_structures():
 	structures = {}

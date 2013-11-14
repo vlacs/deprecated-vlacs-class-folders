@@ -12,11 +12,14 @@ def connect():
         password=config.DATABASE['password'], database=config.DATABASE['database'])
     return conn
 
-def enrollment_query_string(limit=None, offset=None):
+def enrollment_query_string(limit=None, offset=None, where=None):
     query_string = "SELECT * FROM view_vlacs_class_folders"
+    if where != None:
+        query_string = "SELECT * FROM view_vlacs_class_folders WHERE %s" % (where)
+
+        
     if limit != None and offset != None:
         query_string = "SELECT * FROM view_vlacs_class_folders LIMIT(%s) OFFSET(%s)" % (limit, offset)
-        print query_string
     elif limit != None:
         query_string = "SELECT * FROM view_vlacs_class_folders LIMIT(%s)" % (limit)
     elif offset != None:
@@ -28,7 +31,7 @@ def compare_query_string():
     return query_string
 
 def folder_exists_query_string(class_id):
-    query_string = "SELECT class_id, folder_id FROM vlacs_class_folders_structure WHERE class_id = %s" % (class_id)
+    query_string = "SELECT class_id, folder_id FROM vlacs_class_folders_structure WHERE class_id = %s" % (class_id)2
     return query_string
 
 def structure_insert_string(folder_name, folder_id, folder_parent=None, class_id=None, student_id=None):
