@@ -41,18 +41,6 @@ def create_flat(conn, client, title, root_collection, parent=None, class_id=None
  
     return folder
 
-def unshare(client, folder_res_id, unshare_with):
-    folder = client.GetResourceById(folder_id)
-    acl_feed = client.GetAcl(folder)
-
-    if len(acl_feed.entry) > 1:
-        for e in acl_feed.entry:
-            if e.scope.value == unshare_with:
-                client.DeleteAclEntry(e)
-                conn = Database.connect()
-                Database.insert(conn, "DELETE FROM vlacs_class_folders_shared WHERE shared_email = ''" % (unshare_with))
-                conn.close()
-
 def copy(client, folder_res_id, copy_to_res_id):
     copy_folder = client.GetResourceById(folder_res_id)
     copy_to_folder = client.GetResourceById(copy_to_res_id)
