@@ -2,12 +2,13 @@
 
 __author__ = 'mgeorge@vlacs.org (Mike George)'
 
-from Config import config
+from Config import 
+from collections import OrderedDict
 
 def share(client, conn, folder_res_id, share_with, permission):
     pass
 
-def create_share_structure():
+def create_share_structure(client, folder_res_id):
 	pass
 
 def unshare(client, conn, folder_res_id, unshare_with):
@@ -31,7 +32,7 @@ def retrieve_share_structures():
 	if student != "":
 		structures['student'] = parse_share_structure_string(student)
 	if student_alt != "":
-		structures['student_alt' = parse_share_structure_string(student_alt)
+		structures['student_alt'] = parse_share_structure_string(student_alt)
 
 	return structures
 
@@ -52,7 +53,7 @@ def parse_share_structure_string(structure):
 					name = "{" + entry
 					structure_out[name] = level
 		else:
-			structure_out[name] = level
+			structure_out[item] = level
 		level += 1
 
-	return structure_out
+	return OrderedDict(sorted(structure_out.items(), key=lambda d: d[1]))
