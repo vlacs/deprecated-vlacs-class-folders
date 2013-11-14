@@ -25,7 +25,7 @@ def main(limit=None, offset=None):
     check_structure(client, conn)
 
     Color.blue("Marking items that need to be archived...")
-    mark_for_archive(conn, client)
+    set_to_archived(conn, client)
 
     Color.blue("Comparing the database with Google Drive...")
     cid, rid, aid = compare_db_with_drive(client, conn, limit, offset)
@@ -227,10 +227,10 @@ def rename_in_drive(client, enrollments):
 
 def archive_in_drive(client, enrollments):
     #loop through enrollments
-    #delete folder from /VLACS Teacher/ and /VLACS Student/
+    #remove folder from teacher and student share structure.
     pass
 
-def mark_for_archive(conn, client):
+def set_to_archived(conn, client):
     enrollments = Database.get(Database.execute(conn, Database.enrollment_query_string()))
     database_contents = Database.get(Database.execute(conn, Database.compare_query_string()))
 
