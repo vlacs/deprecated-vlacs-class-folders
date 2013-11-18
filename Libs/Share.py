@@ -4,7 +4,7 @@ __author__ = 'mgeorge@vlacs.org (Mike George)'
 
 from collections import OrderedDict
 
-from Config import 
+from Config import config
 from Libs import Database
 from Libs import ShareStructure
 
