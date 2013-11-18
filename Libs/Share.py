@@ -104,7 +104,7 @@ def parse_share_structure_string(structure):
 				if '{{' in entry:
 					name = entry + "}"
 					structure_out[name] = level
-				else
+				else:
 					name = "{" + entry
 					structure_out[name] = level
 		else:
