@@ -16,11 +16,11 @@ The system also handles name changes for both students and teachers.
   + [config.sample.py](https://github.com/vlacs/vlacs-class-folders/blob/master/Config/config.samply.py) - (Must be renamed to config.py)
 * Libraries
   + [Client.py](https://github.com/vlacs/vlacs-class-folders/blob/master/Libs/Client.py) -------- (Easily create Google Data Client)
-  + [Color.py](https://github.com/vlacs/vlacs-class-folders/blob/master/Libs/Color.py) ----- (Utility lib used to output colored text to console)
+  + [Color.py](https://github.com/vlacs/vlacs-class-folders/blob/master/Libs/Color.py) -------- (Utility lib used to output colored text to console)
   + [Database.py](https://github.com/vlacs/vlacs-class-folders/blob/master/Libs/Database.py) --- (Connect to Database and run queries)
   + [Folder.py](https://github.com/vlacs/vlacs-class-folders/blob/master/Libs/Folder.py) ------- (Create, Share, and Unshare Folders on Google Drive)
-  + [Share.py](https://github.com/vlacs/vlacs-class-folders/blob/master/Libs/Share.py)  ----- (Library that contains sharing functions and logic)
-  + [Sync.py](https://github.com/vlacs/vlacs-class-folders/blob/master/Libs/Sync.py) --- (Contains all the boolean functions used when syncing Google Drive with Database)
+  + [Share.py](https://github.com/vlacs/vlacs-class-folders/blob/master/Libs/Share.py)  ------- (Library that contains sharing functions and logic)
+  + [Sync.py](https://github.com/vlacs/vlacs-class-folders/blob/master/Libs/Sync.py) -------- (Contains all the boolean functions used when syncing Google Drive with Database)
   + [Utilities.py](https://github.com/vlacs/vlacs-class-folders/blob/master/Libs/Utilities.py) ------ (Useful methods that can be used throughout the codebase)
 * Files
   + [run.py](https://github.com/vlacs/vlacs-class-folders/blob/master/run.py) ----------- (All-in-One file, check structure of db an google drive, sync, update, etc.)
