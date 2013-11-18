@@ -1,6 +1,7 @@
 __author__ = 'mgeorge@vlacs.org (Mike George)'
 
 from Config import config
+from Libs import Database
 from Libs import Utilities
 
 ## Accepted Template Variables:
@@ -14,7 +15,7 @@ from Libs import Utilities
 ##   {{CLASS_FILES}} Teacher writable Student accessable folder for class files
 ##   {{STUDENT_ASSIGNMENTS}} Students' assignment folder
 
-def get(template, enrollment=None):
+def get(conn, template, enrollment=None):
 	parsed_template = {'folder_name': "", 'role': {'teacher': "", 'student': ""}}
 
 	if template == "{{TEACHER_ROOT}}":
@@ -50,7 +51,8 @@ def get(template, enrollment=None):
 		parsed_template['role']['teacher'] = 'writer'
 		parsed_template['role']['student'] = 'reader'
 	elif template == "{{STUDENT_ASSIGNMENTS}}":
-		parsed_template['folder_name'] = Utilities.gen_title(enrollment, "s")
+		folder_id = Database.get(Database.execute(conn, Database.structure_get_folder_id_string(Utilities.gen_title(enrollment, "s"), enrollment['class_id'], enrollment['student_id'])))
+		parsed_template['folder_id'] = 
 		parsed_template['role']['teacher'] = 'writer'
 		parsed_template['role']['student'] = 'writer'
 

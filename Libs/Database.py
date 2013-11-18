@@ -33,7 +33,7 @@ def compare_query_string():
     return query_string
 
 def folder_exists_query_string(class_id):
-    query_string = "SELECT class_id, folder_id FROM vlacs_class_folders_structure WHERE class_id = %s" % (class_id)2
+    query_string = "SELECT class_id, folder_id FROM vlacs_class_folders_structure WHERE class_id = %s" % (class_id)
     return query_string
 
 def structure_insert_string(folder_name, folder_id, folder_parent=None, class_id=None, student_id=None):
@@ -55,6 +55,10 @@ def structure_insert_string(folder_name, folder_id, folder_parent=None, class_id
         insert_string = "INSERT INTO vlacs_class_folders_structure (folder_name, folder_id) VALUES ('%s', '%s')" % (folder_name, folder_id)
 
     return insert_string
+
+def structure_get_folder_id_string(folder_name, class_id, student_id):
+    query_string = "SELECT folder_id FROM vlacs_class_folders_structure WHERE folder_name = '%s' AND class_id = '%s' AND student_id = '%s'" % (folder_name, class_id, student_id)
+    return query_string
 
 def set_entry_to_archived(conn, entry):
     execute(conn, "UPDATE vlacs_class_folders_structure SET isactive = 0 WHERE class_id = '%s' AND student_id = '%s' AND folder_name = '%s' AND folder_id = '%s' AND folder_parent = '%s'" % (entry['class_id'], entry['student_id'], entry['folder_name'], entry['folder_id'], entry['folder_parent']))

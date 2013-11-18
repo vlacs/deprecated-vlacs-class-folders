@@ -47,3 +47,12 @@ def copy(client, folder_res_id, copy_to_res_id):
     copy_to_folder = client.GetResourceById(copy_to_res_id)
 
     client.MoveResource(copy_folder, copy_to_folder, True)
+
+def list_sub_folders(client, parent):
+    sub_folder_list = {}
+
+    uri = "/feeds/default/private/full/%s/contents/-/folder" % (parent)
+    for resource in client.GetAllResources(uri=uri, show_root=True):
+        sub_folder_list[resource.title.text] = resource.resource_id.text
+
+    return sub_folder_list

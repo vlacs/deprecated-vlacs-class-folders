@@ -6,7 +6,14 @@ from collections import OrderedDict
 
 from Config import 
 from Libs import Database
+from Libs import ShareStructure
 
+def create_folder(client, title, parent):
+	folder = gdata.docs.data.Resource(type='folder', title=title)
+	parent = client.GetResourceById(parent)
+	folder = cleint.CreateResource(folder, collection=parent)
+
+	return folder
 
 def share(client, conn, folder_entry, share_with, permission):
 	# Loop through share structures (bottom up) and verify ACL records
@@ -15,11 +22,31 @@ def share(client, conn, folder_entry, share_with, permission):
 def create_share_structure(client, conn, folder_entry):
 	enrollment = Database.get(Database.execute(conn, Database.enrollment_query_string(where="class_id = '" + folder_entry['class_id'] + "' AND student_id = '" + folder_entry['student_id'] + "'")))
 	parent_res_id = ""
+	directory_folders = None
 
 	structures = retrieve_share_structures()
 
 	for structure in structures:
 		for template, level in structure.iteritems():
+			folder_name = ShareStructure.get(template)
+
+			if level == 0:
+				pass
+			else:
+				if directory_folders == None:
+					directory_folders = Folder.list_sub_folders(client, "root")
+					parent_res_id = directory_folders[folder_name]
+				
+				directory_folders = Folder.list_sub_folders(client, parent_res_id)
+
+				#If the folder is already there, store the resource_id and move on
+				if folder_name in directory_folders:
+					parent_res_id = directory_folders[folder_name]
+				#If the folder is not there, create it, store the id, and move on
+				else
+					new_folder = create_folder(client, folder_name, parent_res_id)
+					parent_res_id = new_folder.resource_id.text
+
 			#If folder for current level exists store the resource_id.text in
 			#a temp variable, then skip the creation and move on to the next level
 

@@ -159,14 +159,10 @@ def compare_db_with_drive(client, conn, limit, offset):
     archive_in_drive = {}
 
     # STORE RESOURCE ID BY TITLE FOR ROOT FOLDERS #
-    for resource in client.GetAllResources(uri="/feeds/default/private/full/root/contents/-/folder", show_root=True):
-        if resource.GetResourceType() == 'folder':
-            gd_root_folders[resource.title.text] = resource.resource_id.text
+    gd_root_folders = Folder.list_sub_folders(client, "root")
 
     # STORE LIST OF CONTENTS (TITLE BY ID) FROM ROOT FOLDER #
-    for resource in client.GetAllResources(uri="/feeds/default/private/full/%s/contents/-/folder" % gd_root_folders[config.ROOT_CLASS_FOLDER], show_root=True):
-        if resource.GetResourceType() == 'folder':
-            gd_contents[resource.resource_id.text] = resource.title.text
+    gd_contents = Folder.list_sub_folders(client, gd_root_folders[config.ROOT_CLASS_FOLDER])
 
     # REMOVE SYNCED ENROLLMENTS FROM DICT #
     enrollments = [enrollment for enrollment in enrollments if Sync.not_synced(enrollment, database_contents)]
