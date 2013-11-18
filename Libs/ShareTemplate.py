@@ -14,7 +14,7 @@ from Libs import Utilities
 ##   {{CLASS_FILES}} Teacher writable Student accessable folder for class files
 ##   {{STUDENT_ASSIGNMENTS}} Students' assignment folder
 
-get(template, enrollment=None):
+def get(template, enrollment=None):
 	parsed_template = {'folder_name': "", 'role': {'teacher': "", 'student': ""}}
 
 	if template == "{{TEACHER_ROOT}}":

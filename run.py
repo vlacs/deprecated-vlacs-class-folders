@@ -73,7 +73,7 @@ def check_structure(client, conn):
     if not tables_exist:
         Color.red("Database tables do not exist, creating...")
         Database.insert(conn, "CREATE TABLE IF NOT EXISTS vlacs_class_folders_structure(id serial, class_id integer, student_id integer, folder_name text, folder_id text, folder_parent text, isactive int DEFAULT 1 NOT NULL)")
-        Database.insert(conn, "CREATE TABLE IF NOT EXISTS vlacs_class_folders_shared(id serial, folder_id text, shared_email text, shared_permission text)")
+        Database.insert(conn, "CREATE TABLE IF NOT EXISTS vlacs_class_folders_shared(id serial, folder_id text, shared_email text, shared_permission text, vlacs_class_folders_structure_id integer)")
 
     Color.cyan("Making sure the root folders exist in Google Drive...")
     # CHECK FOR ROOT LEVEL FOLDERS IN GOOGLE DRIVE #

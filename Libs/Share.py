@@ -9,6 +9,7 @@ from Libs import Database
 
 
 def share(client, conn, folder_entry, share_with, permission):
+	# Loop through share structures (bottom up) and verify ACL records
     pass
 
 def create_share_structure(client, conn, folder_entry):
@@ -22,10 +23,12 @@ def create_share_structure(client, conn, folder_entry):
 			#If folder for current level exists store the resource_id.text in
 			#a temp variable, then skip the creation and move on to the next level
 
-	#Return resource_id.text from parent of {{STUDENT_ASSIGNMENTS}}
+	
 	return parent_res_id
 
 def unshare(client, conn, folder_res_id, unshare_with):
+	# Loop through share structures (bottom up) and remove ACL entry for user
+	pass
 
 
 def remove_share_structure(folder_res_id):
@@ -34,6 +37,7 @@ def remove_share_structure(folder_res_id):
     #Delete folder with folder_res_id
 
     #Recursively delete parent elements if they have no children
+    pass
 
 def retrieve_share_structures():
 	structures = {}
