@@ -6,7 +6,7 @@ from collections import OrderedDict
 
 from Config import config
 from Libs import Database
-from Libs import ShareStructure
+from Libs import ShareTemplate
 
 def create_folder(client, title, parent):
 	folder = gdata.docs.data.Resource(type='folder', title=title)
@@ -28,7 +28,7 @@ def create_share_structure(client, conn, folder_entry):
 
 	for structure in structures:
 		for template, level in structure.iteritems():
-			folder = ShareStructure.get(template)
+			folder = ShareTemplate.get(template)
 
 			if level == 0:
 				pass
