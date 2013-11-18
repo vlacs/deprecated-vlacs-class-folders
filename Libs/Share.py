@@ -2,9 +2,11 @@
 
 __author__ = 'mgeorge@vlacs.org (Mike George)'
 
-from Config import 
 from collections import OrderedDict
+
+from Config import 
 from Libs import Database
+
 
 def share(client, conn, folder_entry, share_with, permission):
     pass

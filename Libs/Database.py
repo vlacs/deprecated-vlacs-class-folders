@@ -3,9 +3,11 @@
 __author__ = 'mgeorge@vlacs.org (Mike George)'
 
 import sys
+
+from Config import config
 import psycopg2
 import psycopg2.extras
-from Config import config
+
 
 def connect():
     conn = psycopg2.connect(host=config.DATABASE['host'], user=config.DATABASE['user'],

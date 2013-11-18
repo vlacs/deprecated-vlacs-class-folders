@@ -2,16 +2,19 @@
 
 __author__ = 'mgeorge@vlacs.org (Mike George)'
 
-import sys, getopt
-import gdata.client
-from Config import config
 import datetime
 from time import time
+
+from Config import config
 from Libs import Client
 from Libs import Color
 from Libs import Database
 from Libs import Folder
+from Libs import Sync
 from Libs import Utilities
+import gdata.client
+import sys, getopt
+
 
 def main(limit=None, offset=None):
     start = time()
@@ -166,12 +169,12 @@ def compare_db_with_drive(client, conn, limit, offset):
             gd_contents[resource.resource_id.text] = resource.title.text
 
     # REMOVE SYNCED ENROLLMENTS FROM DICT #
-    enrollments = [enrollment for enrollment in enrollments if Utilities.not_synced(enrollment, database_contents)]
+    enrollments = [enrollment for enrollment in enrollments if Sync.not_synced(enrollment, database_contents)]
     
     # REMOVE ENROLLMENTS THAT NEED TO BE ARCHIVED FROM DICT #
-    archive_in_drive = [enrollment for enrollment in enrollments if Utilities.should_arcive(enrollment, database_contents)]
+    archive_in_drive = [enrollment for enrollment in enrollments if Sync.should_archive(enrollment, database_contents)]
     # REMOVE ENROLLMENTS THAT NEED RENAMING FROM DICT #
-    rename_in_drive = [enrollment for enrollment in enrollments if Utilities.student_needs_renaming(enrollment, database_contents)]
+    rename_in_drive = [enrollment for enrollment in enrollments if Sync.student_needs_renaming(enrollment, database_contents)]
     # REMOVE ENROLLMENTS THAT NEED TO BE CREATED FROM DICT #
     create_in_drive = [enrollment for enrollment in enrollments if enrollment not in rename_in_drive and enrollment not in archive_in_drive]
 
@@ -236,7 +239,7 @@ def set_to_archived(conn, client):
 
     items_to_archive = {}
 
-    items_to_archive = [entry for entry in database_contents if Utilities.not_exists_in_enrollments(entry, enrollments)]
+    items_to_archive = [entry for entry in database_contents if Sync.not_exists_in_enrollments(entry, enrollments)]
 
     for entry in items_to_archive:
         Database.set_entry_to_archived(conn, entry)

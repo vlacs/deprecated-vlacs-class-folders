@@ -1,8 +1,8 @@
 __author__ = 'mgeorge@vlacs.org (Mike George)'
 
+from Config import config
 import gdata.docs.client
 import gdata.docs.data
-from Config import config
 
 #Create Google Client Object
 def create():

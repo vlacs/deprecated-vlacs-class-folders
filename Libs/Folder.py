@@ -1,10 +1,11 @@
 __author__ = 'mgeorge@vlacs.org (Mike George)'
 
 import json
+
+import Database
+import Utilities
 import gdata.docs.client
 import gdata.docs.data
-import Utilities
-import Database
 
 #Create an empty folder in Google Drive
 def create(conn, client, title, parent=None, class_id=None, noDB=False):
