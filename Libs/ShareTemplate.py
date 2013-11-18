@@ -52,7 +52,8 @@ def get(conn, template, enrollment=None):
 		parsed_template['role']['student'] = 'reader'
 	elif template == "{{STUDENT_ASSIGNMENTS}}":
 		folder_id = Database.get(Database.execute(conn, Database.structure_get_folder_id_string(Utilities.gen_title(enrollment, "s"), enrollment['class_id'], enrollment['student_id'])))
-		parsed_template['folder_id'] = 
+		folder_id = folder_id['folder_id']
+		parsed_template['folder_id'] = folder_id
 		parsed_template['role']['teacher'] = 'writer'
 		parsed_template['role']['student'] = 'writer'
 
