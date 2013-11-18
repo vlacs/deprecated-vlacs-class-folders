@@ -45,7 +45,7 @@ def create_share_structure(client, conn, folder_entry):
 					if folder_name in directory_folders:
 						parent_res_id = directory_folders[folder['folder_name']]
 					#If the folder is not there, create it, store the id, and move on
-					else
+					else:
 						new_folder = create_folder(client, folder['folder_name'], parent_res_id)
 						parent_res_id = new_folder.resource_id.text
 				elif folder_id in folder:
