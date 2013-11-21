@@ -44,7 +44,7 @@ def create_share_structure(client, conn, folder_entry):
 				directory_folders = Folder.list_sub_folders(client, parent_res_id)
 
 				#Make sure the folder isn't the student assignment folder
-				if 'folder_name' in folder:					
+				if !folder['isassignment']:					
 					#If the folder is already there, store the resource_id and move on
 					if folder['folder_name'] in directory_folders:
 						print "DEBUG: Folder exists, ", directory_folders[folder['folder_name']]
@@ -56,7 +56,7 @@ def create_share_structure(client, conn, folder_entry):
 						new_folder = create_folder(client, folder['folder_name'], parent_res_id)
 						if level != max_level:
 							parent_res_id = new_folder.resource_id.text
-				elif 'folder_id' in folder:
+				else:
 					print "DEBUG: Copying assignment folder"
 					Folder.copy(client, folder['folder_id'], parent_res_id)
 
