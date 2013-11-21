@@ -31,12 +31,9 @@ def create_share_structure(client, conn, folder_entry):
 			folder = ShareTemplate.get(client, conn, template, enrollment)
 
 			if level == 0:
-				directory_folders = Folder.list_sub_folders(client, )
-			else:
-				if directory_folders == None:
-					directory_folders = Folder.list_sub_folders(client, "root")
-					parent_res_id = directory_folders[folder['folder_name']]
-				
+				directory_folders = Folder.list_sub_folders(client, folder['folder_id'])
+				parent_res_id = folder['folder_id']
+			else:				
 				directory_folders = Folder.list_sub_folders(client, parent_res_id)
 
 				#Make sure the folder isn't the student assignment folder
