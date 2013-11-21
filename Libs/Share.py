@@ -6,6 +6,7 @@ from collections import OrderedDict
 
 from Config import config
 from Libs import Database
+from Libs import Folder
 from Libs import ShareTemplate
 
 def create_folder(client, title, parent):
