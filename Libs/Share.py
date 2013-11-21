@@ -9,6 +9,8 @@ from Libs import Database
 from Libs import Folder
 from Libs import ShareTemplate
 
+import gdata.docs.data
+
 def create_folder(client, title, parent):
 	folder = gdata.docs.data.Resource(type='folder', title=title)
 	parent = client.GetResourceById(parent)
