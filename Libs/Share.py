@@ -14,7 +14,7 @@ import gdata.docs.data
 def create_folder(client, title, parent):
 	folder = gdata.docs.data.Resource(type='folder', title=title)
 	parent = client.GetResourceById(parent)
-	folder = cleint.CreateResource(folder, collection=parent)
+	folder = client.CreateResource(folder, collection=parent)
 
 	return folder
 
