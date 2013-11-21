@@ -52,7 +52,7 @@ def create_share_structure(client, conn, folder_entry):
 							parent_res_id = directory_folders[folder['folder_name']]
 					#If the folder is not there, create it, store the id, and move on
 					else:
-						print "DEBUG: Creating new folder"
+						print "DEBUG: Creating new folder", template
 						new_folder = create_folder(client, folder['folder_name'], parent_res_id)
 						if level != max_level:
 							parent_res_id = new_folder.resource_id.text
