@@ -43,12 +43,15 @@ def create_share_structure(client, conn, folder_entry):
 				if 'folder_name' in folder:					
 					#If the folder is already there, store the resource_id and move on
 					if folder['folder_name'] in directory_folders:
+						print "DEBUG: Folder exists, ", directory_folders[folder['folder_name']]
 						parent_res_id = directory_folders[folder['folder_name']]
 					#If the folder is not there, create it, store the id, and move on
 					else:
+						print "DEBUG: Creating new folder"
 						new_folder = create_folder(client, folder['folder_name'], parent_res_id)
 						parent_res_id = new_folder.resource_id.text
 				elif 'folder_id' in folder:
+					print "DEBUG: Copying assignment folder"
 					Folder.copy(client, folder['folder_id'], parent_res_id)
 
 	return parent_res_id
