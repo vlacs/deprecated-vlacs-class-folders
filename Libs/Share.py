@@ -26,12 +26,12 @@ def create_share_structure(client, conn, folder_entry):
 
 	structures = retrieve_share_structures()
 
-	for structure in structures:
+	for name, structure in structures.iteritems():
 		for template, level in structure.iteritems():
-			folder = ShareTemplate.get(template)
+			folder = ShareTemplate.get(client, conn, template, enrollment)
 
 			if level == 0:
-				pass
+				directory_folders = Folder.list_sub_folders(client, )
 			else:
 				if directory_folders == None:
 					directory_folders = Folder.list_sub_folders(client, "root")
@@ -50,7 +50,7 @@ def create_share_structure(client, conn, folder_entry):
 						parent_res_id = new_folder.resource_id.text
 				elif 'folder_id' in folder:
 					Folder.copy(client, folder['folder_id'], parent_res_id)
-						
+
 	return parent_res_id
 
 def unshare(client, conn, folder_res_id, unshare_with):

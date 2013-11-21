@@ -2,6 +2,7 @@ __author__ = 'mgeorge@vlacs.org (Mike George)'
 
 from Config import config
 from Libs import Database
+from Libs import Folder
 from Libs import Utilities
 
 ## Accepted Template Variables:
@@ -15,15 +16,17 @@ from Libs import Utilities
 ##   {{CLASS_FILES}} Teacher writable Student accessable folder for class files
 ##   {{STUDENT_ASSIGNMENTS}} Students' assignment folder
 
-def get(conn, template, enrollment=None):
+def get(client, conn, template, enrollment=None):
 	parsed_template = {'folder_name': "", 'role': {'teacher': "", 'student': ""}}
 
 	if template == "{{TEACHER_ROOT}}":
-		parsed_template['folder_name'] = config.TEACHER_SHARE_FOLDER
+		root_folders = Folder.list_sub_folders(client, "root")
+		parsed_template['folder_id'] = root_folders[config.TEACHER_SHARE_FOLDER]
 		parsed_template['role']['teacher'] = 'reader'
 		parsed_template['role']['student'] = 'reader'
 	elif template == "{{STUDENT_ROOT}}":
-		parsed_template['folder_name'] = config.STUDENT_SHARE_FOLDER
+		root_folders = Folder.list_sub_folders(client, "root")
+		parsed_template['folder_id'] = root_folders[config.STUDENT_SHARE_FOLDER]
 		parsed_template['role']['teacher'] = 'reader'
 		parsed_template['role']['student'] = 'reader'
 	elif template == "{{STUDENTS}}":
