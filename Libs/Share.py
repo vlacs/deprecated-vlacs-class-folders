@@ -44,7 +44,7 @@ def create_share_structure(client, conn, folder_entry):
 				directory_folders = Folder.list_sub_folders(client, parent_res_id)
 
 				#Make sure the folder isn't the student assignment folder
-				if !folder['isassignment']:					
+				if not folder['isassignment']:					
 					#If the folder is already there, store the resource_id and move on
 					if folder['folder_name'] in directory_folders:
 						print "DEBUG: Folder exists, ", directory_folders[folder['folder_name']]
