@@ -22,7 +22,7 @@ def share(client, conn, folder_entry, share_with, permission):
 	# Loop through share structures (bottom up) and verify ACL records
     pass
 
-def create_share_structure(client, conn, folder_entry):
+def analyze_share_structure(client, conn, folder_entry):
 	enrollment = Database.get(Database.execute(conn, Database.enrollment_query_string(where="class_id = '" + folder_entry['class_id'] + "' AND student_id = '" + folder_entry['student_id'] + "'")))
 	parent_res_id = ""
 	directory_folders = None
@@ -58,7 +58,7 @@ def create_share_structure(client, conn, folder_entry):
 							parent_res_id = new_folder.resource_id.text
 				else:
 					print "DEBUG: Copying assignment folder"
-					Folder.copy(client, folder['folder_id'], parent_res_id)
+					parent_res_id = Folder.copy(client, folder['folder_id'], parent_res_id)
 
 	return parent_res_id
 
