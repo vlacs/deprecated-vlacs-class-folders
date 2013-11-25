@@ -97,7 +97,7 @@ def create_share_structure(folder, level, max_level, parent_res_id):
                 return new_folder.resource_id.text
             else:
                 print "DEBUG: Copying assignment folder"
-                return = Folder.copy(client, folder['folder_id'], parent_res_id)
+                return Folder.copy(client, folder['folder_id'], parent_res_id)
 
 def unshare(client, conn, folder_res_id, unshare_with):
     # Loop through share structures (bottom up) and remove ACL entry for user
