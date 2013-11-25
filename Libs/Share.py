@@ -74,13 +74,13 @@ def analyze_share_structure(client, conn, folder_entry):
                 parent_res_id = folder['folder_id']
                 new_structure[level] = {'folder_id':folder['folder_id'], 'role':folder['role']}
             else:
-                parent_res_id = create_share_structure(client, folder, level, max_level, parent_res_id)         
+                parent_res_id = create_share_structure(client, folder, level, template, max_level, parent_res_id)         
                 new_structure[template] = {'folder_id':parent_res_id, 'level':level}
         new_structures[name] = OrderedDict(sorted(new_structure.items(), key=lambda d: d[0]))
 
     return enrollment, new_structures
 
-def create_share_structure(client, folder, level, max_level, parent_res_id):
+def create_share_structure(client, folder, level, template, max_level, parent_res_id):
     directory_folders = Folder.list_sub_folders(client, parent_res_id)
     #Make sure the folder isn't the student assignment folder
     if not folder['isassignment']:                  
