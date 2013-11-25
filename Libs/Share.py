@@ -76,6 +76,7 @@ def analyze_share_structure(client, conn, folder_entry):
             else:
                 parent_res_id = create_share_structure(client, folder, level, template, max_level, parent_res_id)         
                 new_structure[template] = {'folder_id':parent_res_id, 'level':level}
+
         new_structures[name] = OrderedDict(sorted(new_structure.items(), key=lambda d: d[0]))
 
     return enrollment, new_structures
@@ -98,6 +99,7 @@ def create_share_structure(client, folder, level, template, max_level, parent_re
             else:
                 print "DEBUG: Copying assignment folder"
                 return Folder.copy(client, folder['folder_id'], parent_res_id)
+    ########## FIX MEEEEEEE ###########
 
 def unshare(client, conn, folder_res_id, unshare_with):
     # Loop through share structures (bottom up) and remove ACL entry for user
