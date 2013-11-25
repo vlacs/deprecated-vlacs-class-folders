@@ -2,8 +2,8 @@ __author__ = 'mgeorge@vlacs.org (Mike George)'
 
 import json
 
-import Database
-import Utilities
+from Libs import Database
+from Libs import Utilities
 import gdata.docs.client
 import gdata.docs.data
 
