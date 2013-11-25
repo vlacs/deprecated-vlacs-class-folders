@@ -40,27 +40,29 @@ def analyze_share_structure(client, conn, folder_entry):
 			if level == 0:
 				directory_folders = Folder.list_sub_folders(client, folder['folder_id'])
 				parent_res_id = folder['folder_id']	
-			else:				
-				directory_folders = Folder.list_sub_folders(client, parent_res_id)
-
-				#Make sure the folder isn't the student assignment folder
-				if not folder['isassignment']:					
-					#If the folder is already there, store the resource_id and move on
-					if folder['folder_name'] in directory_folders:
-						print "DEBUG: Folder exists, ", directory_folders[folder['folder_name']]
-						if level != max_level:
-							parent_res_id = directory_folders[folder['folder_name']]
-					#If the folder is not there, create it, store the id, and move on
-					else:
-						print "DEBUG: Creating new folder", template
-						new_folder = create_folder(client, folder['folder_name'], parent_res_id)
-						if level != max_level:
-							parent_res_id = new_folder.resource_id.text
+			else:
+				parent_res_id = create_share_structure(folder, level, max_level, parent_res_id)			
 				else:
 					print "DEBUG: Copying assignment folder"
 					parent_res_id = Folder.copy(client, folder['folder_id'], parent_res_id)
 
 	return parent_res_id
+
+def create_share_structure(folder, level, max_level, parent_res_id):
+	directory_folders = Folder.list_sub_folders(client, parent_res_id)
+	#Make sure the folder isn't the student assignment folder
+	if not folder['isassignment']:					
+		#If the folder is already there, store the resource_id and move on
+		if folder['folder_name'] in directory_folders:
+			print "DEBUG: Folder exists, ", directory_folders[folder['folder_name']]
+			if level != max_level:
+				return directory_folders[folder['folder_name']]
+		#If the folder is not there, create it, store the id, and move on
+		else:
+			print "DEBUG: Creating new folder", template
+			new_folder = create_folder(client, folder['folder_name'], parent_res_id)
+			if level != max_level:
+				return new_folder.resource_id.text
 
 def unshare(client, conn, folder_res_id, unshare_with):
 	# Loop through share structures (bottom up) and remove ACL entry for user
