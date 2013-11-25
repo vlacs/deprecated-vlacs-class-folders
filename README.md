@@ -23,7 +23,7 @@ The system also handles name changes for both students and teachers.
   + [Sync.py](https://github.com/vlacs/vlacs-class-folders/blob/master/Libs/Sync.py) -------- (Contains all the boolean functions used when syncing Google Drive with Database)
   + [Utilities.py](https://github.com/vlacs/vlacs-class-folders/blob/master/Libs/Utilities.py) ------ (Useful methods that can be used throughout the codebase)
 * Files
-  + [run.py](https://github.com/vlacs/vlacs-class-folders/blob/master/run.py) ----------- (All-in-One file, check structure of db an google drive, sync, update, etc.)
+  + [run.py](https://github.com/vlacs/vlacs-class-folders/blob/master/run.py) ----------- (All-in-One file, check structure of db and google drive, sync, update, etc.)
 
 ## Dependencies ##
 * python
