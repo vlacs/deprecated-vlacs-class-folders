@@ -24,20 +24,20 @@ def share_folder(client, conn, folder_entry):
     #Get structures and enrollment from analyze_share_structure
     enrollment, structures = analyze_share_structure(client, conn, folder_entry)
     # Loop through share structures
-        for name, structure in structures.iteritems():
-            for level, folder in structure.iteritems():
-                #Share with student
-                if 'student' in name:
-                    share(client, folder['folder_id'], 'teststudent@vlacs.net', folder['role']['student'])
-                    sub_folders = Folder.list_sub_folders(client, folder['folder_id'])
-                    for folder in sub_folders:
-                        share(client, sub_folders[folder], 'teststudent@vlacs.net', 'none')
-                #Share with teacher
-                if 'teacher' in name:
-                    share(client, folder['folder_id'], 'testteacher@vlacs.net', folder['role']['student'])
-                    sub_folders = Folder.list_sub_folders(client, folder['folder_id'])
-                    for folder in sub_folders:
-                        share(client, sub_folders[folder], 'testteacher@vlacs.net', 'none')
+    for name, structure in structures.iteritems():
+        for level, folder in structure.iteritems():
+            #Share with student
+            if 'student' in name:
+                share(client, folder['folder_id'], 'teststudent@vlacs.net', folder['role']['student'])
+                sub_folders = Folder.list_sub_folders(client, folder['folder_id'])
+                for folder in sub_folders:
+                    share(client, sub_folders[folder], 'teststudent@vlacs.net', 'none')
+            #Share with teacher
+            if 'teacher' in name:
+                share(client, folder['folder_id'], 'testteacher@vlacs.net', folder['role']['student'])
+                sub_folders = Folder.list_sub_folders(client, folder['folder_id'])
+                for folder in sub_folders:
+                    share(client, sub_folders[folder], 'testteacher@vlacs.net', 'none')
 
 def share(client, folder_id, share_with, role):
     #list current ACL Entries and delete any for share_with
