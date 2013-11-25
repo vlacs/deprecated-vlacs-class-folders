@@ -10,6 +10,8 @@ from Libs import Folder
 from Libs import ShareTemplate
 
 import gdata.docs.data
+import gdata.acl.data
+import gdata.data
 
 def create_folder(client, title, parent):
     folder = gdata.docs.data.Resource(type='folder', title=title)
@@ -18,14 +20,33 @@ def create_folder(client, title, parent):
 
     return folder
 
-def share(client, conn, folder_entry):
+def share_folder(client, conn, folder_entry):
+    #Get structures and enrollment from analyze_share_structure
+    enrollment, structures = analyze_share_structure(client, conn, folder_entry)
     # Loop through share structures
+        for name, structure in structures.iteritems():
+            for level, folder in structure.iteritems():
+                #Share with student
+                if 'student' in name:
+                    share(client, folder['folder_id'], 'teststudent@vlacs.net', folder['role']['student'])
+                    sub_folders = Folder.list_sub_folders(client, folder['folder_id'])
+                    for folder in sub_folders:
+                        share(client, sub_folders[folder], 'teststudent@vlacs.net', 'none')
+                #Share with teacher
+                if 'teacher' in name:
+                    share(client, folder['folder_id'], 'testteacher@vlacs.net', folder['role']['student'])
+                    sub_folders = Folder.list_sub_folders(client, folder['folder_id'])
+                    for folder in sub_folders:
+                        share(client, sub_folders[folder], 'testteacher@vlacs.net', 'none')
 
-        # Share with student
+def share(client, folder_id, share_with, role):
+    #list current ACL Entries and delete any for share_with
+    folder = client.GetResourceById(folder_id)
+    acl_feed = client.GetResourceAcl(folder)
+    for acl in acl_feed.entry:
+        print acl.role.value, acl.scope.type, acl.scope.value
+    #add new ACL entry with proper role for share_with
 
-        # Share with teacher
-
-    pass
 
 def analyze_share_structure(client, conn, folder_entry):
     enrollment = Database.get(Database.execute(conn, Database.enrollment_query_string(where="class_id = '" + folder_entry['class_id'] + "' AND student_id = '" + folder_entry['student_id'] + "'")))
@@ -34,8 +55,10 @@ def analyze_share_structure(client, conn, folder_entry):
     max_level = 0
 
     structures = retrieve_share_structures()
+    new_structures = {}
 
     for name, structure in structures.iteritems():
+        new_structure = {}
         for template, level in structure.iteritems():
             if (level > max_level):
                 max_level = level
@@ -44,14 +67,14 @@ def analyze_share_structure(client, conn, folder_entry):
 
             if level == 0:
                 directory_folders = Folder.list_sub_folders(client, folder['folder_id'])
-                parent_res_id = folder['folder_id'] 
+                parent_res_id = folder['folder_id']
+                new_structure[level] = {'folder_id':folder['folder_id'], 'role':folder['role']}
             else:
                 parent_res_id = create_share_structure(folder, level, max_level, parent_res_id)         
-                else:
-                    print "DEBUG: Copying assignment folder"
-                    parent_res_id = Folder.copy(client, folder['folder_id'], parent_res_id)
+                new_structure[template] = {'folder_id':parent_res_id, 'level':level}
+        new_structures[name] = OrderedDict(sorted(new_structure.items(), key=lambda d: d[0]))
 
-    return parent_res_id
+    return enrollment, new_structures
 
 def create_share_structure(folder, level, max_level, parent_res_id):
     directory_folders = Folder.list_sub_folders(client, parent_res_id)
@@ -68,6 +91,9 @@ def create_share_structure(folder, level, max_level, parent_res_id):
             new_folder = create_folder(client, folder['folder_name'], parent_res_id)
             if level != max_level:
                 return new_folder.resource_id.text
+            else:
+                print "DEBUG: Copying assignment folder"
+                return = Folder.copy(client, folder['folder_id'], parent_res_id)
 
 def unshare(client, conn, folder_res_id, unshare_with):
     # Loop through share structures (bottom up) and remove ACL entry for user
