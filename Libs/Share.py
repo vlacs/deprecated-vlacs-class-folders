@@ -30,16 +30,10 @@ def share_folder(client, conn, folder_entry):
             if 'student' in name:
                 print "DEBUG: Sharing %s with student" % folder['folder_id']
                 share(client, folder['folder_id'], 'teststudent@vlacs.net', folder['role']['student'])
-                sub_folders = Folder.list_sub_folders(client, folder['folder_id'])
-                for folder in sub_folders:
-                    share(client, sub_folders[folder], 'teststudent@vlacs.net', 'none')
             #Share with teacher
             if 'teacher' in name:
                 print "DEBUG: Sharing %s with teacher" % folder['folder_id']
                 share(client, folder['folder_id'], 'testteacher@vlacs.net', folder['role']['teacher'])
-                sub_folders = Folder.list_sub_folders(client, folder['folder_id'])
-                for folder in sub_folders:
-                    share(client, sub_folders[folder], 'testteacher@vlacs.net', 'none')
 
 def share(client, folder_id, share_with, role):
     #list current ACL Entries and delete any for share_with

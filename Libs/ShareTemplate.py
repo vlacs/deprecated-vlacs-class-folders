@@ -101,11 +101,11 @@ def get(client, conn, template, enrollment=None):
 	if template == "{{TEACHER_ROOT}}":
 		root_folders = Folder.list_sub_folders(client, "root")
 		template_variables[template]['parent_id'] = root_folders[config.TEACHER_SHARE_FOLDER]
-		template_variables[template]['folder_name'] = root_folders[config.TEACHER_SHARE_FOLDER] + " (%s)" % (enrollment['teacher_id'])
+		template_variables[template]['folder_name'] = config.TEACHER_SHARE_FOLDER + " (%s)" % (enrollment['teacher_id'])
 	elif template == "{{STUDENT_ROOT}}":
 		root_folders = Folder.list_sub_folders(client, "root")
 		template_variables[template]['parent_id'] = root_folders[config.STUDENT_SHARE_FOLDER]
-		template_variables[template]['folder_name'] = root_folders[config.STUDENT_SHARE_FOLDER] + " (%s)" % (enrollment['student_id'])
+		template_variables[template]['folder_name'] = config.STUDENT_SHARE_FOLDER + " (%s)" % (enrollment['student_id'])
 	elif template == "{{STUDENT_ASSIGNMENTS}}":
 		folder_id = Database.get(Database.execute(conn, Database.structure_get_folder_id_string(Utilities.gen_title(enrollment, "s"), enrollment['class_id'], enrollment['student_id'])))
 		folder_id = folder_id['folder_id']
