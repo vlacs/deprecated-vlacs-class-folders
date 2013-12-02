@@ -28,12 +28,14 @@ def share_folder(client, conn, folder_entry):
         for level, folder in structure.iteritems():
             #Share with student
             if 'student' in name:
+                print "DEBUG: Sharing %s with student" % folder['folder_id']
                 share(client, folder['folder_id'], 'teststudent@vlacs.net', folder['role']['student'])
                 sub_folders = Folder.list_sub_folders(client, folder['folder_id'])
                 for folder in sub_folders:
                     share(client, sub_folders[folder], 'teststudent@vlacs.net', 'none')
             #Share with teacher
             if 'teacher' in name:
+                print "DEBUG: Sharing %s with teacher" % folder['folder_id']
                 share(client, folder['folder_id'], 'testteacher@vlacs.net', folder['role']['student'])
                 sub_folders = Folder.list_sub_folders(client, folder['folder_id'])
                 for folder in sub_folders:
@@ -98,9 +100,9 @@ def create_share_structure(client, folder, level, template, max_level, parent_re
             new_folder = create_folder(client, folder['folder_name'], parent_res_id)
             return new_folder.resource_id.text
     else:
-        if folder['folder_name'] in directory_folders:
-            print "DEBUG: Folder exists, ", directory_folders[folder['folder_name']]
-            return directory_folders[folder['folder_name']]
+        if folder['folder_id'] in directory_folders:
+            print "DEBUG: Folder exists, ", folder['folder_id']
+            return folder['folder_id']
         else:
             print "DEBUG: Copying assignment folder"
             return Folder.copy(client, folder['folder_id'], parent_res_id)
@@ -158,3 +160,12 @@ def parse_share_structure_string(structure):
         level += 1
 
     return OrderedDict(sorted(structure_out.items(), key=lambda d: d[1]))
+
+## Testing / Debugging variables ##
+## client = Client.create()
+## conn = Database.connect()
+## folder_entry = {'id':'296', 'class_id':'1771', 'student_id':'66839', 'folder_name':'Andrews, Henry - Assignments', 'folder_id':'folder:0B7AqvGrb_oO8cy1Ydy00LVlCdXc', 'folder_parent':'folder:0B7AqvGrb_oO8UVNJVl80aWNkWXM', 'isactive':1}
+##
+##
+##
+##
