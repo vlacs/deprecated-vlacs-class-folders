@@ -48,11 +48,13 @@ def share(client, folder_id, share_with, role):
     acl_feed = client.GetResourceAcl(folder)
     for acl in acl_feed.entry:
         if acl.scope.value == share_with:
+            print "DEBUG: ACL for %s exists, verifying role." % share_with
             acl.role = gdata.acl.data.AclRole(value=role)
             client.UpdateAclEntry(acl, send_notification=False)
             updated = True
     #add new ACL entry with proper role for share_with
     if not updated:
+        print "DEBUG: Sharing with %s" % share_with
         acl_entry = gdata.docs.data.AclEntry(
             scope=gdata.acl.data.AclScope(value=share_with, type='user'),
             role=gdata.acl.data.AclRole(value=role))
