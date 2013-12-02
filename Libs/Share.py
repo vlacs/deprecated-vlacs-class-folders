@@ -73,9 +73,12 @@ def analyze_share_structure(client, conn, folder_entry):
                 directory_folders = Folder.list_sub_folders(client, folder['folder_id'])
                 parent_res_id = folder['folder_id']
                 new_structure[level] = {'folder_id':folder['folder_id'], 'role':folder['role']}
-            else:
+            elif level != max_level:
                 parent_res_id = create_share_structure(client, folder, level, template, max_level, parent_res_id)         
-                new_structure[template] = {'folder_id':parent_res_id, 'level':level}
+                new_structure[level] = {'folder_id':parent_res_id, 'role':folder['role']}
+            else:
+                folder_id = create_share_structure(client, folder, level, template, max_level, parent_res_id)
+                new_structure[level] = {'folder_id':folder_id, 'role':folder['role']}
 
         new_structures[name] = OrderedDict(sorted(new_structure.items(), key=lambda d: d[0]))
 
@@ -88,18 +91,19 @@ def create_share_structure(client, folder, level, template, max_level, parent_re
         #If the folder is already there, store the resource_id and move on
         if folder['folder_name'] in directory_folders:
             print "DEBUG: Folder exists, ", directory_folders[folder['folder_name']]
-            if level != max_level:
-                return directory_folders[folder['folder_name']]
+            return directory_folders[folder['folder_name']]
         #If the folder is not there, create it, store the id, and move on
         else:
             print "DEBUG: Creating new folder", template
             new_folder = create_folder(client, folder['folder_name'], parent_res_id)
-            if level != max_level:
-                return new_folder.resource_id.text
-            else:
-                print "DEBUG: Copying assignment folder"
-                return Folder.copy(client, folder['folder_id'], parent_res_id)
-    ########## FIX MEEEEEEE ###########
+            return new_folder.resource_id.text
+    else:
+        if folder['folder_name'] in directory_folders:
+            print "DEBUG: Folder exists, ", directory_folders[folder['folder_name']]
+            return directory_folders[folder['folder_name']]
+        else:
+            print "DEBUG: Copying assignment folder"
+            return Folder.copy(client, folder['folder_id'], parent_res_id)
 
 def unshare(client, conn, folder_res_id, unshare_with):
     # Loop through share structures (bottom up) and remove ACL entry for user
