@@ -36,23 +36,27 @@ def share_folder(client, conn, folder_entry):
             #Share with teacher
             if 'teacher' in name:
                 print "DEBUG: Sharing %s with teacher" % folder['folder_id']
-                share(client, folder['folder_id'], 'testteacher@vlacs.net', folder['role']['student'])
+                share(client, folder['folder_id'], 'testteacher@vlacs.net', folder['role']['teacher'])
                 sub_folders = Folder.list_sub_folders(client, folder['folder_id'])
                 for folder in sub_folders:
                     share(client, sub_folders[folder], 'testteacher@vlacs.net', 'none')
 
 def share(client, folder_id, share_with, role):
     #list current ACL Entries and delete any for share_with
+    updated = False
     folder = client.GetResourceById(folder_id)
     acl_feed = client.GetResourceAcl(folder)
     for acl in acl_feed.entry:
         if acl.scope.value == share_with:
-            client.DeleteAclEntry(acl)
+            acl.role = gdata.acl.data.AclRole(value=role)
+            client.UpdateAclEntry(acl, send_notification=False)
+            updated = True
     #add new ACL entry with proper role for share_with
-    acl_entry = gdata.docs.data.AclEntry(
-        scope=gdata.acl.data.AclScope(value=share_with, type='user'),
-        role=gdata.acl.data.AclRole(value=role))
-    client.AddAclEntry(folder, acl_entry, send_notification=False)
+    if not updated:
+        acl_entry = gdata.docs.data.AclEntry(
+            scope=gdata.acl.data.AclScope(value=share_with, type='user'),
+            role=gdata.acl.data.AclRole(value=role))
+        client.AddAclEntry(folder, acl_entry, send_notification=False)
 
 def analyze_share_structure(client, conn, folder_entry):
     enrollment = Database.get(Database.execute(conn, Database.enrollment_query_string(where="class_id = '" + folder_entry['class_id'] + "' AND student_id = '" + folder_entry['student_id'] + "'")))
@@ -72,9 +76,10 @@ def analyze_share_structure(client, conn, folder_entry):
             folder = ShareTemplate.get(client, conn, template, enrollment)
 
             if level == 0:
-                directory_folders = Folder.list_sub_folders(client, folder['folder_id'])
-                parent_res_id = folder['folder_id']
-                new_structure[level] = {'folder_id':folder['folder_id'], 'role':folder['role']}
+                directory_folders = Folder.list_sub_folders(client, folder['parent_id'])
+                parent_res_id = folder['parent_id']
+                parent_res_id = create_share_structure(client, folder, level, template, max_level, parent_res_id)
+                new_structure[level] = {'folder_id':parent_res_id, 'role':folder['role']}
             elif level != max_level:
                 parent_res_id = create_share_structure(client, folder, level, template, max_level, parent_res_id)         
                 new_structure[level] = {'folder_id':parent_res_id, 'role':folder['role']}
