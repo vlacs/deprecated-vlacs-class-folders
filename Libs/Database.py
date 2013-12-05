@@ -146,7 +146,7 @@ def construct_query_insert_string(q_string, i_string, cols):
                 i_string += " '%s'," % (col['value'])
             else:
                 i_string += " %s," % (col['value'])
-            count += 
+            count += 1
 
     return q_string, i_string
 
