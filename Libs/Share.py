@@ -44,13 +44,17 @@ def share(client, folder_id, share_with, role):
     for acl in acl_feed.entry:
         if acl.scope.value == share_with:
             print "DEBUG: ACL for %s exists, verifying role." % share_with
-            update_acl = acl.GetSelfLink()
+            update_acl = acl
     if update_acl:
-        update_acl = client.GetAclEntryBySelfLink(update_acl)
-        print "DEBUG: ACL Scope: %s ACL Role: %s" % (update_acl.scope.value, update_acl.role.value)
-        update_acl.role.value = role
-        print "DEBUG: ACL Scope: %s ACL Role: %s" % (update_acl.scope.value, update_acl.role.value)
-        client.UpdateAclEntry(update_acl, send_notification=False)
+        if update_acl.role.value not role:
+            print "DEBUG: ACL Scope: %s ACL Role: %s" % (update_acl.scope.value, update_acl.role.value)
+            update_acl.role.value = role
+            print "DEBUG: ACL Scope: %s ACL Role: %s" % (update_acl.scope.value, update_acl.role.value)
+            new_acl = gdata.docs.data.AclEntry(
+                scope=gdata.acl.data.AclScope(value=share_with, type='user'),
+                role=gdata.acl.data.AclRole(value=role)
+            )
+            client.UpdateAclEntry(new_acl, send_notification=False)
         updated = True
     #add new ACL entry with proper role for share_with
     if not updated:
