@@ -74,6 +74,78 @@ def insert(conn, statement):
     conn.commit()
     cursor.close()
 
+def insert_if_not_exists(conn, table, cols):
+    cursor = conn.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
+    
+    q_string = "SELECT * FROM %s WHERE " % (table)
+    i_string = "INSERT INTO %s (" % (table)
+    
+    q_string, i_string = construct_query_insert_string(q_string, i_string, table, cols)
+
+    if get(execute(conn, q_string)):
+        return False
+    else:
+        insert(conn, i_string)
+        return True
+
+def construct_query_insert_string(q_string, i_string, table, cols):
+    num_cols = 0
+    count = 1
+    
+    #Construct query string and insert string
+    for col in cols:
+        if count == 1:
+            if col['type'] == 's':
+                q_string += "%s = '%s'" % (col['name'], col['value'])
+            else:
+                q_string += "%s = %s" % (col['name'], col['value'])
+            if num_cols > 1:
+                i_string += "%s, " % (col['name'])
+            else:
+                i_string += "%s)" % (col['name'])
+            count += 1
+        else if count == num_cols:
+            if col['type'] == 's':
+                q_string += " AND %s = '%s'" % (col['name'], col['value'])
+            else:
+                q_string += " AND %s = %s" % (col['name'], col['values'])
+            i_string += "%s)" % (col['name'])
+            count += 1
+        else:
+            if col['type'] == 's':
+                q_string += " AND %s = '%s'" % (col['name'], col['value'])
+            else:
+                q_string += " AND %s = %s" % (col['name'], col['values'])
+            i_string += "%s, " % (col['name'])
+            count += 1
+
+    count = 1
+
+    #Construct second half of insert string
+    for col in cols:
+        if count == 1:
+            if col['type'] == 's':
+                i_string += " VALUES ('%s'" % (col['value'])
+            else:
+                i_string += " VALUES (%s" % (col['value'])
+            if num_cols > 1:
+                i_string += ","
+            else:
+                i_string += ")"
+            count += 1
+        else if count == num_cols:
+            if col['type'] == 's':
+                i_string += " '%s')" % (col['value'])
+            else:
+                i_string += " %s)" % (col['value'])
+            count += 1
+        else:
+            if col['type'] == 's':
+                i_string += " '%s'," % (col['value'])
+            else:
+                i_string += " %s," % (col['value'])
+            count += 1
+
 def get(cursor):
     results = cursor.fetchall()
     cursor.close
