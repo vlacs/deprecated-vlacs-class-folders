@@ -110,14 +110,14 @@ def construct_query_insert_string(q_string, i_string, cols):
             if col['type'] == 's':
                 q_string += " AND %s = '%s'" % (col['name'], col['value'])
             else:
-                q_string += " AND %s = %s" % (col['name'], col['values'])
+                q_string += " AND %s = %s" % (col['name'], col['value'])
             i_string += "%s)" % (col['name'])
             count += 1
         else:
             if col['type'] == 's':
                 q_string += " AND %s = '%s'" % (col['name'], col['value'])
             else:
-                q_string += " AND %s = %s" % (col['name'], col['values'])
+                q_string += " AND %s = %s" % (col['name'], col['value'])
             i_string += "%s, " % (col['name'])
             count += 1
 
