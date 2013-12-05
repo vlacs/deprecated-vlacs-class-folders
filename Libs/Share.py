@@ -82,23 +82,23 @@ def analyze_share_structure(client, conn, folder_entry):
             if level == 0:
                 directory_folders = Folder.list_sub_folders(client, folder['parent_id'])
                 parent_res_id = folder['parent_id']
-                parent_res_id = create_share_structure(client, folder, level, template, max_level, parent_res_id)
+                parent_res_id = create_share_structure(client, conn, folder, level, template, max_level, parent_res_id)
                 new_structure[level] = {'folder_id':parent_res_id, 'role':folder['role']}
-            elif level != max_level:
-                parent_res_id = create_share_structure(client, folder, level, template, max_level, parent_res_id)         
-                new_structure[level] = {'folder_id':parent_res_id, 'role':folder['role']}
-            else:
-                folder_id = create_share_structure(client, folder, level, template, max_level, parent_res_id)
+            elif level == max_level:
+                folder_id = create_share_structure(client, conn, folder, level, template, max_level, parent_res_id)
                 new_structure[level] = {'folder_id':folder_id, 'role':folder['role']}
-
+            else:
+                parent_res_id = create_share_structure(client, conn, folder, level, template, max_level, parent_res_id)         
+                new_structure[level] = {'folder_id':parent_res_id, 'role':folder['role']}
+            
         new_structures[name] = OrderedDict(sorted(new_structure.items(), key=lambda d: d[0]))
 
     return enrollment, new_structures
 
-def create_share_structure(client, folder, level, template, max_level, parent_res_id):
+def create_share_structure(client, conn, folder, level, template, max_level, parent_res_id):
     directory_folders = Folder.list_sub_folders(client, parent_res_id)
     #Make sure the folder isn't the student assignment folder
-    if not folder['isassignment']:                  
+    if not folder['copy']:                  
         #If the folder is already there, store the resource_id and move on
         if folder['folder_name'] in directory_folders:
             print "DEBUG: Folder exists, ", directory_folders[folder['folder_name']]
@@ -109,12 +109,38 @@ def create_share_structure(client, folder, level, template, max_level, parent_re
             new_folder = create_folder(client, folder['folder_name'], parent_res_id)
             return new_folder.resource_id.text
     else:
-        if folder['folder_id'] in directory_folders:
-            print "DEBUG: Folder exists, ", folder['folder_id']
-            return folder['folder_id']
-        else:
-            print "DEBUG: Copying assignment folder"
-            return Folder.copy(client, folder['folder_id'], parent_res_id)
+        if template == "{{STUDENT_ASSIGNMENTS}}":
+            if folder['folder_id'] in directory_folders:
+                print "DEBUG: Folder exists, ", folder['folder_id']
+                return folder['folder_id']
+            else:
+                print "DEBUG: Copying assignment folder"
+                return Folder.copy(client, folder['folder_id'], parent_res_id)
+        if template == "{{CLASS_FILES}}":
+            table = "vlacs_class_folders_shared"
+            cols = {'folder_name' : {
+                                     'value':folder['folder_name'], 
+                                      'type':'s'
+                                    }
+                    }
+            class_files = Database.insert_if_not_exists(conn, table, cols)
+
+            if class_files == True:
+                new_folder = create_folder(client, folder['folder_name'], parent_res_id)
+                cols = {'folder_id' : {
+                                     'value':new_folder.resource_id.text, 
+                                      'type':'s'
+                                    }
+                        }
+                wheres = {'folder_name' : {
+                                     'value':folder['folder_name'], 
+                                      'type':'s'
+                                    }
+                        }
+                Database.update(conn, "vlacs_class_folders_shared", cols, wheres)                
+            else
+                return Folder.copy(client, class_files['folder_id'], parent_res_id)
+            
 
 def unshare(client, conn, folder_res_id, unshare_with):
     # Loop through share structures (bottom up) and remove ACL entry for user

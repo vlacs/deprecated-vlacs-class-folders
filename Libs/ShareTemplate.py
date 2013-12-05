@@ -21,12 +21,12 @@ def get(client, conn, template, enrollment=None):
 
 	template_variables = {
 			"{{CLASS_FILES}}" : {
-					 'folder_name' : "Class Files",
+					 'folder_name' : "Class Files (%s)" % (enrollment['class_id']),
 					        'role' : {
 										'teacher' : 'writer',
 										'student' : 'reader',
 									},
-					'isassignment' : False
+					'copy' : True
 			},
 			"{{CLASSROOM}}" : {
 					 'folder_name' : "%s (%s - %s)" % (enrollment['course_name'], enrollment['class_id'], Utilities.course_version(enrollment['course_full_name'])),
@@ -34,7 +34,7 @@ def get(client, conn, template, enrollment=None):
 										'teacher' : 'reader',
 										'student' : 'reader',
 									},
-					'isassignment' : False
+					'copy' : False
 			},
 			"{{COURSE_NAME}}" : {
 					 'folder_name' : enrollment['course_name'],
@@ -42,7 +42,7 @@ def get(client, conn, template, enrollment=None):
 										'teacher' : 'reader',
 										'student' : 'reader',
 									},
-					'isassignment' : False
+					'copy' : False
 			},
 			"{{COURSES}}" : {
 					 'folder_name' : "Courses",
@@ -50,15 +50,15 @@ def get(client, conn, template, enrollment=None):
 										'teacher' : 'reader',
 										'student' : 'reader',
 									},
-					'isassignment' : False
+					'copy' : False
 			},
 			"{{STUDENT_ASSIGNMENTS}}" : {
-					 'folder_id' : "",
+					 'folder_id'   : "",
 					        'role' : {
 										'teacher' : 'writer',
 										'student' : 'reader',
 									},
-					'isassignment' : True
+					'copy' : True
 			},
 			"{{STUDENT_NAME}}" : {
 					 'folder_name' : "%s, %s" % (enrollment['student_lastname'], enrollment['student_firstname']),
@@ -66,7 +66,7 @@ def get(client, conn, template, enrollment=None):
 										'teacher' : 'reader',
 										'student' : 'reader',
 									},
-					'isassignment' : False
+					'copy' : False
 			},
 			"{{STUDENT_ROOT}}" : {
 					 'folder_name' : "",
@@ -75,7 +75,7 @@ def get(client, conn, template, enrollment=None):
 										'teacher' : 'reader',
 										'student' : 'reader',
 									},
-					'isassignment' : False
+					'copy' : False
 			},
 			"{{STUDENTS}}" : {
 					 'folder_name' : "Students",
@@ -83,7 +83,7 @@ def get(client, conn, template, enrollment=None):
 										'teacher' : 'reader',
 										'student' : 'reader',
 									},
-					'isassignment' : False
+					'copy' : False
 			},
 			"{{TEACHER_ROOT}}" : {
 					 'folder_name' : "",
@@ -92,7 +92,7 @@ def get(client, conn, template, enrollment=None):
 										'teacher' : 'reader',
 										'student' : 'reader',
 									},
-					'isassignment' : False
+					'copy' : False
 			},
 		}
 
