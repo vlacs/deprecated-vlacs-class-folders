@@ -80,15 +80,17 @@ def insert_if_not_exists(conn, table, cols):
     q_string = "SELECT * FROM %s WHERE " % (table)
     i_string = "INSERT INTO %s (" % (table)
     
-    q_string, i_string = construct_query_insert_string(q_string, i_string, table, cols)
+    q_string, i_string = construct_query_insert_string(q_string, i_string, cols)
 
     if get(execute(conn, q_string)):
         return False
     else:
         insert(conn, i_string)
         return True
-
-def construct_query_insert_string(q_string, i_string, table, cols):
+# q_string = "SELECT * FROM vlacs_class_folders_shared WHERE "
+# i_string = "INSERT INTO vlacs_class_folders_shared ("
+# cols = {'folder_id': {'name':'folder_id', 'value':'folder:9400u5ijfs', type:'s'}, isactive: {'name':'isactive', 'value':0, 'type':'i'}}
+def construct_query_insert_string(q_string, i_string, cols):
     num_cols = 0
     count = 1
     
@@ -104,7 +106,7 @@ def construct_query_insert_string(q_string, i_string, table, cols):
             else:
                 i_string += "%s)" % (col['name'])
             count += 1
-        else if count == num_cols:
+        elif count == num_cols:
             if col['type'] == 's':
                 q_string += " AND %s = '%s'" % (col['name'], col['value'])
             else:
@@ -133,7 +135,7 @@ def construct_query_insert_string(q_string, i_string, table, cols):
             else:
                 i_string += ")"
             count += 1
-        else if count == num_cols:
+        elif count == num_cols:
             if col['type'] == 's':
                 i_string += " '%s')" % (col['value'])
             else:
