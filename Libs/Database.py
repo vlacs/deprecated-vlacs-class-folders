@@ -94,6 +94,9 @@ def construct_query_insert_string(q_string, i_string, cols):
     num_cols = 0
     count = 1
     
+    for n in cols:
+        num_cols += 1
+        
     #Construct query string and insert string
     for n, col in cols.iteritems():
         if count == 1:
