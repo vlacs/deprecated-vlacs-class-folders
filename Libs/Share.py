@@ -46,7 +46,7 @@ def share(client, folder_id, share_with, role):
             print "DEBUG: ACL for %s exists, verifying role." % share_with
             update_acl = acl
     if update_acl:
-        if update_acl.role.value not role:
+        if not update_acl.role.value == role:
             print "DEBUG: ACL Scope: %s ACL Role: %s" % (update_acl.scope.value, update_acl.role.value)
             update_acl.role.value = role
             print "DEBUG: ACL Scope: %s ACL Role: %s" % (update_acl.scope.value, update_acl.role.value)
