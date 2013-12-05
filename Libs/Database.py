@@ -89,13 +89,13 @@ def insert_if_not_exists(conn, table, cols):
         return True
 # q_string = "SELECT * FROM vlacs_class_folders_shared WHERE "
 # i_string = "INSERT INTO vlacs_class_folders_shared ("
-# cols = {'folder_id': {'name':'folder_id', 'value':'folder:9400u5ijfs', type:'s'}, isactive: {'name':'isactive', 'value':0, 'type':'i'}}
+# cols = {'folder_id': {'name':'folder_id', 'value':'folder:9400u5ijfs', 'type':'s'}, 'isactive': {'name':'isactive', 'value':0, 'type':'i'}}
 def construct_query_insert_string(q_string, i_string, cols):
     num_cols = 0
     count = 1
     
     #Construct query string and insert string
-    for col in cols:
+    for n, col in cols.iteritems():
         if count == 1:
             if col['type'] == 's':
                 q_string += "%s = '%s'" % (col['name'], col['value'])
@@ -124,7 +124,7 @@ def construct_query_insert_string(q_string, i_string, cols):
     count = 1
 
     #Construct second half of insert string
-    for col in cols:
+    for n, col in cols.iteritems():
         if count == 1:
             if col['type'] == 's':
                 i_string += " VALUES ('%s'" % (col['value'])
