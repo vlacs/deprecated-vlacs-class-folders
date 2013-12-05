@@ -77,68 +77,51 @@ def insert(conn, statement):
 def insert_if_not_exists(conn, table, cols):
     cursor = conn.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
     
-    q_string = "SELECT * FROM %s WHERE " % (table)
-    i_string = "INSERT INTO %s (" % (table)
+    q_string = construct_query_string(table, cols)
+    get = get(execute(conn, q_string))
     
-    q_string, i_string = construct_query_insert_string(q_string, i_string, cols)
-
-    if get(execute(conn, q_string)):
-        return False
+    if get:
+        return get
     else:
+        i_string = construct_insert_string(table, cols)
         insert(conn, i_string)
         return True
-# q_string = "SELECT * FROM vlacs_class_folders_shared WHERE "
-# i_string = "INSERT INTO vlacs_class_folders_shared ("
-# cols = {'folder_id': {'name':'folder_id', 'value':'folder:9400u5ijfs', 'type':'s'}, 'isactive': {'name':'isactive', 'value':0, 'type':'i'}}
-def construct_query_insert_string(q_string, i_string, cols):
-    num_cols = 0
+
+def update(conn, table, cols, wheres):
+    insert(conn, construct_update_string(table, cols, wheres))
+
+def construct_insert_string(table, cols):
+    i_string = "INSERT INTO %s (" % (table)
+
     count = 1
-    
-    for n in cols:
-        num_cols += 1
-        
+
     #Construct query string and insert string
     for n, col in cols.iteritems():
         if count == 1:
-            if col['type'] == 's':
-                q_string += "%s = '%s'" % (col['name'], col['value'])
+            if len(cols) > 1:
+                i_string += "%s, " % (n)
             else:
-                q_string += "%s = %s" % (col['name'], col['value'])
-            if num_cols > 1:
-                i_string += "%s, " % (col['name'])
-            else:
-                i_string += "%s)" % (col['name'])
+                i_string += "%s)" % (n)
             count += 1
-        elif count == num_cols:
-            if col['type'] == 's':
-                q_string += " AND %s = '%s'" % (col['name'], col['value'])
-            else:
-                q_string += " AND %s = %s" % (col['name'], col['value'])
-            i_string += "%s)" % (col['name'])
+        elif count == len(cols):
+            i_string += "%s)" % (n)
             count += 1
         else:
-            if col['type'] == 's':
-                q_string += " AND %s = '%s'" % (col['name'], col['value'])
-            else:
-                q_string += " AND %s = %s" % (col['name'], col['value'])
-            i_string += "%s, " % (col['name'])
+            i_string += "%s, " % (n)
             count += 1
 
-    count = 1
-
-    #Construct second half of insert string
     for n, col in cols.iteritems():
         if count == 1:
             if col['type'] == 's':
                 i_string += " VALUES ('%s'" % (col['value'])
             else:
                 i_string += " VALUES (%s" % (col['value'])
-            if num_cols > 1:
+            if len(cols) > 1:
                 i_string += ","
             else:
                 i_string += ")"
             count += 1
-        elif count == num_cols:
+        elif count == len(cols):
             if col['type'] == 's':
                 i_string += " '%s')" % (col['value'])
             else:
@@ -151,7 +134,63 @@ def construct_query_insert_string(q_string, i_string, cols):
                 i_string += " %s," % (col['value'])
             count += 1
 
-    return q_string, i_string
+    return i_string
+
+def construct_query_string(table, cols):
+    q_string = "SELECT * FROM %s WHERE "
+
+    count = 1
+
+    for n, col in cols.iteritems():
+        if count == 1:
+            if col['type'] == 's':
+                q_string += "%s = '%s'" % (n, col['value'])
+            else:
+                q_string += "%s = %s" % (n, col['value'])
+            count += 1
+        else:
+            if col['type'] == 's':
+                q_string += " AND %s = '%s'" % (n, col['value'])
+            else:
+                q_string += " AND %s = %s" % (n, col['value'])
+            count += 1
+
+    return q_string 
+
+def construct_update_string(table, cols, wheres):
+    u_string = "UPDATE %s SET " % (table)
+
+    count = 1
+
+    for n, col in cols.iteritems():
+        if count == 1:
+            if col['type'] == 's'
+                u_string += "%s = '%s'" % (n, col['value'])
+            else:
+                u_string += "%s = %s" % (n, col['value'])
+            count += 1
+        else:
+            if col['type'] == 's':
+                u_string += " AND %s = '%s'" % (n, col['value'])
+            else:
+                u_string += " AND %s = %s" % (n, col['value'])
+            count += 1
+
+    count = 1
+
+    for n, where in wheres.iteritems():
+        if count == 1:
+            if where['type'] == 's'
+                u_string += "WHERE %s = '%s'" % (n, where['value'])
+            else:
+                u_string += "WHERE %s = %s" % (n, where['value'])
+            count += 1
+        else:
+            if where['type'] == 's':
+                u_string += " AND %s = '%s'" % (n, where['value'])
+            else:
+                u_string += " AND %s = %s" % (n, where['value'])
+            count += 1
 
 def get(cursor):
     results = cursor.fetchall()
