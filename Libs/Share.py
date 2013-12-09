@@ -96,6 +96,7 @@ def analyze_share_structure(client, conn, folder_entry):
                 new_structure[level] = {'folder_id':parent_res_id, 'role':folder['role']}
             
         new_structures[name] = OrderedDict(sorted(new_structure.items(), key=lambda d: d[0]))
+        max_level = 0
 
     return enrollment, new_structures
 
@@ -205,7 +206,7 @@ def parse_share_structure_string(structure):
 ## Testing / Debugging variables ##
 ## client = Client.create()
 ## conn = Database.connect()
-## folder_entry = {'id':'296', 'class_id':'1771', 'student_id':'66839', 'folder_name':'Andrews, Henry - Assignments', 'folder_id':'folder:0B7AqvGrb_oO8cy1Ydy00LVlCdXc', 'folder_parent':'folder:0B7AqvGrb_oO8UVNJVl80aWNkWXM', 'isactive':1}
+## folder_entry = {'id':'92', 'class_id':'1488', 'student_id':'61348', 'folder_name':'Adams, Abigail - Assignments', 'folder_id':'folder:0B7AqvGrb_oO8WW9MdndPTm1qUjg', 'folder_parent':'folder:0B7AqvGrb_oO8Tmhtd3dXZDFlaU0', 'isactive':1}
 ##
 ##
 ##
