@@ -12,6 +12,7 @@ from Libs import ShareTemplate
 import gdata.docs.data
 import gdata.acl.data
 import gdata.data
+import gdata.client
 
 def create_folder(client, title, parent):
     folder = gdata.docs.data.Resource(type='folder', title=title)
@@ -41,27 +42,30 @@ def share(client, folder_id, share_with, role):
     updated = False
     folder = client.GetResourceById(folder_id)
     acl_feed = client.GetResourceAcl(folder)
-    for acl in acl_feed.entry:
-        if acl.scope.value == share_with:
-            print "DEBUG: ACL for %s exists, verifying role." % share_with
-            update_acl = acl
-    if update_acl:
-        if update_acl.role.value == role:
-            print "DEBUG: Current ACL entry Okay."
-        else:
-            print "DEBUG: ACL Scope: %s ACL Role: %s" % (update_acl.scope.value, update_acl.role.value)
-            update_acl.role.value = role
-            update_acl.etag = None
-            print "DEBUG: ACL Scope: %s ACL Role: %s" % (update_acl.scope.value, update_acl.role.value)
-            client.UpdateAclEntry(update_acl, send_notification=False)
-        updated = True
-    #add new ACL entry with proper role for share_with
-    if not updated:
-        print "DEBUG: Sharing with %s" % share_with
-        acl_entry = gdata.docs.data.AclEntry(
-            scope=gdata.acl.data.AclScope(value=share_with, type='user'),
-            role=gdata.acl.data.AclRole(value=role))
-        client.AddAclEntry(folder, acl_entry, send_notification=False)
+    try:
+        for acl in acl_feed.entry:
+            if acl.scope.value == share_with:
+                print "DEBUG: ACL for %s exists, verifying role." % share_with
+                update_acl = acl
+        if update_acl:
+            if update_acl.role.value == role:
+                print "DEBUG: Current ACL entry Okay."
+            else:
+                print "DEBUG: ACL Scope: %s ACL Role: %s" % (update_acl.scope.value, update_acl.role.value)
+                update_acl.role.value = role
+                update_acl.etag = None
+                print "DEBUG: ACL Scope: %s ACL Role: %s" % (update_acl.scope.value, update_acl.role.value)
+                client.UpdateAclEntry(update_acl, send_notification=False)
+            updated = True
+        #add new ACL entry with proper role for share_with
+        if not updated:
+            print "DEBUG: Sharing with %s" % share_with
+            acl_entry = gdata.docs.data.AclEntry(
+                scope=gdata.acl.data.AclScope(value=share_with, type='user'),
+                role=gdata.acl.data.AclRole(value=role))
+            client.AddAclEntry(folder, acl_entry, send_notification=False)
+    except (gdata.client.RequestError):
+        pass
 
 def analyze_share_structure(client, conn, folder_entry):
     enrollment = Database.get(Database.execute(conn, Database.enrollment_query_string(where="class_id = '" + folder_entry['class_id'] + "' AND student_id = '" + folder_entry['student_id'] + "'")))
