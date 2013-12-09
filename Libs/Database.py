@@ -108,7 +108,9 @@ def construct_insert_string(table, cols):
             count += 1
         else:
             i_string += "%s, " % (n)
-            count += 1
+            count += 
+
+    count = 1
 
     for n, col in cols.iteritems():
         if count == 1:
