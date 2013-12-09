@@ -137,7 +137,7 @@ def construct_insert_string(table, cols):
     return i_string
 
 def construct_query_string(table, cols):
-    q_string = "SELECT * FROM %s WHERE "
+    q_string = "SELECT * FROM %s WHERE " % (table)
 
     count = 1
 
