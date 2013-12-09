@@ -183,9 +183,9 @@ def construct_update_string(table, cols, wheres):
     for n, where in wheres.iteritems():
         if count == 1:
             if where['type'] == 's':
-                u_string += "WHERE %s = '%s'" % (n, where['value'])
+                u_string += " WHERE %s = '%s'" % (n, where['value'])
             else:
-                u_string += "WHERE %s = %s" % (n, where['value'])
+                u_string += " WHERE %s = %s" % (n, where['value'])
             count += 1
         else:
             if where['type'] == 's':
