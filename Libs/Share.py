@@ -77,6 +77,7 @@ def analyze_share_structure(client, conn, folder_entry):
             if (level > max_level):
                 max_level = level
         for template, level in structure.iteritems():
+            print "DEBUG: Folder: %s, Level: %s" % (template, level)
             folder = ShareTemplate.get(client, conn, template, enrollment)
 
             if level == 0:
@@ -85,6 +86,7 @@ def analyze_share_structure(client, conn, folder_entry):
                 parent_res_id = create_share_structure(client, conn, folder, level, template, max_level, parent_res_id)
                 new_structure[level] = {'folder_id':parent_res_id, 'role':folder['role']}
             elif level == max_level:
+                print "DEBUG: MAX_LEVEL"
                 folder_id = create_share_structure(client, conn, folder, level, template, max_level, parent_res_id)
                 new_structure[level] = {'folder_id':folder_id, 'role':folder['role']}
             else:
