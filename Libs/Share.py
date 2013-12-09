@@ -138,7 +138,7 @@ def create_share_structure(client, conn, folder, level, template, max_level, par
                                     }
                         }
                 Database.update(conn, "vlacs_class_folders_shared", cols, wheres)                
-            else
+            else:
                 return Folder.copy(client, class_files['folder_id'], parent_res_id)
             
 
