@@ -77,6 +77,7 @@ def analyze_share_structure(client, conn, folder_entry):
             if (level > max_level):
                 max_level = level
         for template, level in structure.iteritems():
+            print "DEBUG: %s" % (structure)
             print "DEBUG: Folder: %s, Level: %s" % (template, level)
             folder = ShareTemplate.get(client, conn, template, enrollment)
 
@@ -89,6 +90,7 @@ def analyze_share_structure(client, conn, folder_entry):
                 print "DEBUG: MAX_LEVEL"
                 folder_id = create_share_structure(client, conn, folder, level, template, max_level, parent_res_id)
                 new_structure[level] = {'folder_id':folder_id, 'role':folder['role']}
+                print "DEBUG: Parent: " % (parent_res_id)
             else:
                 parent_res_id = create_share_structure(client, conn, folder, level, template, max_level, parent_res_id)         
                 new_structure[level] = {'folder_id':parent_res_id, 'role':folder['role']}
@@ -128,6 +130,7 @@ def create_share_structure(client, conn, folder, level, template, max_level, par
             class_files = Database.insert_if_not_exists(conn, table, cols)
 
             if class_files == True:
+                print "DEBUG: Creating Class Files folder"
                 new_folder = create_folder(client, folder['folder_name'], parent_res_id)
                 cols = {'folder_id' : {
                                      'value':new_folder.resource_id.text, 
@@ -141,6 +144,7 @@ def create_share_structure(client, conn, folder, level, template, max_level, par
                         }
                 Database.update(conn, "vlacs_class_folders_shared", cols, wheres)                
             else:
+                print "DEBUG: Copying Class Files folder"
                 return Folder.copy(client, class_files['folder_id'], parent_res_id)
             
 
