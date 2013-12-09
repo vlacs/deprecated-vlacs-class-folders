@@ -78,10 +78,10 @@ def insert_if_not_exists(conn, table, cols):
     cursor = conn.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
     
     q_string = construct_query_string(table, cols)
-    get = get(execute(conn, q_string))
+    q = get(execute(conn, q_string))
     
-    if get:
-        return get
+    if q:
+        return q
     else:
         i_string = construct_insert_string(table, cols)
         insert(conn, i_string)
