@@ -194,6 +194,8 @@ def construct_update_string(table, cols, wheres):
                 u_string += " AND %s = %s" % (n, where['value'])
             count += 1
 
+    return u_string
+
 def get(cursor):
     results = cursor.fetchall()
     cursor.close
