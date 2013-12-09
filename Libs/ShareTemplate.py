@@ -64,7 +64,7 @@ def get(client, conn, template, enrollment=None):
 					 'folder_name' : "%s, %s" % (enrollment['student_lastname'], enrollment['student_firstname']),
 					        'role' : {
 										'teacher' : 'reader',
-										'student' : 'reader',
+										'student' : 'none',
 									},
 					'copy' : False
 			},
@@ -72,7 +72,7 @@ def get(client, conn, template, enrollment=None):
 					 'folder_name' : "",
 					 'parent_id'   : "",
 					        'role' : {
-										'teacher' : 'reader',
+										'teacher' : 'none',
 										'student' : 'reader',
 									},
 					'copy' : False
@@ -81,7 +81,7 @@ def get(client, conn, template, enrollment=None):
 					 'folder_name' : "Students",
 					        'role' : {
 										'teacher' : 'reader',
-										'student' : 'reader',
+										'student' : 'none',
 									},
 					'copy' : False
 			},
@@ -90,7 +90,7 @@ def get(client, conn, template, enrollment=None):
 					 'parent_id'   : "",
 					        'role' : {
 										'teacher' : 'reader',
-										'student' : 'reader',
+										'student' : 'none',
 									},
 					'copy' : False
 			},

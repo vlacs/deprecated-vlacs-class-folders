@@ -49,7 +49,7 @@ def share(client, folder_id, share_with, role):
                 update_acl = acl
         if update_acl:
             if update_acl.role.value == role:
-                print "DEBUG: Current ACL entry Okay."
+                print "DEBUG: Current ACL entry Okay. %s = %s" % (update_acl.role.value, role)
             else:
                 print "DEBUG: ACL Scope: %s ACL Role: %s" % (update_acl.scope.value, update_acl.role.value)
                 update_acl.role.value = role
@@ -211,7 +211,7 @@ def parse_share_structure_string(structure):
 ## Testing / Debugging variables ##
 ## client = Client.create()
 ## conn = Database.connect()
-## folder_entry = {'id':'92', 'class_id':'1488', 'student_id':'61348', 'folder_name':'Adams, Abigail - Assignments', 'folder_id':'folder:0B7AqvGrb_oO8WW9MdndPTm1qUjg', 'folder_parent':'folder:0B7AqvGrb_oO8Tmhtd3dXZDFlaU0', 'isactive':1}
+## folder_entry = {'id':'9', 'class_id':'1240', 'student_id':'53697', 'folder_name':'Ingram, Trevor - Assignments', 'folder_id':'folder:0B7AqvGrb_oO8VlNZWGJWQVFqZDA', 'folder_parent':'folder:0B7AqvGrb_oO8dlgwTkxhbHlUcVE', 'isactive':1}
 ##
 ##
 ##
