@@ -56,7 +56,7 @@ def get(client, conn, template, enrollment=None):
 					 'folder_id'   : "",
 					        'role' : {
 										'teacher' : 'writer',
-										'student' : 'reader',
+										'student' : 'writer',
 									},
 					'copy' : True
 			},
