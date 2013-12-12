@@ -117,7 +117,7 @@ def analyze_share_structure(client, conn, folder_entry):
         new_structures[name] = OrderedDict(sorted(new_structure.items(), key=lambda d: d[0]))
         max_level = 0
 
-    return enrollment, new_structures, old_structures
+    return enrollment, new_structures, structures
 
 def create_share_structure(client, conn, folder, level, template, max_level, parent_res_id):
     directory_folders = Folder.list_sub_folders(client, parent_res_id)
