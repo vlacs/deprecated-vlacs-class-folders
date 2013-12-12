@@ -26,14 +26,22 @@ def create_folder(client, title, parent):
 
 def share_folder(client, conn, folder_entry):
     #Get structures and enrollment from analyze_share_structure
-    enrollment, structures = analyze_share_structure(client, conn, folder_entry)
+    enrollment, structures, old_structures = analyze_share_structure(client, conn, folder_entry)
+    #check old structures against new structures!
+    for name, structure in old_structures.iteritems():
+        print "DEBUG: %s old share structure" % name
+        print "DEBUG: ------------------------------"
+        for level, folder in structure.iteritems():
+            dbg_l_str = "--" * level
+            print "DEBUG %s %s %s" % (dbg_l_str, folder['folder_name'], folder['role'])
+
     # Loop through share structures
     for name, structure in structures.iteritems():
         print "DEBUG: %s share structure" % name
         print "DEBUG: --------------------------"
         for level, folder in structure.iteritems():
             dbg_l_str = "--" * level
-            print "DEBUG: %s %s %s" % (dbg_l_str, folder['folder_id'], folder['role'])
+            print "DEBUG: %s %s %s" % (dbg_l_str, folder['folder_name'], folder['role'])
             #Share with student
             #if 'student' in name:
             #    print "DEBUG: Sharing %s with student" % folder['folder_id']
@@ -109,7 +117,7 @@ def analyze_share_structure(client, conn, folder_entry):
         new_structures[name] = OrderedDict(sorted(new_structure.items(), key=lambda d: d[0]))
         max_level = 0
 
-    return enrollment, new_structures
+    return enrollment, new_structures, old_structures
 
 def create_share_structure(client, conn, folder, level, template, max_level, parent_res_id):
     directory_folders = Folder.list_sub_folders(client, parent_res_id)
