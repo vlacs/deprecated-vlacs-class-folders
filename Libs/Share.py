@@ -38,8 +38,6 @@ def share_folder(client, conn, folder_entry):
 
 def share(client, folder_id, share_with, role):
     #list current ACL Entries and delete any for share_with
-    import pdb
-    pdb.set_trace()
     update_acl = False
     updated = False
     folder = client.GetResourceById(folder_id)
@@ -60,7 +58,7 @@ def share(client, folder_id, share_with, role):
                 client.UpdateAclEntry(update_acl, send_notification=False)
             updated = True
         #add new ACL entry with proper role for share_with
-        if not updated:
+        elif not updated:
             print "DEBUG: Sharing with %s" % share_with
             acl_entry = gdata.docs.data.AclEntry(
                 scope=gdata.acl.data.AclScope(value=share_with, type='user'),
@@ -70,6 +68,8 @@ def share(client, folder_id, share_with, role):
         pass
 
 def analyze_share_structure(client, conn, folder_entry):
+    import pdb
+    pdb.set_trace()
     enrollment = Database.get(Database.execute(conn, Database.enrollment_query_string(where="class_id = '" + folder_entry['class_id'] + "' AND student_id = '" + folder_entry['student_id'] + "'")))
     parent_res_id = ""
     directory_folders = None
