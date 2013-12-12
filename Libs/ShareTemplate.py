@@ -54,6 +54,7 @@ def get(client, conn, template, enrollment=None):
 			},
 			"{{STUDENT_ASSIGNMENTS}}" : {
 					 'folder_id'   : "",
+					 'folder_name' : "",
 					        'role' : {
 										'teacher' : 'writer',
 										'student' : 'writer',
@@ -110,6 +111,7 @@ def get(client, conn, template, enrollment=None):
 		folder_id = Database.get(Database.execute(conn, Database.structure_get_folder_id_string(Utilities.gen_title(enrollment, "s"), enrollment['class_id'], enrollment['student_id'])))
 		folder_id = folder_id['folder_id']
 		template_variables[template]['folder_id'] = folder_id
+		template_variables[template]['folder_name'] = "%s, %s - Assignments" % (enrollment['student_lastname'], enrollment['student_firstname'])
 		
 	parsed_template = template_variables[template]
 

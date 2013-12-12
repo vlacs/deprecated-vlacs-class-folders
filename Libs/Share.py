@@ -96,15 +96,15 @@ def analyze_share_structure(client, conn, folder_entry):
                 directory_folders = Folder.list_sub_folders(client, folder['parent_id'])
                 parent_res_id = folder['parent_id']
                 parent_res_id = create_share_structure(client, conn, folder, level, template, max_level, parent_res_id)
-                new_structure[level] = {'folder_id':parent_res_id, 'role':folder['role']}
+                new_structure[level] = {'folder_id':parent_res_id, 'folder_name':folder['folder_name'], 'role':folder['role']}
             elif level == max_level:
                 print "DEBUG: MAX_LEVEL"
                 folder_id = create_share_structure(client, conn, folder, level, template, max_level, parent_res_id)
-                new_structure[level] = {'folder_id':folder_id, 'role':folder['role']}
+                new_structure[level] = {'folder_id':folder_id, 'folder_name':folder['folder_name'], 'role':folder['role']}
                 print "DEBUG: Parent: %s" % (parent_res_id)
             else:
                 parent_res_id = create_share_structure(client, conn, folder, level, template, max_level, parent_res_id)         
-                new_structure[level] = {'folder_id':parent_res_id, 'role':folder['role']}
+                new_structure[level] = {'folder_id':parent_res_id, 'folder_name':folder['folder_name'], 'role':folder['role']}
             
         new_structures[name] = OrderedDict(sorted(new_structure.items(), key=lambda d: d[0]))
         max_level = 0
