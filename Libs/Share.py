@@ -68,8 +68,6 @@ def share(client, folder_id, share_with, role):
         pass
 
 def analyze_share_structure(client, conn, folder_entry):
-    import pdb
-    pdb.set_trace()
     enrollment = Database.get(Database.execute(conn, Database.enrollment_query_string(where="class_id = '" + folder_entry['class_id'] + "' AND student_id = '" + folder_entry['student_id'] + "'")))
     parent_res_id = ""
     directory_folders = None
