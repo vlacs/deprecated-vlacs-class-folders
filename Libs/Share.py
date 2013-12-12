@@ -38,6 +38,8 @@ def share_folder(client, conn, folder_entry):
 
 def share(client, folder_id, share_with, role):
     #list current ACL Entries and delete any for share_with
+    import pdb
+    pdb.set_trace()
     update_acl = False
     updated = False
     folder = client.GetResourceById(folder_id)
