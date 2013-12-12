@@ -14,6 +14,9 @@ import gdata.acl.data
 import gdata.data
 import gdata.client
 
+#debugging
+import sys
+
 def create_folder(client, title, parent):
     folder = gdata.docs.data.Resource(type='folder', title=title)
     parent = client.GetResourceById(parent)
@@ -26,18 +29,21 @@ def share_folder(client, conn, folder_entry):
     enrollment, structures = analyze_share_structure(client, conn, folder_entry)
     # Loop through share structures
     for name, structure in structures.iteritems():
+        print "DEBUG: %s share structure" % name
+        print "DEBUG: --------------------------"
         for level, folder in structure.iteritems():
+            dbg_l_str = "--" * level
+            print "DEBUG: %s %s %s" % (dbg_l_str, folder['folder_id'], folder['role'])
             #Share with student
-            if 'student' in name:
-                print "DEBUG: Sharing %s with student" % folder['folder_id']
-                share(client, folder['folder_id'], 'teststudent@vlacs.net', folder['role']['student'])
+            #if 'student' in name:
+            #    print "DEBUG: Sharing %s with student" % folder['folder_id']
+            #    share(client, folder['folder_id'], 'teststudent@vlacs.net', folder['role']['student'])
             #Share with teacher
-            if 'teacher' in name:
-                print "DEBUG: Sharing %s with teacher" % folder['folder_id']
-                share(client, folder['folder_id'], 'testteacher@vlacs.net', folder['role']['teacher'])
+            #if 'teacher' in name:
+            #    print "DEBUG: Sharing %s with teacher" % folder['folder_id']
+            #    share(client, folder['folder_id'], 'testteacher@vlacs.net', folder['role']['teacher'])
 
 def share(client, folder_id, share_with, role):
-    #list current ACL Entries and delete any for share_with
     update_acl = False
     updated = False
     folder = client.GetResourceById(folder_id)
