@@ -8,6 +8,7 @@ from Config import config
 from Libs import Database
 from Libs import Folder
 from Libs import ShareTemplate
+from Libs import Utilities
 
 import gdata.docs.data
 import gdata.acl.data
