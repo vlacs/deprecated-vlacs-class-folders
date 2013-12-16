@@ -14,9 +14,6 @@ import gdata.acl.data
 import gdata.data
 import gdata.client
 
-#debugging
-import sys
-
 def create_folder(client, title, parent):
     folder = gdata.docs.data.Resource(type='folder', title=title)
     parent = client.GetResourceById(parent)
