@@ -80,7 +80,7 @@ def remove_duplicates(list):
         i = tuple(i.items())
         if i not in seen:
             result.append(d)
-            seen.add(h)
+            seen.add(i)
 
     return result
 
