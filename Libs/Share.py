@@ -17,9 +17,9 @@ import gdata.client
 
 import sys
 
-def share_folder():
+def ShareFolder():
     #Create the share structures and then share and modify permissions
-    #for student and teacher.
+    #for student and teacher.]
 
 def parse_share_structure_string(structure):
     structure_out = {}
@@ -105,11 +105,3 @@ def share(client, folder_id, share_with, role, try_count=1):
         else:
             try_count += 1
             share(client, folder_id, share_with, role, try_count=try_count)
-
-
-
-
-
-    ##
-    ##
-    ##
