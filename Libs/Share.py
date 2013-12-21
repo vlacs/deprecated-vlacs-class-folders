@@ -22,6 +22,7 @@ import sys
 def ShareFolder():
     #Create the share structures and then share and modify permissions
     #for student and teacher.
+    pass
 
 def parse_share_structure_string(structure):
     structure_out = {}
