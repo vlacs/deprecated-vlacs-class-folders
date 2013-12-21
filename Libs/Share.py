@@ -10,8 +10,10 @@ from Libs import Folder
 from Libs import ShareTemplate
 from Libs import Utilities
 
-import gdata.docs.data
-import gdata.acl.data
+from gdata.acl.data import AclRole
+from gdata.acl.data import AclScope
+from gdata.docs.data import AclEntry
+
 import gdata.data
 import gdata.client
 
@@ -19,7 +21,7 @@ import sys
 
 def ShareFolder():
     #Create the share structures and then share and modify permissions
-    #for student and teacher.]
+    #for student and teacher.
 
 def parse_share_structure_string(structure):
     structure_out = {}
@@ -78,30 +80,30 @@ def retrieve_share_structures():
     return structures
 
 def share(client, folder_id, share_with, role, try_count=1):
-    update_acl = False
-    updated = False
     folder = client.GetResourceById(folder_id)
     acl_feed = client.GetResourceAcl(folder)
+
     try:
         for acl in acl_feed.entry:
             if acl.scope.value == share_with:
-                update_acl = acl
-
-        if update_acl:
-            if not update_acl.role.value == role:
-                update_acl.role.value = role
-                update_acl.etag = None
-                client.UpdateAclEntry(update_acl, send_notification=False)
-            updated = True
-        elif not updated:
-            acl_entry = gdata.docs.data.AclEntry(
-                scope=gdata.acl.data.AclScope(value=share_with, type='user'),
-                role=gdata.acl.data.AclRole(value=role))
+                break
+        else:
+            #If there is no break no acl record exists for shared_with
+            acl_entry = AclEntry(
+                scope = AclScope(value=share_with, type='user'),
+                role = AclRole(value=role))
             client.AddAclEntry(folder, acl_entry, send_notification=False)
+
+        if not acl.role.value = role:
+            acl.role.value = role
+            acl.etag = None
+            client.UpdateAclEntry(acl, send_notification=False)
     except (gdata.client.RequestError):
-        # Catch the request error and retry up to three times.
+        # Catch the request error and retry up to three times
+        # Sometimes we recieve a random 500 error and a retry
+        # does the trick
         if try_count > 2:
             sys.exit("ERROR: There seems to be a problem sharing...")
         else:
             try_count += 1
-            share(client, folder_id, share_with, role, try_count=try_count)
+            share(client, folder_id, share_with, role, try_count)
