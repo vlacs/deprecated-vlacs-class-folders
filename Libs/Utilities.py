@@ -2,6 +2,7 @@
 
 __author__ = 'mgeorge@vlacs.org (Mike George)'
 
+from contextlib import contextmanager
 import string
 
 def clean_name(name):
@@ -70,6 +71,22 @@ def gen_title(enrollment, type):
         title += " - "
         title += enrollment['class_id']
     return title
+
+@contextmanager
+def ignored(*exceptions):
+    try:
+        yield
+    except exceptions:
+        pass
+
+@contextmanager
+def redirect_stdout(fileobj):
+    oldstdout = sys.stdout
+    sys.stdout = fileobj
+    try:
+        yield fileobj
+    finally:
+        sys.stdout = oldstdout
 
 def remove_duplicates(list):
     seen = set()
