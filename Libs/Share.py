@@ -95,7 +95,7 @@ def share(client, folder_id, share_with, role, try_count=1):
                 role = AclRole(value=role))
             client.AddAclEntry(folder, acl_entry, send_notification=False)
 
-        if not acl.role.value = role:
+        if not acl.role.value == role:
             acl.role.value = role
             acl.etag = None
             client.UpdateAclEntry(acl, send_notification=False)
