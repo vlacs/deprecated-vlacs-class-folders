@@ -33,7 +33,7 @@ def ShareFolder(client, conn, folder_entry):
             created_structures[name] = create_share_structure(client, conn, enrollment, structure)
         except KeyError:
             print "ERROR"
-            print created_structures
+            print structures
     share_roles = retrieve_share_roles(created_structures)
 
     print "Sharing Folders..."
