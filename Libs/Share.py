@@ -57,11 +57,15 @@ def create_share_structure(client, conn, enrollment, structure):
         if level == 0:
             #Level 0 will always be the root folders
             currentdir_folders = Folder.list_sub_folders(client, folder['folder_id'])
-            parents[level+1] = folder['folder_id']
+            cr_folder = folder_not_exists_create(client, conn, folder, template, folder['folder_id'], currentdir_folders)
+            parents[level+1] = cr_folder['folder_id']
         else:
             cr_folder = folder_not_exists_create(client, conn, folder, template, parents[level], currentdir_folders)
             parents[level+1] = cr_folder['folder_id']
-            created_structure.append(cr_folder)
+
+        created_structure.append(cr_folder)
+        dbg_arrow = '--' * level + '>'
+        print template, dbg_arrow, cr_folder['folder_id']
 
     return created_structure
 
@@ -74,7 +78,7 @@ def folder_not_exists_create(client, conn, folder, template, parent, currentdir_
     elif folder['copy']:
         #this is a folder that needs to be copied from somewhere else
         if template == "{{STUDENT_ASSIGNMENTS}}":
-            Folder.copy(client, folder[folder_id], parent)
+            Folder.copy(client, folder['folder_id'], parent)
             return folder
         elif template == "{{CLASS_FILES}}":
             table = "vlacs_class_folders_shared"
