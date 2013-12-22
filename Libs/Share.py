@@ -31,8 +31,6 @@ def ShareFolder(client, conn, folder_entry):
     for name, structure in structures.iteritems():
         created_structures[name] = create_share_structure(client, conn, enrollment, structure)
 
-    return created_structures
-
     share_roles = retrieve_share_roles(created_structures)
 
     print "Sharing Folders..."
