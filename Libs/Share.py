@@ -40,8 +40,10 @@ def ShareFolder(client, conn, folder_entry):
 
     for folder in share_roles:
         # In production the teacher and student emails will come from enrollment dict
-        share(client, folder['folder_id'], 'testteacher@vlacs.net', folder['role']['teacher'])
-        share(client, folder['folder_id'], 'teststudent@vlacs.net', folder['role']['student'])
+        if not folder['role']['teacher'] == 'none':
+            share(client, folder['folder_id'], 'testteacher@vlacs.net', folder['role']['teacher'])
+        if not folder['role']['student'] == 'none':
+            share(client, folder['folder_id'], 'teststudent@vlacs.net', folder['role']['student'])
 
     print "Done!"
 
