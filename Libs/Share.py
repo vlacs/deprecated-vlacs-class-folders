@@ -29,8 +29,11 @@ def ShareFolder(client, conn, folder_entry):
     print "Creating Share Structure..."
 
     for name, structure in structures.iteritems():
-        created_structures[name] = create_share_structure(client, conn, enrollment, structure)
-
+        try:
+            created_structures[name] = create_share_structure(client, conn, enrollment, structure)
+        except KeyError:
+            print "ERROR"
+            print created_structures
     share_roles = retrieve_share_roles(created_structures)
 
     print "Sharing Folders..."
@@ -197,3 +200,8 @@ def share(client, folder_id, share_with, role, try_count=1):
         else:
             try_count += 1
             share(client, folder_id, share_with, role, try_count)
+
+##
+## TEST VARIABLES
+## folder_entry = {'id':'9', 'class_id':'1240', 'student_id':'53697', 'folder_name':'Ingram, Trevor - Assignments', 'folder_id':'folder:0B7AqvGrb_oO8VlNZWGJWQVFqZDA', 'folder_parent':'folder:0B7AqvGrb_oO8dlgwTkxhbHlUcVE', 'isactive':1}
+##
