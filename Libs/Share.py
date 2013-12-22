@@ -69,6 +69,7 @@ def create_share_structure(client, conn, enrollment, structure):
             cr_folder = folder_not_exists_create(client, conn, folder, template, folder['folder_id'], currentdir_folders)
             parents[level+1] = cr_folder['folder_id']
         else:
+            currentdir_folders = Folder.list_sub_folders(client, parents[level])
             cr_folder = folder_not_exists_create(client, conn, folder, template, parents[level], currentdir_folders)
             parents[level+1] = cr_folder['folder_id']
 
