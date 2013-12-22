@@ -176,6 +176,8 @@ def share(client, folder_id, share_with, role, try_count=1):
     folder = client.GetResourceById(folder_id)
     acl_feed = client.GetResourceAcl(folder)
 
+    print "Sharing: %s with %s as %s, try %s" % (folder_id, share_with, role, try_count)
+
     try:
         for acl in acl_feed.entry:
             if acl.scope.value == share_with:
@@ -191,17 +193,18 @@ def share(client, folder_id, share_with, role, try_count=1):
             acl.role.value = role
             acl.etag = None
             client.UpdateAclEntry(acl, send_notification=False)
-    except (gdata.client.RequestError):
+    except (gdata.client.RequestError as e):
         # Catch the request error and retry up to three times
         # Sometimes we recieve a random 500 error and a retry
         # does the trick
         if try_count > 2:
-            sys.exit("ERROR: There seems to be a problem sharing...")
+            print "ERROR: There seems to be a problem sharing..."
+            sys.exit(e.message)
         else:
             try_count += 1
             share(client, folder_id, share_with, role, try_count)
 
 ##
 ## TEST VARIABLES
-## folder_entry = {'id':'9', 'class_id':'1240', 'student_id':'53697', 'folder_name':'Ingram, Trevor - Assignments', 'folder_id':'folder:0B7AqvGrb_oO8VlNZWGJWQVFqZDA', 'folder_parent':'folder:0B7AqvGrb_oO8dlgwTkxhbHlUcVE', 'isactive':1}
+## folder_entry = {'id':'47', 'class_id':'1463', 'student_id':'58737', 'folder_name':'Adam, Kaitlyn - Assignments', 'folder_id':'folder:0B7AqvGrb_oO8OVNwaElSdWV0ZlE', 'folder_parent':'folder:0B7AqvGrb_oO8cTdhb3BLQWEwTzQ', 'isactive':1}
 ##
