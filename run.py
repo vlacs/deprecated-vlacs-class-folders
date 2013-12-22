@@ -23,33 +23,33 @@ def main(limit=None, offset=None):
 
     count = 1
 
-    Color.green("******** VLACS CLASS FOLDERS ********")
-    Color.blue("Verifying database and root folders exist...")
+    print "******** VLACS CLASS FOLDERS ********"
+    print "Verifying database and root folders exist..."
     check_structure(client, conn)
 
-    Color.blue("Marking items that need to be archived...")
+    print "Marking items that need to be archived..."
     set_to_archived(conn, client)
 
-    Color.blue("Comparing the database with Google Drive...")
+    print "Comparing the database with Google Drive..."
     cid, rid, aid = compare_db_with_drive(client, conn, limit, offset)
 
     if cid:
-        Color.blue("--- Creating folders in Drive...")
+        print "--- Creating folders in Drive..."
         create_in_drive(conn, client, cid, count, offset)
     else:
-        Color.green("--- No folders to create.")
+        print "--- No folders to create."
 
     if rid:
-        Color.blue("--- Renaming folders in Drive...")
+        print "--- Renaming folders in Drive..."
         rename_in_drive(client, rid)
     else:
-        Color.green("--- Nothing to rename.")
+        print "--- Nothing to rename."
 
     if aid:
-        Color.blue("--- Archiving folders in Drive...")
+        print "--- Archiving folders in Drive..."
         archive_in_drive(conn, client, aid)
     else:
-        Color.green("--- Nothing to archive.")
+        print "--- Nothing to archive."
 
     elapsed = int(time() - start)
     print "Finished in %s" % str(datetime.timedelta(seconds=elapsed))
@@ -63,19 +63,19 @@ def check_structure(client, conn):
     exists_list_db = {}
     everything_exists = False
 
-    Color.cyan("Making sure the database tables exist...")
+    print "Making sure the database tables exist..."
     # CHECK FOR DATABASE TABLES #
     tables_query = Database.get(Database.execute(conn, "SELECT COUNT(*) FROM pg_tables WHERE schemaname='public' AND tablename LIKE 'vlacs%'"))
     if tables_query['count'] > 1:
-        Color.green("Database tables exist.")
+        print "Database tables exist."
         tables_exist = True
 
     if not tables_exist:
-        Color.red("Database tables do not exist, creating...")
+        print "Database tables do not exist, creating..."
         Database.insert(conn, "CREATE TABLE IF NOT EXISTS vlacs_class_folders_structure(id serial, class_id integer, student_id integer, folder_name text, folder_id text, folder_parent text, isactive int DEFAULT 1 NOT NULL)")
         Database.insert(conn, "CREATE TABLE IF NOT EXISTS vlacs_class_folders_shared(id serial, folder_id text, folder_name text, shared_with text, shared_permission text)")
 
-    Color.cyan("Making sure the root folders exist in Google Drive...")
+    print "Making sure the root folders exist in Google Drive..."
     # CHECK FOR ROOT LEVEL FOLDERS IN GOOGLE DRIVE #
     for resource in client.GetAllResources(uri="/feeds/default/private/full/root/contents/-/folder", show_root=True):
         if resource.GetResourceType() == 'folder':
@@ -83,29 +83,29 @@ def check_structure(client, conn):
 
     for title, f_id in folder_list.items():
         if title == config.ROOT_CLASS_FOLDER:
-            Color.green("--- %s exists in Google Drive." % config.ROOT_CLASS_FOLDER)
+            print .green("--- %s exists in Google Drive." % config.ROOT_CLASS_FOLDER)
             exists_list_gd["root"] = True
         elif title == config.TEACHER_SHARE_FOLDER:
-            Color.green("--- %s exists in Google Drive." % config.TEACHER_SHARE_FOLDER)
+            print .green("--- %s exists in Google Drive." % config.TEACHER_SHARE_FOLDER)
             exists_list_gd["teacher"] = True
         elif title == config.STUDENT_SHARE_FOLDER:
-            Color.green("--- %s exists in Google Drive." % config.STUDENT_SHARE_FOLDER)
+            print .green("--- %s exists in Google Drive." % config.STUDENT_SHARE_FOLDER)
             exists_list_gd["student"] = True
 
-    Color.cyan("Making sure the database has entries for the root folders...")
+    print "Making sure the database has entries for the root folders..."
     # CHECK FOR ROOT LEVEL FOLDERS IN DATABASE #
     rcf_query = Database.get(Database.execute(conn, "SELECT count(*) FROM vlacs_class_folders_structure WHERE folder_name = '%s'" % config.ROOT_CLASS_FOLDER))
     ts_query = Database.get(Database.execute(conn, "SELECT count(*) FROM vlacs_class_folders_structure WHERE folder_name = '%s'" % config.TEACHER_SHARE_FOLDER))
     ss_query = Database.get(Database.execute(conn, "SELECT count(*) FROM vlacs_class_folders_structure WHERE folder_name = '%s'" % config.STUDENT_SHARE_FOLDER))
 
     if rcf_query['count'] > 0:
-        Color.green("--- %s exists in the Database." % config.ROOT_CLASS_FOLDER)
+        print "--- %s exists in the Database." % config.ROOT_CLASS_FOLDER
         exists_list_db["root"] = True
     if ts_query['count'] > 0:
-        Color.green("--- %s exists in the Database." % config.TEACHER_SHARE_FOLDER)
+        print "--- %s exists in the Database." % config.TEACHER_SHARE_FOLDER
         exists_list_db["teacher"] = True
     if ss_query['count'] > 0:
-        Color.green("--- %s exists in the Database." % config.STUDENT_SHARE_FOLDER)
+        print "--- %s exists in the Database." % config.STUDENT_SHARE_FOLDER
         exists_list_db["student"] = True
 
     if ("root" in exists_list_db and "root" in exists_list_gd and 
@@ -117,36 +117,36 @@ def check_structure(client, conn):
         print "Something is missing..."
         # COMPARE AND INSERT / CREATE #
         if 'root' in exists_list_db and 'root' not in exists_list_gd:
-            Color.red("--- Root folder is in the database, but not Google Drive. Fixing...")
+            print "--- Root folder is in the database, but not Google Drive. Fixing..."
             rcf = Folder.create(False, client, config.ROOT_CLASS_FOLDER)
             Database.insert(conn, "UPDATE vlacs_class_folders_structure SET folder_id = '%s' WHERE folder_name = '%s'" % (rcf.resource_id.text, config.ROOT_CLASS_FOLDER))
         elif 'root' in exists_list_gd and 'root' not in exists_list_db:
-            Color.red("--- Root folder is in Google Drive but not in the database. Fixing...")
+            print "--- Root folder is in Google Drive but not in the database. Fixing..."
             Database.insert(conn, Database.structure_insert_string(config.ROOT_CLASS_FOLDER, folder_list[config.ROOT_CLASS_FOLDER]))
         elif 'root' not in exists_list_db and 'root' not in exists_list_gd:
-            Color.red("--- Root folder is not in Google Drive or the database. Fixing...")
+            print "--- Root folder is not in Google Drive or the database. Fixing..."
             rcf = Folder.create(conn, client, config.ROOT_CLASS_FOLDER)
 
         if 'teacher' in exists_list_db and 'teacher' not in exists_list_gd:
-            Color.red("--- Teacher folder is in the database, but not Google Drive. Fixing...")
+            print "--- Teacher folder is in the database, but not Google Drive. Fixing..."
             rcf = Folder.create(False, client, config.TEACHER_SHARE_FOLDER)
             Database.insert(conn, "UPDATE vlacs_class_folders_structure SET folder_id = '%s' WHERE folder_name = '%s'" % (rcf.resource_id.text, config.TEACHER_SHARE_FOLDER))
         elif 'teacher' in exists_list_gd and 'teacher' not in exists_list_db:
-            Color.red("--- Teacher folder is in Google Drive but not in the database. Fixing...")
+            print "--- Teacher folder is in Google Drive but not in the database. Fixing..."
             Database.insert(conn, Database.structure_insert_string(config.TEACHER_SHARE_FOLDER, folder_list[config.TEACHER_SHARE_FOLDER]))
         elif 'teacher' not in exists_list_db and 'teacher' not in exists_list_gd:
-            Color.red("--- Teacher folder is not in Google Drive or the database. Fixing...")
+            print "--- Teacher folder is not in Google Drive or the database. Fixing..."
             rcf = Folder.create(conn, client, config.TEACHER_SHARE_FOLDER)
 
         if 'student' in exists_list_db and 'student' not in exists_list_gd:
-            Color.red("--- Student folder is in the database, but not Google Drive. Fixing...")
+            print "--- Student folder is in the database, but not Google Drive. Fixing..."
             rcf = Folder.create(False, client, config.STUDENT_SHARE_FOLDER)
             Database.insert(conn, "UPDATE vlacs_class_folders_structure SET folder_id = '%s' WHERE folder_name = '%s'" % (rcf.resource_id.text, config.STUDENT_SHARE_FOLDER))
         elif 'student' in exists_list_gd and 'student' not in exists_list_db:
-            Color.red("--- Student folder is in Google Drive but not in the database. Fixing...")
+            print "--- Student folder is in Google Drive but not in the database. Fixing..."
             Database.insert(conn, Database.structure_insert_string(config.STUDENT_SHARE_FOLDER, folder_list[config.STUDENT_SHARE_FOLDER]))
         elif 'student' not in exists_list_db and 'student' not in exists_list_gd:
-            Color.red("--- Student folder is not in Google Drive or the database. Fixing...")
+            print "--- Student folder is not in Google Drive or the database. Fixing..."
             rcf = Folder.create(conn, client, config.STUDENT_SHARE_FOLDER)
 
 def compare_db_with_drive(client, conn, limit, offset):
@@ -219,7 +219,7 @@ def create_in_drive(conn, client, enrollments, count, offset):
 
 def rename_in_drive(client, enrollments):
     for enrollment in enrollments:
-        Color.green("Renaming folder %s to %s..." % (enrollment['old_name'], enrollment['new_name']))
+        print "Renaming folder %s to %s..." % (enrollment['old_name'], enrollment['new_name'])
         folder = client.GetResourceById(enrollment['folder_id'])
         folder.title.text = enrollment['new_name']
         client.UpdateResource(folder)
