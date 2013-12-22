@@ -8,7 +8,7 @@ import gdata.docs.client
 import gdata.docs.data
 
 #Create an empty folder in Google Drive
-def create(conn, client, title, parent=None, class_id=None, noDB=False):
+def create(conn, client, title, parent=None, class_id=None):
     #Initialize folder object with title
     folder = gdata.docs.data.Resource(type='folder', title=title)
 
@@ -18,7 +18,7 @@ def create(conn, client, title, parent=None, class_id=None, noDB=False):
     #Use the Client Object to create the folder in the root of their Drive or the collection specified.
     folder = client.CreateResource(folder, collection=parent)
 
-    if not noDB:
+    if conn:
         if parent != None:
             Database.insert(conn, Database.structure_insert_string(Utilities.clean_title(title), folder.resource_id.text, parent.resource_id.text, class_id))
         else:

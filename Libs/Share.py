@@ -19,10 +19,84 @@ import gdata.client
 
 import sys
 
-def ShareFolder():
+def ShareFolder(client, conn, folder_entry):
     #Create the share structures and then share and modify permissions
     #for student and teacher.
-    pass
+    enrollment = Database.get(Database.execute(conn, Database.enrollment_query_string(where="class_id = '" + folder_entry['class_id'] + "' AND student_id = '" + folder_entry['student_id'] + "'")))
+    structures = retrieve_share_structures()
+    created_structures = {}
+    
+    for name, structure in structures.iteritems():
+        created_structures[name] = create_share_structure(client, conn, enrollment, structure)
+
+    return created_structures
+
+    #share_roles = retrieve_share_roles(created_structures)
+
+    #for folder in share_roles:
+        # In production the teacher and student emails will come from enrollment dict
+    #    share(client, folder['folder_id'], 'testteacher@vlacs.net', folder['roles']['teacher'])
+    #    share(client, folder['folder_id'], 'teststudent@vlacs.net', folder['roles']['student'])
+
+def create_share_structure(client, conn, enrollment, structure):
+    parents = {}
+    currentdir_folders = None
+    parsed_templates = None
+    max_level = 0
+    created_structure = []
+
+    for template, level in structure.iteritems():
+        if(level > max_level):
+            max_level = level
+    for template, level in structure.iteritems():
+        if template not in parsed_templates:
+            parsed_templates[template] = ShareTemplate.get(client, conn, template, enrollment)
+
+        folder = parsed_templates[template]
+        #Create the folder in drive and set the folder id!
+        if level == 0:
+            #Level 0 will always be the root folders
+            directory_folders = Folder.list_sub_folders(client, folder['folder_id'])
+            parents[level+1] = folder['folder_id']
+        else:
+            cr_folder = folder_not_exists_create(client, conn, folder, parents[level], currentdir_folders)
+            parents[level+1] = cr_folder['folder_id']
+            created_structure.append(cr_folder)
+
+    return created_structure
+
+
+def folder_not_exists_create(client, conn, folder, parent, currentdir_folders):
+    if folder['folder_name'] in currentdir_folders:
+        #folder exists, update the folder_id and return it
+        folder['folder_id'] = currentdir_folders[folder['folder_name']]
+        return folder
+    elif folder['copy']:
+        #this is a folder that needs to be copied from somewhere else
+        if template == "{{STUDENT_ASSIGNMENTS}}":
+            Folder.copy(client, folder[folder_id], parent)
+            return folder
+        elif template == "{{CLASS_FILES}}":
+            table = "vlacs_class_folders_shared"
+            cols = {'folder_name':{'value':folder['folder_name'],'type':'s'}}
+            class_files = Database.insert_if_not_exists(conn, table, cols)
+
+            if class_files:
+                cr_folder = Folder.create(False, client, folder['folder_name'], parent)
+                cols = {'folder_id':{'value':cr_folder.resource_id.text,'type':'s'}}
+                wheres = {'folder_name':{'value':folder['folder_name'],'type':'s'}}
+                Database.update(conn, table, cols, wheres)
+                folder['folder_id'] = cr_folder.resource_id.text
+            else:
+                folder['folder_id'] = class_files['folder_id']
+                Folder.copy(client, folder['folder_id'], parent)
+            return folder
+    else:
+        #folder does not exist, create it and update the folder_id and return it
+        cr_folder = Folder.create(False, client, folder['folder_name'], parent)
+        folder['folder_id'] = cr_folder.resource_id.text
+        return folder
+
 
 def parse_share_structure_string(structure):
     structure_out = {}
@@ -48,13 +122,15 @@ def parse_share_structure_string(structure):
 
 def retrieve_share_roles(created_structures):
     ##
-    ##    share_roles = [{"folder:folder_id":{"teacher":"writer", "student":"reader"}},]
+    ##    share_roles = [{'folder_id':'folder:alsdjfalksd', 'roles':{"teacher":"writer", "student":"reader"}},]
     ##
     share_roles = []
 
-    for structure in created_structures.iteritems():
+    for name, structure in created_structures.iteritems():
         for folder in structure.iteritems():
-            temp_dict[folder['folder_id']] = folder['roles']
+            temp_dict = {}
+            temp_dict['folder_id'] = folder['folder_id']
+            temp_dict['roles'] = folder['roles']
             share_roles.append(temp_dict)
     share_roles = Utilities.remove_duplicates(share_roles)
 

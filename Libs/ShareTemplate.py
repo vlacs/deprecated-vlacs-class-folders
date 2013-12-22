@@ -21,6 +21,7 @@ def get(client, conn, template, enrollment=None):
 
 	template_variables = {
 			"{{CLASS_FILES}}" : {
+					 'folder_id'   : None,
 					 'folder_name' : "Class Files (%s)" % (enrollment['class_id']),
 					        'role' : {
 										'teacher' : 'writer',
@@ -29,6 +30,7 @@ def get(client, conn, template, enrollment=None):
 					'copy' : True
 			},
 			"{{CLASSROOM}}" : {
+					 'folder_id'   : None,
 					 'folder_name' : "%s (%s - %s)" % (enrollment['course_name'], enrollment['class_id'], Utilities.course_version(enrollment['course_full_name'])),
 					        'role' : {
 										'teacher' : 'reader',
@@ -37,6 +39,7 @@ def get(client, conn, template, enrollment=None):
 					'copy' : False
 			},
 			"{{COURSE_NAME}}" : {
+					 'folder_id'   : None,
 					 'folder_name' : enrollment['course_name'],
 					        'role' : {
 										'teacher' : 'reader',
@@ -45,6 +48,7 @@ def get(client, conn, template, enrollment=None):
 					'copy' : False
 			},
 			"{{COURSES}}" : {
+					 'folder_id'   : None,
 					 'folder_name' : "Courses",
 					        'role' : {
 										'teacher' : 'reader',
@@ -53,8 +57,8 @@ def get(client, conn, template, enrollment=None):
 					'copy' : False
 			},
 			"{{STUDENT_ASSIGNMENTS}}" : {
-					 'folder_id'   : "",
-					 'folder_name' : "",
+					 'folder_id'   : None,
+					 'folder_name' : None,
 					        'role' : {
 										'teacher' : 'writer',
 										'student' : 'writer',
@@ -70,8 +74,8 @@ def get(client, conn, template, enrollment=None):
 					'copy' : False
 			},
 			"{{STUDENT_ROOT}}" : {
-					 'folder_name' : "",
-					 'parent_id'   : "",
+					 'folder_name' : None,
+					 'folder_id'   : None,
 					        'role' : {
 										'teacher' : 'none',
 										'student' : 'reader',
@@ -79,6 +83,7 @@ def get(client, conn, template, enrollment=None):
 					'copy' : False
 			},
 			"{{STUDENTS}}" : {
+					 'folder_id'   : None,
 					 'folder_name' : "Students",
 					        'role' : {
 										'teacher' : 'reader',
@@ -87,8 +92,8 @@ def get(client, conn, template, enrollment=None):
 					'copy' : False
 			},
 			"{{TEACHER_ROOT}}" : {
-					 'folder_name' : "",
-					 'parent_id'   : "",
+					 'folder_id'   : None,
+					 'folder_name' : None,
 					        'role' : {
 										'teacher' : 'reader',
 										'student' : 'none',
@@ -101,11 +106,11 @@ def get(client, conn, template, enrollment=None):
 	# each time the function is called.
 	if template == "{{TEACHER_ROOT}}":
 		root_folders = Folder.list_sub_folders(client, "root")
-		template_variables[template]['parent_id'] = root_folders[config.TEACHER_SHARE_FOLDER]
+		template_variables[template]['folder_id'] = root_folders[config.TEACHER_SHARE_FOLDER]
 		template_variables[template]['folder_name'] = config.TEACHER_SHARE_FOLDER + " (%s)" % (enrollment['teacher_id'])
 	elif template == "{{STUDENT_ROOT}}":
 		root_folders = Folder.list_sub_folders(client, "root")
-		template_variables[template]['parent_id'] = root_folders[config.STUDENT_SHARE_FOLDER]
+		template_variables[template]['folder_id'] = root_folders[config.STUDENT_SHARE_FOLDER]
 		template_variables[template]['folder_name'] = config.STUDENT_SHARE_FOLDER + " (%s)" % (enrollment['student_id'])
 	elif template == "{{STUDENT_ASSIGNMENTS}}":
 		folder_id = Database.get(Database.execute(conn, Database.structure_get_folder_id_string(Utilities.gen_title(enrollment, "s"), enrollment['class_id'], enrollment['student_id'])))

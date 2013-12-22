@@ -118,7 +118,7 @@ def check_structure(client, conn):
         # COMPARE AND INSERT / CREATE #
         if 'root' in exists_list_db and 'root' not in exists_list_gd:
             Color.red("--- Root folder is in the database, but not Google Drive. Fixing...")
-            rcf = Folder.create(conn, client, config.ROOT_CLASS_FOLDER, noDB=True)
+            rcf = Folder.create(False, client, config.ROOT_CLASS_FOLDER)
             Database.insert(conn, "UPDATE vlacs_class_folders_structure SET folder_id = '%s' WHERE folder_name = '%s'" % (rcf.resource_id.text, config.ROOT_CLASS_FOLDER))
         elif 'root' in exists_list_gd and 'root' not in exists_list_db:
             Color.red("--- Root folder is in Google Drive but not in the database. Fixing...")
@@ -129,7 +129,7 @@ def check_structure(client, conn):
 
         if 'teacher' in exists_list_db and 'teacher' not in exists_list_gd:
             Color.red("--- Teacher folder is in the database, but not Google Drive. Fixing...")
-            rcf = Folder.create(conn, client, config.TEACHER_SHARE_FOLDER, noDB=True)
+            rcf = Folder.create(False, client, config.TEACHER_SHARE_FOLDER)
             Database.insert(conn, "UPDATE vlacs_class_folders_structure SET folder_id = '%s' WHERE folder_name = '%s'" % (rcf.resource_id.text, config.TEACHER_SHARE_FOLDER))
         elif 'teacher' in exists_list_gd and 'teacher' not in exists_list_db:
             Color.red("--- Teacher folder is in Google Drive but not in the database. Fixing...")
@@ -140,7 +140,7 @@ def check_structure(client, conn):
 
         if 'student' in exists_list_db and 'student' not in exists_list_gd:
             Color.red("--- Student folder is in the database, but not Google Drive. Fixing...")
-            rcf = Folder.create(conn, client, config.STUDENT_SHARE_FOLDER, noDB=True)
+            rcf = Folder.create(False, client, config.STUDENT_SHARE_FOLDER)
             Database.insert(conn, "UPDATE vlacs_class_folders_structure SET folder_id = '%s' WHERE folder_name = '%s'" % (rcf.resource_id.text, config.STUDENT_SHARE_FOLDER))
         elif 'student' in exists_list_gd and 'student' not in exists_list_db:
             Color.red("--- Student folder is in Google Drive but not in the database. Fixing...")
