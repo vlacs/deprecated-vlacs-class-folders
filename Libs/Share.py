@@ -193,7 +193,7 @@ def share(client, folder_id, share_with, role, try_count=1):
             acl.role.value = role
             acl.etag = None
             client.UpdateAclEntry(acl, send_notification=False)
-    except (gdata.client.RequestError as e):
+    except gdata.client.RequestError as e:
         # Catch the request error and retry up to three times
         # Sometimes we recieve a random 500 error and a retry
         # does the trick
