@@ -59,14 +59,14 @@ def create_share_structure(client, conn, enrollment, structure):
             currentdir_folders = Folder.list_sub_folders(client, folder['folder_id'])
             parents[level+1] = folder['folder_id']
         else:
-            cr_folder = folder_not_exists_create(client, conn, folder, parents[level], currentdir_folders)
+            cr_folder = folder_not_exists_create(client, conn, folder, template, parents[level], currentdir_folders)
             parents[level+1] = cr_folder['folder_id']
             created_structure.append(cr_folder)
 
     return created_structure
 
 
-def folder_not_exists_create(client, conn, folder, parent, currentdir_folders):
+def folder_not_exists_create(client, conn, folder, template, parent, currentdir_folders):
     if folder['folder_name'] in currentdir_folders:
         #folder exists, update the folder_id and return it
         folder['folder_id'] = currentdir_folders[folder['folder_name']]
