@@ -88,19 +88,6 @@ def redirect_stdout(fileobj):
     finally:
         sys.stdout = oldstdout
 
-def remove_duplicates(list):
-    seen = set()
-    result = []
-
-    for d in list:
-        i = d.copy()
-        i = tuple(i.items())
-        if i not in seen:
-            result.append(d)
-            seen.add(i)
-
-    return result
-
 ##test remove_duplicates
 ## list = [{"key":"value", "hello":"there"},{"key":"value", "hello":"different"},{"key":"value", "hello":"there"}]
 ##

@@ -26,17 +26,23 @@ def ShareFolder(client, conn, folder_entry):
     structures = retrieve_share_structures()
     created_structures = {}
     
+    print "Creating Share Structure..."
+
     for name, structure in structures.iteritems():
         created_structures[name] = create_share_structure(client, conn, enrollment, structure)
 
     return created_structures
 
-    #share_roles = retrieve_share_roles(created_structures)
+    share_roles = retrieve_share_roles(created_structures)
 
-    #for folder in share_roles:
+    print "Sharing Folders..."
+
+    for folder in share_roles:
         # In production the teacher and student emails will come from enrollment dict
-    #    share(client, folder['folder_id'], 'testteacher@vlacs.net', folder['roles']['teacher'])
-    #    share(client, folder['folder_id'], 'teststudent@vlacs.net', folder['roles']['student'])
+        share(client, folder['folder_id'], 'testteacher@vlacs.net', folder['role']['teacher'])
+        share(client, folder['folder_id'], 'teststudent@vlacs.net', folder['role']['student'])
+
+    print "Done!"
 
 def create_share_structure(client, conn, enrollment, structure):
     parents = {}
@@ -65,7 +71,8 @@ def create_share_structure(client, conn, enrollment, structure):
 
         created_structure.append(cr_folder)
         dbg_arrow = '--' * level + '>'
-        print template, dbg_arrow, cr_folder['folder_id']
+        fmt = '{0:25}'
+        print fmt.format(template), dbg_arrow, cr_folder['folder_id']
 
     return created_structure
 
@@ -129,16 +136,20 @@ def retrieve_share_roles(created_structures):
     ##    share_roles = [{'folder_id':'folder:alsdjfalksd', 'roles':{"teacher":"writer", "student":"reader"}},]
     ##
     share_roles = []
+    result = []
 
     for name, structure in created_structures.iteritems():
-        for folder in structure.iteritems():
+        for folder in structure:
             temp_dict = {}
             temp_dict['folder_id'] = folder['folder_id']
-            temp_dict['roles'] = folder['roles']
+            temp_dict['role'] = folder['role']
             share_roles.append(temp_dict)
-    share_roles = Utilities.remove_duplicates(share_roles)
+    #Remove duplicates
+    for d in share_roles:
+        if d not in result:
+            result.append(d)
 
-    return share_roles
+    return result
 
 
 def retrieve_share_structures():
