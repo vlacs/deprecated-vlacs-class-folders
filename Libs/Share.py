@@ -40,8 +40,8 @@ def ShareFolder(client, conn, folder_entry):
 
 def create_share_structure(client, conn, enrollment, structure):
     parents = {}
-    currentdir_folders = None
-    parsed_templates = None
+    currentdir_folders = {}
+    parsed_templates = {}
     max_level = 0
     created_structure = []
 
@@ -56,7 +56,7 @@ def create_share_structure(client, conn, enrollment, structure):
         #Create the folder in drive and set the folder id!
         if level == 0:
             #Level 0 will always be the root folders
-            directory_folders = Folder.list_sub_folders(client, folder['folder_id'])
+            currentdir_folders = Folder.list_sub_folders(client, folder['folder_id'])
             parents[level+1] = folder['folder_id']
         else:
             cr_folder = folder_not_exists_create(client, conn, folder, parents[level], currentdir_folders)
