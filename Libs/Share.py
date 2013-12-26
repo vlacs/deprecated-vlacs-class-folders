@@ -29,11 +29,8 @@ def ShareFolder(client, conn, folder_entry):
     print "Creating Share Structure..."
 
     for name, structure in structures.iteritems():
-        try:
-            created_structures[name] = create_share_structure(client, conn, enrollment, structure)
-        except KeyError:
-            print "ERROR"
-            print structures
+        created_structures[name] = create_share_structure(client, conn, enrollment, structure)
+    
     share_roles = retrieve_share_roles(created_structures)
 
     print "Sharing Folders..."
