@@ -2,7 +2,10 @@
 
 __author__ = 'mgeorge@vlacs.org (Mike George)'
 
+from Course import Course
 from Enrollment import Enrollment
+from Student import Student
+from Teacher import Teacher
 
 def enrollment_list_from_dict(db_result_dict):
 	return_list = []
