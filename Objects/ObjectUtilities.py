@@ -7,6 +7,8 @@ from Enrollment import Enrollment
 from Student import Student
 from Teacher import Teacher
 
+from Libs import Utilities
+
 def enrollment_list_from_dict(db_result_dict):
 	return_list = []
 
