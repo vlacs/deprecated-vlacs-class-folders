@@ -9,7 +9,7 @@ from Teacher import Teacher
 from Libs import Utilities
 
 class Enrollment:
-	""" Enrollment object.
+	"""Enrollment object.
 
 	Contains the proper structure for an enrollment
 	there are no arguments and the enrollment can be generated

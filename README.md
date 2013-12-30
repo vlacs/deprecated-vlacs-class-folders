@@ -22,6 +22,8 @@ The system also handles name changes for both students and teachers.
   + [Share.py](https://github.com/vlacs/vlacs-class-folders/blob/master/Libs/Share.py)  ------- (Library that contains sharing functions and logic)
   + [Sync.py](https://github.com/vlacs/vlacs-class-folders/blob/master/Libs/Sync.py) -------- (Contains all the boolean functions used when syncing Google Drive with Database)
   + [Utilities.py](https://github.com/vlacs/vlacs-class-folders/blob/master/Libs/Utilities.py) ------ (Useful methods that can be used throughout the codebase)
+* Objects
+  + Contains various python objects that are used throughout the code.
 * Files
   + [run.py](https://github.com/vlacs/vlacs-class-folders/blob/master/run.py) ----------- (All-in-One file, check structure of db and google drive, sync, update, etc.)
 
@@ -37,11 +39,11 @@ First, be sure that your database has the proper view in it ([view.sql](https://
 
 Now you are ready to run a batch, here is the command line syntax:
 ```
-python run.py [--limit <limit> --offset <offset> --verbosity <verbosity>]
+python run.py [--limit <limit> --offset <offset>]
 ```
 or
 ```
-python run.py [-l <limit> -o <offset> -v <verbosity>]
+python run.py [-l <limit> -o <offset>]
 ```
 The first time you run the program it will be fine just to provide a limit, or if you'd like to process the entire
 database you will not need to provide any parameters.
