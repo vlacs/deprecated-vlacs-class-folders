@@ -12,6 +12,6 @@ def enrollment_list_from_dict(db_result_dict):
 	for enrollment in db_result_dict:
 		tmp_enr = Enrollment()
 		tmp_enr.create(enrollment)
-		return_list.append(tmp_enr)
+		result_list.append(tmp_enr)
 
 	return result_list
