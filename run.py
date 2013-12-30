@@ -6,12 +6,16 @@ import datetime
 from time import time
 
 from Config import config
+
 from Libs import Client
 from Libs import Color
 from Libs import Database
 from Libs import Folder
 from Libs import Sync
 from Libs import Utilities
+
+from Objects.Enrollment import Enrollment
+
 import gdata.client
 import sys, getopt
 
@@ -169,6 +173,7 @@ def compare_db_with_drive(client, conn, limit, offset):
     
     # REMOVE ENROLLMENTS THAT NEED TO BE ARCHIVED FROM DICT #
     archive_in_drive = [enrollment for enrollment in enrollments if Sync.should_archive(enrollment, database_contents)]
+    archive_in_drive = Enrollment.create_list_from_dict(db_result_dict=archive_in_drive)
     # REMOVE ENROLLMENTS THAT NEED RENAMING FROM DICT #
     rename_in_drive = [enrollment for enrollment in enrollments if Sync.student_needs_renaming(enrollment, database_contents)]
     # REMOVE ENROLLMENTS THAT NEED TO BE CREATED FROM DICT #
