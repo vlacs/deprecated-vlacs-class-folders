@@ -38,6 +38,7 @@ class Enrollment:
 			                   db_result['teacher_lastname'],
 			                   db_result['teacher_email'])
 
+class EnrollmentUtils:
 	def create_list_from_dict(db_result_dict):
 		return_list = []
 
