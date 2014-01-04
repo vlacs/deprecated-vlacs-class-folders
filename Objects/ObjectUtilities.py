@@ -4,8 +4,6 @@ __author__ = 'mgeorge@vlacs.org (Mike George)'
 
 from Enrollment import Enrollment
 
-from Libs import Utilities
-
 def enrollment_list_from_dict(db_result_dict):
 	result_list = []
 

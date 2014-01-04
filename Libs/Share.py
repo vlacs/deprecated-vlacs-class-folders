@@ -12,10 +12,8 @@ from Libs import Utilities
 
 from gdata.acl.data import AclRole
 from gdata.acl.data import AclScope
+from gdata.client import RequestError as GDRequestError
 from gdata.docs.data import AclEntry
-
-import gdata.data
-import gdata.client
 
 import sys
 
@@ -193,7 +191,7 @@ def share(client, folder_id, share_with, role, try_count=1):
             acl.role.value = role
             acl.etag = None
             client.UpdateAclEntry(acl, send_notification=False)
-    except gdata.client.RequestError as e:
+    except GDRequestError as e:
         # Catch the request error and retry up to three times
         # Sometimes we recieve a random 500 error and a retry
         # does the trick

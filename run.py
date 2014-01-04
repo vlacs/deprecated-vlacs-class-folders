@@ -7,16 +7,18 @@ from time import time
 
 from Config import config
 
+from gdata.client import RequestError as GDRequestError
+
 from Libs import Client
-from Libs import Color
 from Libs import Database
 from Libs import Folder
+from Libs import Share
 from Libs import Sync
 from Libs import Utilities
 
-from Objects.Enrollment import Enrollment, EnrollmentUtils
+from Objects.Enrollment import Enrollment
+from Objects import ObjectUtilites
 
-import gdata.client
 import sys, getopt
 
 
@@ -173,11 +175,13 @@ def compare_db_with_drive(client, conn, limit, offset):
     
     # REMOVE ENROLLMENTS THAT NEED TO BE ARCHIVED FROM DICT #
     archive_in_drive = [enrollment for enrollment in enrollments if Sync.should_archive(enrollment, database_contents)]
-    archive_in_drive = EnrollmentUtils.create_list_from_dict(db_result_dict=archive_in_drive)
+    archive_in_drive = ObjectUtilites.enrollment_list_from_dict(archive_in_drive)
     # REMOVE ENROLLMENTS THAT NEED RENAMING FROM DICT #
     rename_in_drive = [enrollment for enrollment in enrollments if Sync.student_needs_renaming(enrollment, database_contents)]
+    rename_in_drive = ObjectUtilites.enrollment_list_from_dict(rename_in_drive)
     # REMOVE ENROLLMENTS THAT NEED TO BE CREATED FROM DICT #
     create_in_drive = [enrollment for enrollment in enrollments if enrollment not in rename_in_drive and enrollment not in archive_in_drive]
+    create_in_drive = ObjectUtilites.enrollment_list_from_dict(create_in_drive)
 
     return create_in_drive, rename_in_drive, archive_in_drive
 
@@ -193,40 +197,34 @@ def create_in_drive(conn, client, enrollments, count, offset):
     for enrollment in enrollments:
         try:
             print("Processing enrollment %s/%s..." % (count, last_disp))
-            if(Utilities.fix_nulls(enrollment)):
-                folder_exists = Database.get(Database.execute(conn, Database.folder_exists_query_string(enrollment['class_id'])))
-                rootclassfolder_id = Database.get(Database.execute(conn, query="SELECT folder_id FROM vlacs_class_folders_structure WHERE folder_name = '%s'" % (config.ROOT_CLASS_FOLDER)))
-                
-                if folder_exists:
-                    if isinstance(folder_exists, list):
-                        folder_exists = folder_exists[0]
-                    print "Creating Student Folder: %s" % Utilities.gen_title(enrollment, "s")
-                    studentfolder = Folder.create_flat(conn, client, Utilities.gen_title(enrollment, "s"), rootclassfolder_id['folder_id'], folder_exists['folder_id'], enrollment['class_id'], enrollment['student_id'])
-                else:
-                    title = Utilities.gen_title(enrollment, "c")
-                    print "Creating Class Folder: %s" % title
-                    classfolder = Folder.create_flat(conn, client, title, rootclassfolder_id['folder_id'], rootclassfolder_id['folder_id'], enrollment['class_id'])
-                    print "Creating Student Folder: %s" % Utilities.gen_title(enrollment, "s")
-                    studentfolder = Folder.create_flat(conn, client, Utilities.gen_title(enrollment, "s"), rootclassfolder_id['folder_id'], classfolder.resource_id.text, enrollment['class_id'], enrollment['student_id'])
+
+            folder_exists = Database.get(Database.execute(conn, Database.folder_exists_query_string(enrollment.course.id)))
+            rootclassfolder_id = Database.get(Database.execute(conn, query="SELECT folder_id FROM vlacs_class_folders_structure WHERE folder_name = '%s'" % (config.ROOT_CLASS_FOLDER)))
+            
+            if folder_exists:
+                if isinstance(folder_exists, list):
+                    folder_exists = folder_exists[0]
+                print "Creating Student Folder: %s" % Utilities.gen_title(enrollment, "s")
+                studentfolder = Folder.create_flat(conn, client, Utilities.gen_title(enrollment, "s"), rootclassfolder_id['folder_id'], folder_exists['folder_id'], enrollment.course.id, enrollment.student.id)
             else:
-                print "ERROR:", count, "HAS NULL VALUE(S) THAT COULD NOT BE FIXED"
+                title = Utilities.gen_title(enrollment, "c")
+                print "Creating Class Folder: %s" % title
+                classfolder = Folder.create_flat(conn, client, title, rootclassfolder_id['folder_id'], rootclassfolder_id['folder_id'], enrollment.course.id)
+                print "Creating Student Folder: %s" % Utilities.gen_title(enrollment, "s")
+                studentfolder = Folder.create_flat(conn, client, Utilities.gen_title(enrollment, "s"), rootclassfolder_id['folder_id'], classfolder.resource_id.text, enrollment.course.id, enrollment.student.id)
             count += 1
-        except gdata.client.RequestError as e:
+
+        except GDRequestError as e:
             print "ERROR:", e.status
             count += 1
-        except KeyError as ke:
-            print "ERROR:", ke
-            print "DEBUG:", folder_exists
-            count += 1
-        except TypeError as te:
-            print "ERROR:", te
-            print "DEBUG:", folder_exists
 
 def rename_in_drive(client, enrollments):
     for enrollment in enrollments:
-        print "Renaming folder %s to %s..." % (enrollment['old_name'], enrollment['new_name'])
-        folder = client.GetResourceById(enrollment['folder_id'])
-        folder.title.text = enrollment['new_name']
+        folder = client.GetResourceById(enrollment.folder_id)
+        
+        print "Renaming folder %s to %s..." % (folder.text.title, enrollment.folder_name)
+        
+        folder.title.text = enrollment.folder_name
         client.UpdateResource(folder)
 
 def archive_in_drive(client, enrollments):
@@ -249,19 +247,31 @@ def check_for_class_rename(conn, client):
     pass
 
 if __name__ == "__main__":
-    limit = None;
-    offset = None;
+    limit = None
+    offset = None
+    redirect_output = False
+
     try:
-        opts, args = getopt.getopt(sys.argv[1:],"hl:o:",["help","limit=","offset="])
+        opts, args = getopt.getopt(sys.argv[1:],"hl:o:f:",["help","limit=","offset=","file="])
     except getopt.GetoptError:
-        print 'run_flat_batch.py [-l <limit> -o <offset>]'
+        print 'run_flat_batch.py [-l <limit> -o <offset> -f <output file>]'
         sys.exit(2)
     for opt, arg in opts:
         if opt in ("-h", "--help"):
-            print 'run_flat_batch.py [-l <limit> -o <offset>]'
+            print 'run_flat_batch.py [-l <limit> -o <offset> -f <output file>]'
             sys.exit()
         elif opt in ("-l", "--limit"):
             limit = arg
         elif opt in ("-o", "--offset"):
             offset = arg
-    main(limit=limit, offset=offset)
+        elif opt in ("-f", "--file"):
+            redirect_output = arg
+
+    if not redirect_output:
+        main(limit=limit, offset=offset)
+    else:
+        print "Running..."
+        with Utilities.redirect_stdout(redirect_output):
+            main(limit=limit, offset=offset)
+
+        print "Finished, output stored in %s" % (redirect_output)

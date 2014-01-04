@@ -8,8 +8,8 @@ class Teacher:
 	Contains the proper structure for a Teacher,
 	this object is primarily used within the Enrollment object.
 	"""
-	def __init__(self, id, firstname, lastname, email):
-		self.id = id
+	def __init__(self, id=None, firstname=None, lastname=None, email=None):
+		self.id        = id
 		self.firstname = firstname
-		self.lastname = lastname
-		self.email = email
+		self.lastname  = lastname
+		self.email     = email

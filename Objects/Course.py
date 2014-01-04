@@ -8,7 +8,7 @@ class Course:
 	Contains the proper structure for a course,
 	this object is primarily used within the Enrollment object.
 	"""
-	def __init__(self, id, name, version):
-		self.id = id
-		self.name = name
+	def __init__(self, id=None, name=None, version=None):
+		self.id      = id
+		self.name    = name
 		self.version = version

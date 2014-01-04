@@ -1,9 +1,8 @@
+#!/usr/bin/python
 #Sample config for vlacs-class-folders
 #You must rename this file to config.py and insert your own data
 
 __author__ = 'mgeorge@vlacs.org'
-
-DEBUG = False
 
 #Master google drive account username and password
 USERNAME = ""

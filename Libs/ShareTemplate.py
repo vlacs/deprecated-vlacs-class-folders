@@ -1,6 +1,9 @@
+#!/usr/bin/python
+
 __author__ = 'mgeorge@vlacs.org (Mike George)'
 
 from Config import config
+
 from Libs import Database
 from Libs import Folder
 from Libs import Utilities

@@ -17,23 +17,26 @@ class Enrollment:
 	function
 	"""
 	def __init__(self):
-		self.master_id = None
-		self.course = None
-		self.student = None
-		self.teacher = None
+		self.master_id   = None
+		self.course      = Course()
+		self.folder_id   = None
+		self.folder_name = None
+		self.student     = Student()
+		self.teacher     = Teacher()
 
 	def create(self, db_result):
-		self.master_id = db_result['master_id']
-		self.course = Course(db_result['course_id'],
-			                 db_result['course_name'],
-			                 Utilities.course_version(db_result['course_full_name']))
+		self.master_id         = db_result['master_id']
+		
+		self.course.id         = db_result['course_id']
+		self.course.name       = db_result['course_name']
+		self.course.version    = Utilities.course_version(db_result['course_full_name'])
 
-		self.student = Student(db_result['student_id'],
-							   db_result['student_firstname'],
-							   db_result['student_lastname'],
-							   db_result['student_email'])
+		self.student.id        = db_result['student_id']
+		self.student.firstname = db_result['student_firstname']
+		self.student.lastname  = db_result['student_lastname']
+		self.student.email     = db_result['student_email']
 
-		self.teacher = Teacher(db_result['teacher_id'],
-			                   db_result['teacher_firstname'],
-			                   db_result['teacher_lastname'],
-			                   db_result['teacher_email'])
+		self.teacher.id        = db_result['teacher_id']
+		self.teacher.firstname = db_result['teacher_firstname']
+		self.teacher.lastname  = db_result['teacher_lastname']
+		self.teacher.email     = db_result['teacher_email']

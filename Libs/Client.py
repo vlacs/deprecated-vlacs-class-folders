@@ -1,6 +1,9 @@
+#!/usr/bin/python
+
 __author__ = 'mgeorge@vlacs.org (Mike George)'
 
 from Config import config
+
 import gdata.docs.client
 import gdata.docs.data
 

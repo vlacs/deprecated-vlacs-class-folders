@@ -1,10 +1,10 @@
-__author__ = 'mgeorge@vlacs.org (Mike George)'
+#!/usr/bin/python
 
-import json
+__author__ = 'mgeorge@vlacs.org (Mike George)'
 
 from Libs import Database
 from Libs import Utilities
-import gdata.docs.client
+
 import gdata.docs.data
 
 #Create an empty folder in Google Drive
