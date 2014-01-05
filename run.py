@@ -71,7 +71,7 @@ def check_structure(client, conn):
 
     print "Making sure the database tables exist..."
     # CHECK FOR DATABASE TABLES #
-    tables_query = Database.get(Database.execute(conn, "SELECT COUNT(*) FROM pg_tables WHERE schemaname='public' AND tablename LIKE 'vlacs%'"))
+    tables_query = Database.get(Database.execute(conn, "SELECT COUNT(*) FROM pg_tables WHERE schemaname='public' AND tablename LIKE 'vlacs_class_folders%'"))
     if tables_query['count'] > 1:
         print "Database tables exist."
         tables_exist = True
@@ -122,38 +122,17 @@ def check_structure(client, conn):
     if not everything_exists:
         print "Something is missing..."
         # COMPARE AND INSERT / CREATE #
-        if 'root' in exists_list_db and 'root' not in exists_list_gd:
-            print "--- Root folder is in the database, but not Google Drive. Fixing..."
-            rcf = Folder.create(False, client, config.ROOT_CLASS_FOLDER)
-            Database.insert(conn, "UPDATE vlacs_class_folders_structure SET folder_id = '%s' WHERE folder_name = '%s'" % (rcf.resource_id.text, config.ROOT_CLASS_FOLDER))
-        elif 'root' in exists_list_gd and 'root' not in exists_list_db:
-            print "--- Root folder is in Google Drive but not in the database. Fixing..."
-            Database.insert(conn, Database.structure_insert_string(config.ROOT_CLASS_FOLDER, folder_list[config.ROOT_CLASS_FOLDER]))
-        elif 'root' not in exists_list_db and 'root' not in exists_list_gd:
-            print "--- Root folder is not in Google Drive or the database. Fixing..."
-            rcf = Folder.create(conn, client, config.ROOT_CLASS_FOLDER)
-
-        if 'teacher' in exists_list_db and 'teacher' not in exists_list_gd:
-            print "--- Teacher folder is in the database, but not Google Drive. Fixing..."
-            rcf = Folder.create(False, client, config.TEACHER_SHARE_FOLDER)
-            Database.insert(conn, "UPDATE vlacs_class_folders_structure SET folder_id = '%s' WHERE folder_name = '%s'" % (rcf.resource_id.text, config.TEACHER_SHARE_FOLDER))
-        elif 'teacher' in exists_list_gd and 'teacher' not in exists_list_db:
-            print "--- Teacher folder is in Google Drive but not in the database. Fixing..."
-            Database.insert(conn, Database.structure_insert_string(config.TEACHER_SHARE_FOLDER, folder_list[config.TEACHER_SHARE_FOLDER]))
-        elif 'teacher' not in exists_list_db and 'teacher' not in exists_list_gd:
-            print "--- Teacher folder is not in Google Drive or the database. Fixing..."
-            rcf = Folder.create(conn, client, config.TEACHER_SHARE_FOLDER)
-
-        if 'student' in exists_list_db and 'student' not in exists_list_gd:
-            print "--- Student folder is in the database, but not Google Drive. Fixing..."
-            rcf = Folder.create(False, client, config.STUDENT_SHARE_FOLDER)
-            Database.insert(conn, "UPDATE vlacs_class_folders_structure SET folder_id = '%s' WHERE folder_name = '%s'" % (rcf.resource_id.text, config.STUDENT_SHARE_FOLDER))
-        elif 'student' in exists_list_gd and 'student' not in exists_list_db:
-            print "--- Student folder is in Google Drive but not in the database. Fixing..."
-            Database.insert(conn, Database.structure_insert_string(config.STUDENT_SHARE_FOLDER, folder_list[config.STUDENT_SHARE_FOLDER]))
-        elif 'student' not in exists_list_db and 'student' not in exists_list_gd:
-            print "--- Student folder is not in Google Drive or the database. Fixing..."
-            rcf = Folder.create(conn, client, config.STUDENT_SHARE_FOLDER)
+        for folder, config_f in [{'root', config.ROOT_CLASS_FOLDER}, {'teacher', config.TEACHER_SHARE_FOLDER}, {'student', config.STUDENT_SHARE_FOLDER}]:
+            if folder in exists_list_db and folder not in exists_list_gd:
+                print "--- %s folder is in the database, but not Google Drive. Fixing..." % (config_f)
+                f = Folder.create(False, client, config_f)
+                Database.insert(conn, "UPDATE vlacs_class_folders_structure SET folder_id = '%s' WHERE folder_name = '%s'" % (f.resource_id.text, config_f))
+            elif folder in exists_list_gd and folder not in exists_list_db:
+                print "--- %s folder is in Google Drive but not in the database. Fixing..." % (config_f)
+                Database.insert(conn, Database.structure_insert_string(config_f, folder_list[config_f]))
+            elif folder not in exists_list_db and folder_list not in exists_list_gd:
+                print "--- %s folder is not in Google Drive or the database. Fixing..." % (config_f)
+                f = Folder.create(conn, client, config_f)
 
 def compare_db_with_drive(client, conn, limit, offset):
     enrollments = Database.get(Database.execute(conn, Database.enrollment_query_string(limit=limit, offset=offset)))
@@ -173,14 +152,16 @@ def compare_db_with_drive(client, conn, limit, offset):
     # REMOVE SYNCED ENROLLMENTS FROM DICT #
     enrollments = [enrollment for enrollment in enrollments if Sync.not_synced(enrollment, database_contents)]
     
-    # REMOVE ENROLLMENTS THAT NEED TO BE ARCHIVED FROM DICT #
+    # MOVE ENROLLMENTS THAT NEED TO BE ARCHIVED TO archive_in_drive #
     archive_in_drive = [enrollment for enrollment in enrollments if Sync.should_archive(enrollment, database_contents)]
-    archive_in_drive = ObjectUtilites.enrollment_list_from_dict(archive_in_drive)
-    # REMOVE ENROLLMENTS THAT NEED RENAMING FROM DICT #
+    # MOVE ENROLLMENTS THAT NEED RENAMING TO rename_in_drive #
     rename_in_drive = [enrollment for enrollment in enrollments if Sync.student_needs_renaming(enrollment, database_contents)]
-    rename_in_drive = ObjectUtilites.enrollment_list_from_dict(rename_in_drive)
-    # REMOVE ENROLLMENTS THAT NEED TO BE CREATED FROM DICT #
+    # MOVE ENROLLMENTS THAT NEED TO BE CREATED TO create_in_drive #
     create_in_drive = [enrollment for enrollment in enrollments if enrollment not in rename_in_drive and enrollment not in archive_in_drive]
+
+    # CONVERT TO LISTS OF Enrollment OBJECTS #
+    archive_in_drive = ObjectUtilites.enrollment_list_from_dict(archive_in_drive)
+    rename_in_drive = ObjectUtilites.enrollment_list_from_dict(rename_in_drive)
     create_in_drive = ObjectUtilites.enrollment_list_from_dict(create_in_drive)
 
     return create_in_drive, rename_in_drive, archive_in_drive
