@@ -69,6 +69,11 @@ def gen_title(enrollment, type):
         title += enrollment.course.id
     return title
 
+def remove_from_list(l_remove, l_from):
+    for v in l_remove:
+        l_from.remove(v)
+    return l_from
+
 @contextmanager
 def ignored(*exceptions):
     try:

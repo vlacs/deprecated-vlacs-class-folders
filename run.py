@@ -37,19 +37,26 @@ def main(limit=None, offset=None):
     set_to_archived(conn, client)
 
     print "Comparing the database with Google Drive..."
-    cid, rid, aid = compare_db_with_drive(client, conn, limit, offset)
+    cid, rcid, rid, aid = compare_db_with_drive(client, conn, limit, offset)
 
     if cid:
         print "--- Creating folders in Drive..."
         create_in_drive(conn, client, cid, count, offset)
+        ###### SHARE HERE ######ss
     else:
         print "--- No folders to create."
 
     if rid:
-        print "--- Renaming folders in Drive..."
-        rename_in_drive(client, rid)
+        print "--- Renaming student folders in Drive..."
+        rename_folder_in_drive(client, rid)
     else:
-        print "--- Nothing to rename."
+        print "--- No student folders to rename."
+
+    if rcid:
+        print "--- Renaming class folders in Drive..."
+        rename_folder_in_drive(client, rcid)
+    else:
+        print "--- No class folders to rename."
 
     if aid:
         print "--- Archiving folders in Drive..."
@@ -137,16 +144,8 @@ def check_structure(client, conn):
 def compare_db_with_drive(client, conn, limit, offset):
     enrollments = Database.get(Database.execute(conn, Database.enrollment_query_string(limit=limit, offset=offset)))
     database_contents = Database.get(Database.execute(conn, Database.compare_query_string()))
-    gd_root_folders = {}
-    gd_contents = {}
-    create_in_drive = {}
-    rename_in_drive = {} 
-    archive_in_drive = {}
 
-    # STORE RESOURCE ID BY TITLE FOR ROOT FOLDERS #
     gd_root_folders = Folder.list_sub_folders(client, "root")
-
-    # STORE LIST OF CONTENTS (TITLE BY ID) FROM ROOT FOLDER #
     gd_contents = Folder.list_sub_folders(client, gd_root_folders[config.ROOT_CLASS_FOLDER])
 
     # REMOVE SYNCED ENROLLMENTS FROM DICT #
@@ -154,17 +153,25 @@ def compare_db_with_drive(client, conn, limit, offset):
     
     # MOVE ENROLLMENTS THAT NEED TO BE ARCHIVED TO archive_in_drive #
     archive_in_drive = [enrollment for enrollment in enrollments if Sync.should_archive(enrollment, database_contents)]
-    # MOVE ENROLLMENTS THAT NEED RENAMING TO rename_in_drive #
-    rename_in_drive = [enrollment for enrollment in enrollments if Sync.student_needs_renaming(enrollment, database_contents)]
-    # MOVE ENROLLMENTS THAT NEED TO BE CREATED TO create_in_drive #
-    create_in_drive = [enrollment for enrollment in enrollments if enrollment not in rename_in_drive and enrollment not in archive_in_drive]
+    enrollments = Utilities.remove_from_list(archive_in_drive, enrollments)
 
-    # CONVERT TO LISTS OF Enrollment OBJECTS #
+    # MOVE ENROLLMENTS THAT NEED RENAMING TO rename_in_drive #
+    rename_course_in_drive = [enrollment for enrollment in enrollments if Sync.course_needs_renaming(conn, enrollment)]
+    rename_in_drive = [enrollment for enrollment in enrollments if Sync.student_needs_renaming(enrollment, database_contents)]
+    enrollments = Utilities.remove_from_list(rename_in_drive, enrollments)
+    
+    # MOVE ENROLLMENTS THAT ARE LEFT NEED TO BE CREATED IN DRIVE #
+    create_in_drive = enrollments
+    rename_course_in_drive = Utilities.remove_from_list(create_in_drive, rename_course_in_drive)
+
+
+
     archive_in_drive = ObjectUtilites.enrollment_list_from_dict(archive_in_drive)
+    rename_course_in_drive = ObjectUtilites.enrollment_list_from_dict(rename_course_in_drive)
     rename_in_drive = ObjectUtilites.enrollment_list_from_dict(rename_in_drive)
     create_in_drive = ObjectUtilites.enrollment_list_from_dict(create_in_drive)
 
-    return create_in_drive, rename_in_drive, archive_in_drive
+    return create_in_drive, rename_course_in_drive, rename_in_drive, archive_in_drive
 
 def create_in_drive(conn, client, enrollments, count, offset):
     if offset != None:
@@ -201,7 +208,7 @@ def create_in_drive(conn, client, enrollments, count, offset):
             print "ERROR:", e.status
             count += 1
 
-def rename_in_drive(client, enrollments):
+def rename_folder_in_drive(client, enrollments):
     for enrollment in enrollments:
         folder = client.GetResourceById(enrollment.folder_id)
         
@@ -226,8 +233,6 @@ def set_to_archived(conn, client):
     for entry in items_to_archive:
         Database.set_entry_to_archived(conn, entry)
 
-def check_for_class_rename(conn, client):
-    pass
 
 if __name__ == "__main__":
     limit = None

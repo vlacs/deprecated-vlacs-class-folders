@@ -2,6 +2,9 @@
 
 _author_ = 'mgeorge@vlacs.org (Mike George)'
 
+from Libs import Database
+from Libs import Utilities
+
 def not_synced(enrollment, database_contents):
     for entry in database_contents:
         if (gen_title(enrollment, "s") == entry['folder_name'] and 
@@ -9,20 +12,25 @@ def not_synced(enrollment, database_contents):
             return False
     return True
 
+def course_needs_renaming(conn, enrollment):
+    qs = Database.construct_query_string('vlacs_class_folders_structure', 
+                                        {'folder_name' : 
+                                            {'value' : Utilities.gen_title(enrollment, "c"),
+                                             'type' : 's'}})
+    needs_renaming = Database.get(Database.execute(conn, qs))
+    if len(needs_renaming) > 0:
+        return False
+    enrollment.folder_id = needs_renaming['folder_id']
+    enrollment.folder_name = Utilites.gen_title(enrollment, "c")
+    return True
+
 def student_needs_renaming(enrollment, database_contents):
     for entry in database_contents:
         if (enrollment.student.id == entry['student_id'] and
-            Utilities.gen_title(enrollment, "s") != database_contents['folder_name']):
+            Utilities.gen_title(enrollment, "s") != entry['folder_name']):
+            enrollment.folder_id = entry['folder_id']
+            enrollment.folder_name = entry['folder_name']
             return True
-    return False
-
-def class_folder_needs_renaming(database_folder, enrollments_folders):
-    for folder in enrollments_folders:
-        if database_folder['class_id'] == folder['class_id']:
-            df = deconstruct_title(database_folder['folder_name'], "c")
-            if (folder['teacher_firstname'] != df['teacher_firstname'] and
-                folder['teacher_lastname']  != df['teacher_lastname']):
-                return True
     return False
 
 def should_archive(enrollment, database_contents):
