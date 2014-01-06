@@ -89,13 +89,13 @@ def check_structure(client, conn):
 
     for title, f_id in folder_list.items():
         if title == config.ROOT_CLASS_FOLDER:
-            print .green("--- %s exists in Google Drive." % config.ROOT_CLASS_FOLDER)
+            print "--- %s exists in Google Drive." % (config.ROOT_CLASS_FOLDER)
             exists_list_gd["root"] = True
         elif title == config.TEACHER_SHARE_FOLDER:
-            print .green("--- %s exists in Google Drive." % config.TEACHER_SHARE_FOLDER)
+            print "--- %s exists in Google Drive." % (config.TEACHER_SHARE_FOLDER)
             exists_list_gd["teacher"] = True
         elif title == config.STUDENT_SHARE_FOLDER:
-            print .green("--- %s exists in Google Drive." % config.STUDENT_SHARE_FOLDER)
+            print "--- %s exists in Google Drive." % (config.STUDENT_SHARE_FOLDER)
             exists_list_gd["student"] = True
 
     print "Making sure the database has entries for the root folders..."
@@ -105,13 +105,13 @@ def check_structure(client, conn):
     ss_query = Database.get(Database.execute(conn, "SELECT count(*) FROM vlacs_class_folders_structure WHERE folder_name = '%s'" % config.STUDENT_SHARE_FOLDER))
 
     if rcf_query['count'] > 0:
-        print "--- %s exists in the Database." % config.ROOT_CLASS_FOLDER
+        print "--- %s exists in the Database." % (config.ROOT_CLASS_FOLDER)
         exists_list_db["root"] = True
     if ts_query['count'] > 0:
-        print "--- %s exists in the Database." % config.TEACHER_SHARE_FOLDER
+        print "--- %s exists in the Database." % (config.TEACHER_SHARE_FOLDER)
         exists_list_db["teacher"] = True
     if ss_query['count'] > 0:
-        print "--- %s exists in the Database." % config.STUDENT_SHARE_FOLDER
+        print "--- %s exists in the Database." % (config.STUDENT_SHARE_FOLDER)
         exists_list_db["student"] = True
 
     if ("root" in exists_list_db and "root" in exists_list_gd and 
@@ -179,20 +179,22 @@ def create_in_drive(conn, client, enrollments, count, offset):
         try:
             print("Processing enrollment %s/%s..." % (count, last_disp))
 
-            folder_exists = Database.get(Database.execute(conn, Database.folder_exists_query_string(enrollment.course.id)))
-            rootclassfolder_id = Database.get(Database.execute(conn, query="SELECT folder_id FROM vlacs_class_folders_structure WHERE folder_name = '%s'" % (config.ROOT_CLASS_FOLDER)))
-            
+            fe_q = Database.get(Database.execute(conn, Database.folder_exists_query_string(enrollment.course.id)))
+            rcf_q = Database.get(Database.execute(conn, query="SELECT folder_id FROM vlacs_class_folders_structure WHERE folder_name = '%s'" % (config.ROOT_CLASS_FOLDER)))
+            fe_id = fe_q['folder_id']
+            rcf_id = rcf_q['folder_id']
+
             if folder_exists:
                 if isinstance(folder_exists, list):
                     folder_exists = folder_exists[0]
                 print "Creating Student Folder: %s" % Utilities.gen_title(enrollment, "s")
-                studentfolder = Folder.create_flat(conn, client, Utilities.gen_title(enrollment, "s"), rootclassfolder_id['folder_id'], folder_exists['folder_id'], enrollment.course.id, enrollment.student.id)
+                studentfolder = Folder.create_flat(conn, client, Utilities.gen_title(enrollment, "s"), rcf_id, fe_id, enrollment.course.id, enrollment.student.id)
             else:
                 title = Utilities.gen_title(enrollment, "c")
                 print "Creating Class Folder: %s" % title
-                classfolder = Folder.create_flat(conn, client, title, rootclassfolder_id['folder_id'], rootclassfolder_id['folder_id'], enrollment.course.id)
+                classfolder = Folder.create_flat(conn, client, title, rcf_id, rcf_id, enrollment.course.id)
                 print "Creating Student Folder: %s" % Utilities.gen_title(enrollment, "s")
-                studentfolder = Folder.create_flat(conn, client, Utilities.gen_title(enrollment, "s"), rootclassfolder_id['folder_id'], classfolder.resource_id.text, enrollment.course.id, enrollment.student.id)
+                studentfolder = Folder.create_flat(conn, client, Utilities.gen_title(enrollment, "s"), rcf_id, classfolder.resource_id.text, enrollment.course.id, enrollment.student.id)
             count += 1
 
         except GDRequestError as e:
