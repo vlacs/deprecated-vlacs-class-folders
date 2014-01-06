@@ -6,7 +6,7 @@ from contextlib import contextmanager
 
 from Objects.Enrollment import Enrollment
 
-import string
+import string, sys
 
 def clean_name(name):
     clean = name
@@ -82,11 +82,18 @@ def ignored(*exceptions):
         pass
 
 @contextmanager
-def redirect_stdout(file_path):
-    with open(file_path, "a+") as fileobj:
-        oldstdout = sys.stdout
-        sys.stdout = fileobj
-        try:
-            yield fileobj
-        finally:
-            sys.stdout = oldstdout
+def redirect_stdout(fileobj):
+    oldstdout = sys.stdout
+    sys.stdout = fileobj
+    try:
+        yield fileobj
+    finally:
+        fileobj.close()
+        sys.stdout = oldstdout
+
+
+
+
+
+
+

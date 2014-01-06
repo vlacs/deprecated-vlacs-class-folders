@@ -259,7 +259,10 @@ if __name__ == "__main__":
         main(limit=limit, offset=offset)
     else:
         print "Running..."
-        with Utilities.redirect_stdout(redirect_output):
-            main(limit=limit, offset=offset)
-
+        with open(redirect_output, "a+") as f:
+            with Utilities.redirect_stdout(f):
+                main(limit=limit, offset=offset)
         print "Finished, output stored in %s" % (redirect_output)
+
+
+
