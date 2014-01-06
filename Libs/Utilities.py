@@ -75,13 +75,6 @@ def remove_from_list(l_remove, l_from):
     return l_from
 
 @contextmanager
-def ignored(*exceptions):
-    try:
-        yield
-    except exceptions:
-        pass
-
-@contextmanager
 def redirect_stdout(fileobj):
     oldstdout = sys.stdout
     sys.stdout = fileobj
