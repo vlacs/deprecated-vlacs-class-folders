@@ -42,6 +42,9 @@ def ShareFolder(client, conn, folder_entry):
 
     print "Done!"
 
+def UnshareFolder(client, conn, folder_entry):
+    pass
+
 def create_share_structure(client, conn, enrollment, structure):
     parents = {}
     currentdir_folders = {}

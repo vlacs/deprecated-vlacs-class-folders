@@ -31,7 +31,7 @@ def main(limit=None, offset=None):
 
     print "******** VLACS CLASS FOLDERS ********"
     print "Verifying database and root folders exist..."
-    check_structure(client, conn)
+    fix_structure(client, conn)
 
     print "Marking items that need to be archived..."
     set_to_archived(conn, client)
@@ -42,7 +42,6 @@ def main(limit=None, offset=None):
     if cid:
         print "--- Creating folders in Drive..."
         create_in_drive(conn, client, cid, count, offset)
-        ###### SHARE HERE ######ss
     else:
         print "--- No folders to create."
 
@@ -68,78 +67,6 @@ def main(limit=None, offset=None):
     print "Finished in %s" % str(datetime.timedelta(seconds=elapsed))
     
     conn.close()
-
-def check_structure(client, conn):
-    tables_exist = False
-    folder_list = {}
-    exists_list_gd = {}
-    exists_list_db = {}
-    everything_exists = False
-
-    print "Making sure the database tables exist..."
-    # CHECK FOR DATABASE TABLES #
-    tables_query = Database.get(Database.execute(conn, "SELECT COUNT(*) FROM pg_tables WHERE schemaname='public' AND tablename LIKE 'vlacs_class_folders%'"))
-    if tables_query['count'] > 1:
-        print "Database tables exist."
-        tables_exist = True
-
-    if not tables_exist:
-        print "Database tables do not exist, creating..."
-        Database.insert(conn, "CREATE TABLE IF NOT EXISTS vlacs_class_folders_structure(id serial, class_id integer, student_id integer, folder_name text, folder_id text, folder_parent text, isactive int DEFAULT 1 NOT NULL)")
-        Database.insert(conn, "CREATE TABLE IF NOT EXISTS vlacs_class_folders_shared(id serial, folder_id text, folder_name text, shared_with text, shared_permission text)")
-
-    print "Making sure the root folders exist in Google Drive..."
-    # CHECK FOR ROOT LEVEL FOLDERS IN GOOGLE DRIVE #
-    for resource in client.GetAllResources(uri="/feeds/default/private/full/root/contents/-/folder", show_root=True):
-        if resource.GetResourceType() == 'folder':
-            folder_list[resource.title.text] = resource.resource_id.text
-
-    for title, f_id in folder_list.items():
-        if title == config.ROOT_CLASS_FOLDER:
-            print "--- %s exists in Google Drive." % (config.ROOT_CLASS_FOLDER)
-            exists_list_gd["root"] = True
-        elif title == config.TEACHER_SHARE_FOLDER:
-            print "--- %s exists in Google Drive." % (config.TEACHER_SHARE_FOLDER)
-            exists_list_gd["teacher"] = True
-        elif title == config.STUDENT_SHARE_FOLDER:
-            print "--- %s exists in Google Drive." % (config.STUDENT_SHARE_FOLDER)
-            exists_list_gd["student"] = True
-
-    print "Making sure the database has entries for the root folders..."
-    # CHECK FOR ROOT LEVEL FOLDERS IN DATABASE #
-    rcf_query = Database.get(Database.execute(conn, "SELECT count(*) FROM vlacs_class_folders_structure WHERE folder_name = '%s'" % config.ROOT_CLASS_FOLDER))
-    ts_query = Database.get(Database.execute(conn, "SELECT count(*) FROM vlacs_class_folders_structure WHERE folder_name = '%s'" % config.TEACHER_SHARE_FOLDER))
-    ss_query = Database.get(Database.execute(conn, "SELECT count(*) FROM vlacs_class_folders_structure WHERE folder_name = '%s'" % config.STUDENT_SHARE_FOLDER))
-
-    if rcf_query['count'] > 0:
-        print "--- %s exists in the Database." % (config.ROOT_CLASS_FOLDER)
-        exists_list_db["root"] = True
-    if ts_query['count'] > 0:
-        print "--- %s exists in the Database." % (config.TEACHER_SHARE_FOLDER)
-        exists_list_db["teacher"] = True
-    if ss_query['count'] > 0:
-        print "--- %s exists in the Database." % (config.STUDENT_SHARE_FOLDER)
-        exists_list_db["student"] = True
-
-    if ("root" in exists_list_db and "root" in exists_list_gd and 
-            "teacher" in exists_list_db and "teacher" in exists_list_gd and 
-            "student" in exists_list_db and "student" in exists_list_gd):
-        everything_exists = True
-
-    if not everything_exists:
-        print "Something is missing..."
-        # COMPARE AND INSERT / CREATE #
-        for folder, config_f in [{'root', config.ROOT_CLASS_FOLDER}, {'teacher', config.TEACHER_SHARE_FOLDER}, {'student', config.STUDENT_SHARE_FOLDER}]:
-            if folder in exists_list_db and folder not in exists_list_gd:
-                print "--- %s folder is in the database, but not Google Drive. Fixing..." % (config_f)
-                f = Folder.create(False, client, config_f)
-                Database.insert(conn, "UPDATE vlacs_class_folders_structure SET folder_id = '%s' WHERE folder_name = '%s'" % (f.resource_id.text, config_f))
-            elif folder in exists_list_gd and folder not in exists_list_db:
-                print "--- %s folder is in Google Drive but not in the database. Fixing..." % (config_f)
-                Database.insert(conn, Database.structure_insert_string(config_f, folder_list[config_f]))
-            elif folder not in exists_list_db and folder_list not in exists_list_gd:
-                print "--- %s folder is not in Google Drive or the database. Fixing..." % (config_f)
-                f = Folder.create(conn, client, config_f)
 
 def compare_db_with_drive(client, conn, limit, offset):
     enrollments = Database.get(Database.execute(conn, Database.enrollment_query_string(limit=limit, offset=offset)))
@@ -208,6 +135,64 @@ def create_in_drive(conn, client, enrollments, count, offset):
             print "ERROR:", e.status
             count += 1
 
+def fix_structure(client, conn):
+    tables_exist = False
+    folder_list = {}
+    exists_list_gd = {}
+    exists_list_db = {}
+    everything_exists = False
+
+    print "Making sure the database tables exist..."
+    # CHECK FOR DATABASE TABLES #
+    tables_query = Database.get(Database.execute(conn, "SELECT COUNT(*) FROM pg_tables WHERE schemaname='public' AND tablename LIKE 'vlacs_class_folders%'"))
+    if tables_query['count'] > 1:
+        print "Database tables exist."
+        tables_exist = True
+
+    if not tables_exist:
+        print "Database tables do not exist, creating..."
+        Database.insert(conn, "CREATE TABLE IF NOT EXISTS vlacs_class_folders_structure(id serial, class_id integer, student_id integer, folder_name text, folder_id text, folder_parent text, isactive int DEFAULT 1 NOT NULL)")
+        Database.insert(conn, "CREATE TABLE IF NOT EXISTS vlacs_class_folders_shared(id serial, folder_id text, folder_name text, shared_with text, shared_permission text)")
+
+    print "Making sure the root folders exist in Google Drive and Database..."
+    # STORE NAMES OF ROOT LEVEL FOLDERS IN LIST #
+    for resource in client.GetAllResources(uri="/feeds/default/private/full/root/contents/-/folder", show_root=True):
+        if resource.GetResourceType() == 'folder':
+            folder_list[resource.title.text] = resource.resource_id.text
+
+    for folder_name in [config.ROOT_CLASS_FOLDER, config.TEACHER_SHARE_FOLDER, config.STUDENT_SHARE_FOLDER]:
+        # CHECK IF FOLDER EXISTS IN DRIVE #
+        for title, f_id in folder_list.items():
+            if title == folder_name:
+                print "--- %s exists in Google Drive." % (folder_name)
+                exists_list_gd[folder_name] = True
+
+        #CHECK IF FOLDER EXISTS IN DATATBASE #
+            cq = Database.get(Database.execute(conn, "SELECT count(*) FROM vlacs_class_folders_structure WHERE folder_name = '%s'" % folder_name))
+            if cq['count'] > 0:
+                print "--- %s exists in the Database." % (folder_name)
+                exists_list_db[folder_name] = True
+
+    if (config.ROOT_CLASS_FOLDER in exists_list_db and config.ROOT_CLASS_FOLDER in exists_list_gd and 
+            config.TEACHER_SHARE_FOLDER in exists_list_db and config.TEACHER_SHARE_FOLDER in exists_list_gd and 
+            config.STUDENT_SHARE_FOLDER in exists_list_db and config.STUDENT_SHARE_FOLDER in exists_list_gd):
+        everything_exists = True
+
+    if not everything_exists:
+        print "Something is missing..."
+        # COMPARE AND INSERT / CREATE #
+        for folder, config_f in [{'root', config.ROOT_CLASS_FOLDER}, {'teacher', config.TEACHER_SHARE_FOLDER}, {'student', config.STUDENT_SHARE_FOLDER}]:
+            if folder in exists_list_db and folder not in exists_list_gd:
+                print "--- %s folder is in the database, but not Google Drive. Fixing..." % (config_f)
+                f = Folder.create(False, client, config_f)
+                Database.insert(conn, "UPDATE vlacs_class_folders_structure SET folder_id = '%s' WHERE folder_name = '%s'" % (f.resource_id.text, config_f))
+            elif folder in exists_list_gd and folder not in exists_list_db:
+                print "--- %s folder is in Google Drive but not in the database. Fixing..." % (config_f)
+                Database.insert(conn, Database.structure_insert_string(config_f, folder_list[config_f]))
+            elif folder not in exists_list_db and folder_list not in exists_list_gd:
+                print "--- %s folder is not in Google Drive or the database. Fixing..." % (config_f)
+                f = Folder.create(conn, client, config_f)
+
 def rename_folder_in_drive(client, enrollments):
     for enrollment in enrollments:
         folder = client.GetResourceById(enrollment.folder_id)
@@ -242,11 +227,11 @@ if __name__ == "__main__":
     try:
         opts, args = getopt.getopt(sys.argv[1:],"hl:o:f:",["help","limit=","offset=","file="])
     except getopt.GetoptError:
-        print 'run_flat_batch.py [-l <limit> -o <offset> -f <output file>]'
+        print 'run.py [-l <limit> -o <offset> -f <output file>]'
         sys.exit(2)
     for opt, arg in opts:
         if opt in ("-h", "--help"):
-            print 'run_flat_batch.py [-l <limit> -o <offset> -f <output file>]'
+            print 'run.py [-l <limit> -o <offset> -f <output file>]'
             sys.exit()
         elif opt in ("-l", "--limit"):
             limit = arg
