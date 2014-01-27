@@ -91,8 +91,6 @@ def compare_db_with_drive(client, conn, limit, offset):
     create_in_drive = enrollments
     rename_course_in_drive = Utilities.remove_from_list(create_in_drive, rename_course_in_drive)
 
-
-
     archive_in_drive = ObjectUtilites.enrollment_list_from_dict(archive_in_drive)
     rename_course_in_drive = ObjectUtilites.enrollment_list_from_dict(rename_course_in_drive)
     rename_in_drive = ObjectUtilites.enrollment_list_from_dict(rename_in_drive)
@@ -222,32 +220,22 @@ def set_to_archived(conn, client):
 if __name__ == "__main__":
     limit = None
     offset = None
-    redirect_output = False
 
     try:
-        opts, args = getopt.getopt(sys.argv[1:],"hl:o:f:",["help","limit=","offset=","file="])
+        opts, args = getopt.getopt(sys.argv[1:],"hl:o:",["help","limit=","offset="])
     except getopt.GetoptError:
-        print 'run.py [-l <limit> -o <offset> -f <output file>]'
+        print 'run.py [-l <limit> -o <offset>]'
         sys.exit(2)
     for opt, arg in opts:
         if opt in ("-h", "--help"):
-            print 'run.py [-l <limit> -o <offset> -f <output file>]'
+            print 'run.py [-l <limit> -o <offset>]'
             sys.exit()
         elif opt in ("-l", "--limit"):
             limit = arg
         elif opt in ("-o", "--offset"):
             offset = arg
-        elif opt in ("-f", "--file"):
-            redirect_output = arg
 
-    if not redirect_output:
-        main(limit=limit, offset=offset)
-    else:
-        print "Running..."
-        with open(redirect_output, "a+") as f:
-            with Utilities.redirect_stdout(f):
-                main(limit=limit, offset=offset)
-        print "Finished, output stored in %s" % (redirect_output)
+    main(limit=limit, offset=offset)
 
 
 

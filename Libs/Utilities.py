@@ -73,20 +73,3 @@ def remove_from_list(l_remove, l_from):
     for v in l_remove:
         l_from.remove(v)
     return l_from
-
-@contextmanager
-def redirect_stdout(fileobj):
-    oldstdout = sys.stdout
-    sys.stdout = fileobj
-    try:
-        yield fileobj
-    finally:
-        fileobj.close()
-        sys.stdout = oldstdout
-
-
-
-
-
-
-
