@@ -25,7 +25,7 @@ DATABASE = {
 }
 
 ## SHARE STRUCTURES ##
-## Setup so teachers and students can each use two
+## Set up so teachers and students can each use two
 ## different share structures to access their documents
 ## Accepted Template Variables:
 ##   {{TEACHER_ROOT}} Root Teacher Share Folder
