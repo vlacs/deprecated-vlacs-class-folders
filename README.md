@@ -1,4 +1,8 @@
-# vlacs-class-folders #
+# This project is dead, unfortunately. #
+
+### We're keeping it here as a monument and potential source of inspiration. ###
+
+--
 
 The purpose of this project is to automate the task of creating a folder structure on Google Drive and synchronizing
 between teachers and students of each class appropriately.
